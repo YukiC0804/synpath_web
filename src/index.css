@@ -1,0 +1,51 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap");
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
+}
+
+body {
+  margin: 0;
+  background-color: #000;
+  color: #fff;
+  font-family: var(--font-sans);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-display);
+}
+
+.calendly-inline-widget {
+  line-height: 0;
+}
+
+.calendly-inline-widget iframe {
+  display: block;
+  margin: 0 !important;
+}
+
+.calendly-scroll-area {
+  -webkit-overflow-scrolling: touch;
+  scrollbar-color: #3a3a3a #0a0a0a;
+  scrollbar-width: thin;
+}
+
+.calendly-scroll-area::-webkit-scrollbar {
+  width: 8px;
+}
+
+.calendly-scroll-area::-webkit-scrollbar-track {
+  background: #0a0a0a;
+}
+
+.calendly-scroll-area::-webkit-scrollbar-thumb {
+  background: #3a3a3a;
+  border-radius: 4px;
+}

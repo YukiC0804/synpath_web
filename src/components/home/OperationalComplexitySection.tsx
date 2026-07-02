@@ -50,17 +50,17 @@ export function OperationalComplexitySection() {
       className="border-t border-white/5 bg-black py-16 md:py-20 lg:py-24"
     >
       <div className="mx-auto grid max-w-[88rem] grid-cols-1 items-start gap-10 px-4 sm:px-6 lg:grid-cols-12 lg:gap-12 lg:px-10">
-        <div className="lg:col-span-4">
+        <div className="text-left lg:col-span-4">
           <h2
             id="operational-complexity-heading"
-            className="max-w-sm text-3xl font-medium leading-tight tracking-tight text-white md:text-4xl lg:text-[2.5rem]"
+            className="max-w-sm text-left text-3xl font-medium leading-tight tracking-tight text-white md:text-4xl lg:text-[2.5rem]"
           >
             Built to handle operational complexity
           </h2>
         </div>
 
-        <div className="lg:col-span-8">
-          <div className="grid grid-cols-1 gap-10 md:grid-cols-3 md:gap-8 lg:max-w-[75%] lg:gap-10">
+        <div className="flex justify-start lg:col-span-8 lg:justify-end">
+          <div className="grid w-full grid-cols-1 gap-10 md:grid-cols-3 md:gap-8 lg:w-3/4 lg:gap-10">
             {features.map((feature) => (
               <FeatureCard
                 key={feature.id}

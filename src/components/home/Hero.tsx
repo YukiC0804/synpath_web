@@ -95,16 +95,20 @@ export function Hero() {
       />
 
       <div className="relative z-10 mx-auto flex min-h-[calc(100vh-5rem)] w-full max-w-[96rem] flex-col items-center justify-center px-4 py-16 text-center sm:px-6 lg:px-8 lg:py-24">
-        <motion.h1
-          id="hero-heading"
+        <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, ease: 'easeOut' }}
-          className="hero-headline mx-auto mb-12 w-fit max-w-full text-center lg:mb-14"
+          className="mx-auto mb-12 w-fit max-w-full text-center lg:mb-14"
         >
-          <span className="hero-title-line">AI that listens and executes for you</span>
-          <span className="hero-title-line mt-2 md:mt-3">Build for Manufacturing Operations</span>
-        </motion.h1>
+          <h1 id="hero-heading" className="hero-headline">
+            <span className="hero-title-line">AI that listens and executes for you</span>
+            <span className="hero-title-line mt-2 md:mt-3">Build for Manufacturing Operations</span>
+          </h1>
+          <p className="mt-4 inline-flex rounded-full border border-white/20 bg-white/5 px-4 py-1.5 text-xs font-medium tracking-wide text-white/80 backdrop-blur-sm sm:mt-5 sm:px-5 sm:text-sm">
+            Hit plan, cut waste and scale
+          </p>
+        </motion.div>
 
         <motion.div
           initial={{ opacity: 0, y: 20 }}

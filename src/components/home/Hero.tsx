@@ -35,7 +35,7 @@ const workflowCards = [
     id: 'risk',
     label: 'Supplier / material risk flagged',
     icon: Layers,
-    position: 'top-[58%] left-[18%] md:top-[54%] md:left-[22%]',
+    position: 'top-[68%] left-[18%] md:top-[64%] md:left-[22%]',
     delay: 0.95,
   },
 ] as const;
@@ -94,7 +94,7 @@ export function Hero() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.1, ease: 'easeOut' }}
-            className="mb-4 max-w-xl text-lg leading-relaxed text-neutral-400 md:text-xl"
+            className="mb-4 max-w-xl text-lg leading-relaxed text-white md:text-xl"
           >
             Synpath trains custom AI agents that runs your plant with real time data. Machines,
             software, paperwork, tribal knowledge, all connected. No rip-and-replace. No Firefighting
@@ -104,7 +104,7 @@ export function Hero() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.15, ease: 'easeOut' }}
-            className="mb-10 max-w-xl text-lg leading-relaxed text-neutral-400 md:text-xl"
+            className="mb-10 max-w-xl text-lg leading-relaxed text-white md:text-xl"
           >
             We&apos;ve saved our customers millions in avoided staff costs.
           </motion.p>

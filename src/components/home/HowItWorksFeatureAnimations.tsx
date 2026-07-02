@@ -68,13 +68,13 @@ type FlowPaths = {
 };
 
 const fragmentedSources = [
-  { id: 'mes', label: 'MES', icon: Activity, top: '1%', left: '0%', floatDelay: 0 },
-  { id: 'erp', label: 'ERP', icon: Database, top: '14%', left: '44%', floatDelay: 0.4 },
-  { id: 'machine', label: 'Machine Data', icon: Cog, top: '27%', left: '0%', floatDelay: 0.8 },
-  { id: 'paper', label: 'Paperwork', icon: FileText, top: '40%', left: '42%', floatDelay: 1.2 },
-  { id: 'tribal', label: 'Tribal Knowledge', icon: Users, top: '53%', left: '2%', floatDelay: 0.6 },
-  { id: 'excel', label: 'Excel', icon: Table2, top: '66%', left: '44%', floatDelay: 1.0 },
-  { id: 'sop', label: 'SOPs', icon: ClipboardList, top: '79%', left: '0%', floatDelay: 1.4 },
+  { id: 'mes', label: 'MES', icon: Activity, floatDelay: 0 },
+  { id: 'erp', label: 'ERP', icon: Database, floatDelay: 0.4 },
+  { id: 'machine', label: 'Machine Data', icon: Cog, floatDelay: 0.8 },
+  { id: 'paper', label: 'Paperwork', icon: FileText, floatDelay: 1.2 },
+  { id: 'tribal', label: 'Tribal Knowledge', icon: Users, floatDelay: 0.6 },
+  { id: 'excel', label: 'Excel', icon: Table2, floatDelay: 1.0 },
+  { id: 'sop', label: 'SOPs', icon: ClipboardList, floatDelay: 1.4 },
 ] as const;
 
 const truthInsights = [
@@ -88,16 +88,12 @@ const truthInsights = [
 function FragmentedSourceCard({
   label,
   icon: Icon,
-  top,
-  left,
   floatDelay,
   index,
   cardRef,
 }: {
   label: string;
   icon: React.ComponentType<{ className?: string }>;
-  top: string;
-  left: string;
   floatDelay: number;
   index: number;
   cardRef?: (element: HTMLDivElement | null) => void;
@@ -105,9 +101,8 @@ function FragmentedSourceCard({
   return (
     <motion.div
       ref={cardRef}
-      className="absolute z-20 w-max max-w-full rounded-xl border border-dashed border-white/20 bg-white/[0.04] px-3 py-2.5 shadow-[0_4px_24px_rgba(0,0,0,0.25)] backdrop-blur-sm sm:px-3.5 sm:py-2.5"
-      style={{ top, left }}
-      animate={{ y: [0, -4, 0], x: [0, index % 2 === 0 ? 2 : -2, 0] }}
+      className="relative z-20 w-full rounded-xl border border-dashed border-white/20 bg-white/[0.04] px-3 py-2 shadow-[0_4px_24px_rgba(0,0,0,0.25)] backdrop-blur-sm sm:px-3.5 sm:py-2.5"
+      animate={{ y: [0, -3, 0], x: [0, index % 2 === 0 ? 1 : -1, 0] }}
       transition={{
         duration: 3.6 + floatDelay,
         repeat: Infinity,
@@ -128,23 +123,23 @@ function FragmentedSourceCard({
 
 function SynpathHub({ hubRef }: { hubRef: React.Ref<HTMLDivElement> }) {
   return (
-    <div className="relative z-30 flex items-center justify-center px-2 py-6 lg:justify-self-center lg:px-4 lg:py-8">
-      <div className="relative flex h-24 w-24 items-center justify-center sm:h-28 sm:w-28">
+    <div
+      ref={hubRef}
+      className="relative z-30 flex min-h-[28rem] items-center justify-center self-stretch px-2 lg:px-3 xl:min-h-[30rem]"
+    >
+      <div className="relative flex h-full w-24 items-center justify-center sm:w-28">
         <motion.div
-          className="absolute inset-0 rounded-full bg-emerald-500/20 blur-2xl"
+          className="absolute inset-y-4 inset-x-0 rounded-full bg-emerald-500/20 blur-2xl"
           animate={{ opacity: [0.25, 0.5, 0.25], scale: [0.94, 1.04, 0.94] }}
           transition={{ duration: 3.5, repeat: Infinity, ease: 'easeInOut' }}
         />
         <motion.div
-          className="absolute inset-2 rounded-full border border-emerald-400/20"
+          className="absolute inset-y-6 inset-x-2 rounded-full border border-emerald-400/20"
           animate={{ opacity: [0.35, 0.7, 0.35] }}
           transition={{ duration: 3.5, repeat: Infinity, ease: 'easeInOut' }}
         />
 
-        <div
-          ref={hubRef}
-          className="relative z-30 flex h-16 w-16 flex-col items-center justify-center rounded-full border border-emerald-400/40 bg-gradient-to-b from-emerald-500/20 to-emerald-500/5 shadow-[0_0_32px_rgba(52,211,153,0.25)] sm:h-[4.5rem] sm:w-[4.5rem]"
-        >
+        <div className="relative z-30 flex h-16 w-16 flex-col items-center justify-center rounded-full border border-emerald-400/40 bg-gradient-to-b from-emerald-500/20 to-emerald-500/5 shadow-[0_0_32px_rgba(52,211,153,0.25)] sm:h-[4.5rem] sm:w-[4.5rem]">
           <Sparkles className="mb-0.5 h-4 w-4 text-emerald-300" />
           <span className="text-[9px] font-semibold text-emerald-200 sm:text-[10px]">Synpath</span>
         </div>
@@ -222,7 +217,7 @@ function TruthPanel({
   return (
     <motion.div
       ref={panelRef}
-      className="relative z-20 w-full min-w-0 overflow-visible rounded-2xl border border-emerald-400/25 bg-gradient-to-br from-white/[0.07] to-white/[0.02] p-3 shadow-[0_8px_40px_rgba(0,0,0,0.35)] backdrop-blur-md sm:p-3.5 lg:max-w-[260px] xl:max-w-[272px]"
+      className="relative z-20 flex min-h-[28rem] w-full min-w-0 flex-col overflow-visible rounded-2xl border border-emerald-400/25 bg-gradient-to-br from-white/[0.07] to-white/[0.02] p-3.5 shadow-[0_8px_40px_rgba(0,0,0,0.35)] backdrop-blur-md sm:p-4 lg:max-w-[290px] xl:min-h-[30rem] xl:max-w-[300px]"
       animate={{
         boxShadow: [
           '0 8px 40px rgba(0,0,0,0.35)',
@@ -244,26 +239,26 @@ function TruthPanel({
         />
       </motion.div>
 
-      <div className="relative mb-2 flex items-center justify-between gap-2 border-b border-white/10 pb-2">
+      <div className="relative mb-3 flex shrink-0 items-center justify-between gap-2 border-b border-white/10 pb-2.5">
         <div className="min-w-0">
-          <p className="whitespace-nowrap text-[9px] font-semibold uppercase tracking-[0.1em] text-emerald-300/90 sm:text-[10px]">
+          <p className="whitespace-nowrap text-[10px] font-semibold uppercase tracking-[0.1em] text-emerald-300/90 sm:text-[11px]">
             One Source of Truth
           </p>
-          <p className="mt-0.5 text-[9px] text-white/45">Unified operating layer</p>
+          <p className="mt-0.5 text-[10px] text-white/45 sm:text-[11px]">Unified operating layer</p>
         </div>
         <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg border border-emerald-400/30 bg-emerald-500/10">
           <Lock className="h-3.5 w-3.5 text-emerald-300" />
         </div>
       </div>
 
-      <ul className="relative space-y-1">
+      <ul className="relative flex flex-1 flex-col justify-between gap-1.5 py-0.5">
         {truthInsights.map((item, index) => {
           const isActive = index === highlightIndex;
 
           return (
             <motion.li
               key={item}
-              className={`flex items-center gap-2 rounded-lg border px-2.5 py-1.5 sm:px-3 sm:py-1.5 ${
+              className={`flex flex-1 items-center gap-2.5 rounded-lg border px-3 py-2 sm:px-3.5 sm:py-2.5 ${
                 isActive
                   ? 'border-emerald-400/35 bg-emerald-500/[0.08]'
                   : 'border-white/[0.08] bg-black/20'
@@ -272,9 +267,9 @@ function TruthPanel({
               transition={{ duration: 2.5, repeat: isActive ? Infinity : 0 }}
             >
               <CheckCircle2
-                className={`h-3.5 w-3.5 shrink-0 ${isActive ? 'text-emerald-300' : 'text-white/35'}`}
+                className={`h-4 w-4 shrink-0 ${isActive ? 'text-emerald-300' : 'text-white/35'}`}
               />
-              <span className="text-[10px] font-medium leading-snug text-white/80">{item}</span>
+              <span className="text-[11px] font-medium leading-snug text-white/85 sm:text-xs">{item}</span>
             </motion.li>
           );
         })}
@@ -387,12 +382,12 @@ export function SourceOfTruthAnimation() {
     >
       <div
         ref={containerRef}
-        className="relative flex flex-col gap-10 lg:grid lg:grid-cols-[minmax(0,34%)_minmax(5.5rem,23%)_minmax(0,40%)] lg:items-center lg:gap-x-6 lg:gap-y-10 xl:gap-x-8"
+        className="relative flex flex-col gap-10 lg:grid lg:grid-cols-[minmax(0,26%)_minmax(5rem,16%)_minmax(0,1fr)] lg:items-stretch lg:gap-x-5 lg:gap-y-10 xl:gap-x-6"
       >
         <ConnectionLinesLayer paths={paths} />
 
-        <div className="relative z-20">
-          <p className="mb-3 text-[9px] font-medium uppercase tracking-[0.14em] text-white/35">
+        <div className="relative z-20 flex flex-col lg:h-full">
+          <p className="mb-3 shrink-0 text-[9px] font-medium uppercase tracking-[0.14em] text-white/35">
             Fragmented sources
           </p>
 
@@ -422,14 +417,12 @@ export function SourceOfTruthAnimation() {
             })}
           </div>
 
-          <div className="relative hidden min-h-[28rem] lg:block xl:min-h-[30rem]">
+          <div className="hidden min-h-[28rem] flex-1 flex-col justify-between gap-1.5 lg:flex xl:min-h-[30rem]">
             {fragmentedSources.map((source, index) => (
               <FragmentedSourceCard
                 key={source.id}
                 label={source.label}
                 icon={source.icon}
-                top={source.top}
-                left={source.left}
                 floatDelay={source.floatDelay}
                 index={index}
                 cardRef={(element) => {
@@ -442,8 +435,8 @@ export function SourceOfTruthAnimation() {
 
         <SynpathHub hubRef={hubRef} />
 
-        <div className="relative z-20 w-full lg:max-w-none lg:justify-self-stretch">
-          <p className="mb-3 text-[9px] font-medium uppercase tracking-[0.14em] text-white/35">
+        <div className="relative z-20 flex flex-col lg:h-full">
+          <p className="mb-3 shrink-0 text-[9px] font-medium uppercase tracking-[0.14em] text-white/35">
             Trusted layer
           </p>
           <TruthPanel highlightIndex={highlightIndex} panelRef={panelRef} />

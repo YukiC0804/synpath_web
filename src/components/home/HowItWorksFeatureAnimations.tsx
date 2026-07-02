@@ -69,9 +69,9 @@ function PanelChrome({
 
 function ProcessCardHeader({ title }: { title: string }) {
   return (
-    <div className="mb-2 flex items-center justify-between gap-2 border-b border-white/10 pb-2">
-      <p className="text-[10px] font-semibold text-white sm:text-[11px]">{title}</p>
-      <Pencil className="h-3 w-3 text-white/35" />
+    <div className="mb-1 flex items-center justify-between gap-1 border-b border-white/10 pb-1">
+      <p className="text-[9px] font-semibold text-white sm:text-[10px]">{title}</p>
+      <Pencil className="h-2.5 w-2.5 text-white/35" />
     </div>
   );
 }
@@ -92,9 +92,9 @@ function AgentTag({
 
   return (
     <span
-      className={`inline-flex items-center gap-1 rounded-md border px-1.5 py-0.5 text-[8px] font-medium sm:text-[9px] ${tones[tone]}`}
+      className={`inline-flex items-center gap-0.5 rounded border px-1 py-0.5 text-[7px] font-medium sm:text-[8px] ${tones[tone]}`}
     >
-      <Icon className="h-2.5 w-2.5" />
+      <Icon className="h-2 w-2" />
       {label}
     </span>
   );
@@ -123,31 +123,31 @@ export function LearnOperationsAnimation() {
   return (
     <AnimationShell
       label="Animated manufacturing and sales process mapping"
-      aspectClass="aspect-[4/3.35] sm:aspect-[4/3.15]"
+      aspectClass="aspect-[4/3.55] sm:aspect-[4/3.35]"
     >
-      <div className="relative h-full">
-        <div className="grid h-full grid-cols-2 gap-2 sm:gap-3">
+      <div className="relative h-full origin-center scale-[0.92] sm:scale-[0.94]">
+        <div className="grid h-full grid-cols-2 gap-1.5 sm:gap-2">
           <motion.div
-            className="flex flex-col rounded-xl border border-white/10 bg-[#101010] p-2 shadow-[0_8px_32px_rgba(0,0,0,0.35)] sm:rounded-2xl sm:p-2.5"
+            className="flex min-h-0 flex-col rounded-lg border border-white/10 bg-[#101010] p-1.5 shadow-[0_8px_32px_rgba(0,0,0,0.35)] sm:rounded-xl sm:p-2"
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
           >
             <ProcessCardHeader title="Manufacturing order" />
 
-            <div className="min-h-0 flex-1 space-y-1 overflow-hidden">
+            <div className="min-h-0 flex-1 space-y-0.5">
               <motion.div
-                className="rounded-lg border border-emerald-500/25 bg-[#0a0a0a] p-2"
+                className="rounded-md border border-emerald-500/25 bg-[#0a0a0a] p-1.5"
                 initial={{ opacity: 0, y: 6 }}
                 animate={{ opacity: phase >= 0 ? 1 : 0, y: 0 }}
               >
-                <span className="mb-1 inline-block rounded-full bg-emerald-500/15 px-2 py-0.5 text-[8px] font-medium text-emerald-300 sm:text-[9px]">
+                <span className="mb-0.5 inline-block rounded-full bg-emerald-500/15 px-1.5 py-0.5 text-[7px] font-medium text-emerald-300 sm:text-[8px]">
                   Components preparation
                 </span>
-                <p className="text-[8px] leading-snug text-white/55 sm:text-[9px]">
+                <p className="text-[7px] leading-snug text-white/55 sm:text-[8px]">
                   Check stock and create a procurement order if needed.
                 </p>
-                <div className="mt-1.5">
+                <div className="mt-1">
                   <AgentTag label="Procurement agent" icon={ShoppingCart} />
                 </div>
               </motion.div>
@@ -155,7 +155,7 @@ export function LearnOperationsAnimation() {
               {manufacturingSteps.map((step, index) => (
                 <motion.div
                   key={step}
-                  className="rounded-md border border-white/[0.06] bg-white/[0.03] px-2 py-1 text-center text-[8px] font-medium text-emerald-300/90 sm:text-[9px]"
+                  className="rounded border border-white/[0.06] bg-white/[0.03] px-1.5 py-0.5 text-center text-[7px] font-medium text-emerald-300/90 sm:text-[8px]"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: phase >= 1 ? 1 : 0 }}
                   transition={{ delay: index * 0.07 }}
@@ -165,7 +165,7 @@ export function LearnOperationsAnimation() {
               ))}
 
               <motion.div
-                className={`relative rounded-lg border px-2 py-1.5 text-center text-[8px] font-medium sm:text-[9px] ${
+                className={`relative rounded-md border px-1.5 py-1 text-center text-[7px] font-medium sm:text-[8px] ${
                   showConnection
                     ? 'border-emerald-400/60 bg-emerald-500/[0.08] text-emerald-200'
                     : 'border-white/10 bg-white/[0.03] text-white/85'
@@ -175,43 +175,43 @@ export function LearnOperationsAnimation() {
               >
                 Add to stock
                 {showConnection ? (
-                  <span className="absolute -right-0.5 top-1/2 h-2 w-2 -translate-y-1/2 rounded-full bg-emerald-400" />
+                  <span className="absolute -right-0.5 top-1/2 h-1.5 w-1.5 -translate-y-1/2 rounded-full bg-emerald-400" />
                 ) : null}
               </motion.div>
             </div>
 
-            <div className="mt-2 rounded-lg bg-white/[0.06] py-1.5 text-center text-[8px] font-medium text-white/40 sm:text-[9px]">
+            <div className="mt-1 rounded-md bg-white/[0.06] py-1 text-center text-[7px] font-medium text-white/40 sm:text-[8px]">
               Done
             </div>
           </motion.div>
 
           <motion.div
-            className="flex flex-col rounded-xl border border-white/10 bg-[#101010] p-2 shadow-[0_8px_32px_rgba(0,0,0,0.35)] sm:rounded-2xl sm:p-2.5"
+            className="flex min-h-0 flex-col rounded-lg border border-white/10 bg-[#101010] p-1.5 shadow-[0_8px_32px_rgba(0,0,0,0.35)] sm:rounded-xl sm:p-2"
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.12 }}
           >
             <ProcessCardHeader title="Sales order process" />
 
-            <div className="min-h-0 flex-1 space-y-1 overflow-hidden">
+            <div className="min-h-0 flex-1 space-y-0.5">
               <motion.div
-                className="rounded-lg border border-white/[0.08] bg-[#0a0a0a] p-2"
+                className="rounded-md border border-white/[0.08] bg-[#0a0a0a] p-1.5"
                 initial={{ opacity: 0, y: 6 }}
                 animate={{ opacity: phase >= 1 ? 1 : 0, y: 0 }}
               >
-                <div className="mb-1 flex items-center gap-1">
-                  <Truck className="h-2.5 w-2.5 text-amber-400" />
-                  <span className="rounded-full bg-amber-500/15 px-2 py-0.5 text-[8px] font-medium text-amber-300 sm:text-[9px]">
+                <div className="mb-0.5 flex items-center gap-1">
+                  <Truck className="h-2 w-2 text-amber-400" />
+                  <span className="rounded-full bg-amber-500/15 px-1.5 py-0.5 text-[7px] font-medium text-amber-300 sm:text-[8px]">
                     Shipment creation
                   </span>
                 </div>
-                <p className="text-[8px] leading-snug text-white/55 sm:text-[9px]">
+                <p className="text-[7px] leading-snug text-white/55 sm:text-[8px]">
                   Create the shipment record based on the validated sales order.
                 </p>
               </motion.div>
 
               <motion.div
-                className={`relative rounded-lg border bg-[#0a0a0a] p-2 ${
+                className={`relative rounded-md border bg-[#0a0a0a] p-1.5 ${
                   pulseTarget
                     ? 'border-emerald-400/55 bg-emerald-500/[0.06]'
                     : 'border-white/[0.08]'
@@ -220,50 +220,50 @@ export function LearnOperationsAnimation() {
                 transition={{ duration: 1.2, repeat: pulseTarget ? Infinity : 0 }}
               >
                 {pulseTarget ? (
-                  <span className="absolute -left-0.5 top-1/2 h-2 w-2 -translate-y-1/2 rounded-full bg-emerald-400" />
+                  <span className="absolute -left-0.5 top-1/2 h-1.5 w-1.5 -translate-y-1/2 rounded-full bg-emerald-400" />
                 ) : null}
-                <div className="mb-1 flex items-center gap-1">
-                  <Package className="h-2.5 w-2.5 text-emerald-300" />
-                  <span className="rounded-full bg-emerald-500/15 px-2 py-0.5 text-[8px] font-medium text-emerald-300 sm:text-[9px]">
-                    Batch preparation for shipment
+                <div className="mb-0.5 flex items-center gap-1">
+                  <Package className="h-2 w-2 text-emerald-300" />
+                  <span className="rounded-full bg-emerald-500/15 px-1.5 py-0.5 text-[7px] font-medium text-emerald-300 sm:text-[8px]">
+                    Batch preparation
                   </span>
                 </div>
-                <p className="text-[8px] leading-snug text-white/55 sm:text-[9px]">
-                  Group, verify, and prepare items linked to outgoing orders before dispatch.
+                <p className="text-[7px] leading-snug text-white/55 sm:text-[8px]">
+                  Group and prepare items linked to outgoing orders.
                 </p>
-                <div className="mt-1.5">
+                <div className="mt-1">
                   <motion.span
-                    className="inline-flex items-center gap-1 rounded-md border border-violet-500/30 bg-violet-500/10 px-1.5 py-0.5 text-[8px] font-medium text-violet-300 sm:text-[9px]"
+                    className="inline-flex items-center gap-0.5 rounded border border-violet-500/30 bg-violet-500/10 px-1 py-0.5 text-[7px] font-medium text-violet-300 sm:text-[8px]"
                     animate={pulseTarget ? { opacity: [0.55, 1, 0.55] } : { opacity: 1 }}
                     transition={{ duration: 1.4, repeat: pulseTarget ? Infinity : 0 }}
                   >
-                    <BrainCircuit className="h-2.5 w-2.5" />
+                    <BrainCircuit className="h-2 w-2" />
                     AI rules applied
                   </motion.span>
                 </div>
               </motion.div>
 
               <motion.div
-                className="rounded-lg border border-white/[0.08] bg-[#0a0a0a] p-2"
+                className="rounded-md border border-white/[0.08] bg-[#0a0a0a] p-1.5"
                 initial={{ opacity: 0, y: 6 }}
                 animate={{ opacity: phase >= 2 ? 1 : 0, y: 0 }}
               >
-                <div className="mb-1 flex items-center gap-1">
-                  <FileText className="h-2.5 w-2.5 text-rose-400" />
-                  <span className="rounded-full bg-rose-500/15 px-2 py-0.5 text-[8px] font-medium text-rose-300 sm:text-[9px]">
-                    Delivery notes creation
+                <div className="mb-0.5 flex items-center gap-1">
+                  <FileText className="h-2 w-2 text-rose-400" />
+                  <span className="rounded-full bg-rose-500/15 px-1.5 py-0.5 text-[7px] font-medium text-rose-300 sm:text-[8px]">
+                    Delivery notes
                   </span>
                 </div>
-                <p className="text-[8px] leading-snug text-white/55 sm:text-[9px]">
-                  Generate delivery notes with updated batch numbers based on picking.
+                <p className="text-[7px] leading-snug text-white/55 sm:text-[8px]">
+                  Generate delivery notes with updated batch numbers.
                 </p>
-                <div className="mt-1.5">
+                <div className="mt-1">
                   <AgentTag label="Admin agent" icon={Bot} tone="orange" />
                 </div>
               </motion.div>
             </div>
 
-            <div className="mt-2 rounded-lg bg-white/[0.06] py-1.5 text-center text-[8px] font-medium text-white/40 sm:text-[9px]">
+            <div className="mt-1 rounded-md bg-white/[0.06] py-1 text-center text-[7px] font-medium text-white/40 sm:text-[8px]">
               Done
             </div>
           </motion.div>
@@ -324,16 +324,16 @@ const truthRows = [
 ] as const;
 
 export function SourceOfTruthAnimation() {
-  const [activeSource, setActiveSource] = useState(0);
   const [activeRow, setActiveRow] = useState(0);
 
   useEffect(() => {
     const interval = window.setInterval(() => {
-      setActiveSource((current) => (current + 1) % sources.length);
       setActiveRow((current) => (current + 1) % truthRows.length);
     }, 900);
     return () => window.clearInterval(interval);
   }, []);
+
+  const sourceLineYs = [12, 26, 40, 54, 68, 82];
 
   return (
     <AnimationShell
@@ -343,55 +343,60 @@ export function SourceOfTruthAnimation() {
       <PanelChrome title="Unified Operating Layer" badge="Syncing" />
 
       <div className="grid h-[calc(100%-1.75rem)] grid-cols-[0.82fr_auto_1.35fr] items-stretch gap-1.5 sm:gap-2">
-        <div className="flex flex-col justify-between gap-1">
-          {sources.map((source, index) => {
+        <div className="relative flex flex-col gap-0.5">
+          {sources.map((source) => {
             const Icon = source.icon;
-            const isActive = index === activeSource;
 
             return (
               <motion.div
                 key={source.id}
-                className={`flex items-center gap-2 rounded-lg border px-2 py-1.5 sm:rounded-xl sm:py-1.5 ${
-                  isActive
-                    ? 'border-emerald-400/40 bg-emerald-500/[0.08]'
-                    : 'border-white/10 bg-black/50'
-                }`}
-                animate={
-                  isActive
-                    ? { x: [0, 3, 0], opacity: [0.85, 1, 0.85] }
-                    : { x: 0, opacity: 0.75 }
-                }
-                transition={{ duration: 0.9, repeat: isActive ? Infinity : 0 }}
+                className="flex items-center gap-1.5 rounded-lg border border-emerald-400/35 bg-emerald-500/[0.08] px-1.5 py-1 sm:rounded-xl"
+                animate={{ opacity: [0.82, 1, 0.82] }}
+                transition={{ duration: 2.2, repeat: Infinity, ease: 'easeInOut' }}
               >
-                <Icon className={`h-3 w-3 shrink-0 ${isActive ? 'text-emerald-300' : 'text-white/50'}`} />
-                <span className="text-[9px] leading-tight text-white/80 sm:text-[10px]">{source.label}</span>
+                <Icon className="h-2.5 w-2.5 shrink-0 text-emerald-300" />
+                <span className="text-[8px] leading-tight text-white/85 sm:text-[9px]">{source.label}</span>
               </motion.div>
             );
           })}
+
+          <svg
+            className="pointer-events-none absolute inset-y-0 -right-3 w-8 sm:-right-4 sm:w-10"
+            viewBox="0 0 40 100"
+            preserveAspectRatio="none"
+            aria-hidden
+          >
+            {sourceLineYs.map((y, index) => (
+              <motion.line
+                key={sources[index].id}
+                x1="0"
+                y1={y}
+                x2="40"
+                y2="50"
+                stroke="rgba(52,211,153,0.55)"
+                strokeWidth="1.2"
+                strokeLinecap="round"
+                initial={{ pathLength: 0, opacity: 0 }}
+                animate={{ pathLength: 1, opacity: [0.35, 0.85, 0.35] }}
+                transition={{
+                  pathLength: { duration: 1.2, delay: index * 0.08 },
+                  opacity: { duration: 2, repeat: Infinity, delay: index * 0.12 },
+                }}
+              />
+            ))}
+          </svg>
         </div>
 
         <div className="relative flex items-center justify-center px-0.5">
-          {sources.map((_, index) => (
-            <motion.span
-              key={index}
-              className="absolute h-1 w-1 rounded-full bg-emerald-400/80"
-              animate={{ x: [-6, 8, 22], opacity: [0, 1, 0] }}
-              transition={{
-                duration: 1.1,
-                delay: index * 0.16,
-                repeat: Infinity,
-                ease: 'easeInOut',
-              }}
-            />
-          ))}
           <motion.div
-            className="z-10 flex h-10 w-10 items-center justify-center rounded-xl border border-emerald-400/30 bg-emerald-400/10 sm:h-11 sm:w-11"
+            className="z-10 flex h-10 w-10 items-center justify-center rounded-xl border border-emerald-400/40 bg-emerald-400/15 sm:h-11 sm:w-11"
             animate={{
               boxShadow: [
                 '0 0 0 rgba(52,211,153,0)',
-                '0 0 20px rgba(52,211,153,0.25)',
+                '0 0 20px rgba(52,211,153,0.35)',
                 '0 0 0 rgba(52,211,153,0)',
               ],
+              opacity: [0.9, 1, 0.9],
             }}
             transition={{ duration: 2.2, repeat: Infinity }}
           >

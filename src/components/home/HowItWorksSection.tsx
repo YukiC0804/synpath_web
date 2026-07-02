@@ -10,9 +10,9 @@ const featureRows = [
   },
   {
     id: 'agents' as const,
-    title: 'Hire Agents. Build Tools',
+    title: 'Build Agents & Tools',
     description:
-      'Use natural language to create AI agents, build dashboards, and create tools that execute daunting tasks for you.',
+      'Use natural language to create AI agents, dashboards, and apps that execute daunting tasks for you.',
   },
   {
     id: 'deploy' as const,

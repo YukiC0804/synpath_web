@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react';
 import { SynpathUseCasesIntro } from './SynpathUseCasesIntro';
 import { HowItWorksFeatureAnimation } from './HowItWorksFeatureAnimations';
 
@@ -11,8 +12,13 @@ const featureRows = [
   {
     id: 'agents' as const,
     title: 'Create Agents & Tools',
-    description:
-      'Use natural language to create AI agents, dashboards,\nand apps that execute daunting tasks for you.',
+    description: (
+      <>
+        Use natural language to create AI agents, dashboards,
+        <br />
+        and apps that execute daunting tasks for you.
+      </>
+    ),
   },
   {
     id: 'deploy' as const,
@@ -53,16 +59,14 @@ function FeatureCopy({
   description,
 }: {
   title: string;
-  description: string;
+  description: ReactNode;
 }) {
   return (
-    <div className="max-w-xl lg:max-w-lg">
+    <div className="max-w-xl">
       <h3 className="mb-5 text-2xl font-medium leading-[1.12] tracking-tight text-white md:text-3xl lg:text-[2rem]">
         {title}
       </h3>
-      <p className="whitespace-pre-line text-lg font-normal leading-relaxed text-white/70 md:text-xl">
-        {description}
-      </p>
+      <p className="text-lg font-normal leading-relaxed text-white/70 md:text-xl">{description}</p>
     </div>
   );
 }

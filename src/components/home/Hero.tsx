@@ -88,9 +88,9 @@ export function Hero() {
         loading="eager"
         fetchPriority="high"
       />
-      <div className="pointer-events-none absolute inset-0 bg-black/35" aria-hidden />
+      <div className="pointer-events-none absolute inset-0 bg-black/45" aria-hidden />
       <div
-        className="pointer-events-none absolute inset-0 bg-gradient-to-b from-black/25 via-black/30 to-black/45"
+        className="pointer-events-none absolute inset-0 bg-gradient-to-b from-black/33 via-black/40 to-black/60"
         aria-hidden
       />
 

@@ -1,3 +1,5 @@
+import { SynpathUseCasesIntro } from './SynpathUseCasesIntro';
+
 const featureRows = [
   {
     id: 'learn',
@@ -102,19 +104,7 @@ function FeatureCopy({
 export function HowItWorksSection() {
   return (
     <section id="how-it-works" aria-labelledby="how-it-works-heading" className="bg-black">
-      <div className="border-t border-white/5 py-20 md:py-24 lg:py-28">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <p className="mb-4 text-sm font-medium uppercase tracking-[0.18em] text-white/55">
-            How It Works
-          </p>
-          <h2
-            id="how-it-works-heading"
-            className="max-w-4xl text-4xl font-medium leading-[1.08] tracking-tight text-white md:text-5xl lg:text-6xl"
-          >
-            A single operational truth to close the execution gap
-          </h2>
-        </div>
-      </div>
+      <SynpathUseCasesIntro />
 
       <div className="border-t border-white/5">
         {featureRows.map((row, index) => {

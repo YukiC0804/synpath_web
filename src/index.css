@@ -92,3 +92,27 @@ h6 {
 .complexity-feature-description {
   color: #8a8a8a !important;
 }
+
+@keyframes use-cases-marquee {
+  from {
+    transform: translateY(0);
+  }
+
+  to {
+    transform: translateY(-50%);
+  }
+}
+
+.use-cases-track {
+  animation: use-cases-marquee 55s linear infinite;
+}
+
+.use-cases-scroller:hover .use-cases-track {
+  animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .use-cases-track {
+    animation: none;
+  }
+}

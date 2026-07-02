@@ -77,13 +77,6 @@ const fragmentedSources = [
   { id: 'sop', label: 'SOPs', icon: ClipboardList, top: '77%', left: '8%', floatDelay: 1.4 },
 ] as const;
 
-const hubLabels = [
-  { label: 'Clean', className: 'absolute -top-7 left-1/2 -translate-x-1/2' },
-  { label: 'Validate', className: 'absolute -bottom-7 left-1/2 -translate-x-1/2' },
-  { label: 'Structure', className: 'absolute left-0 top-1/2 -translate-x-[calc(100%+10px)] -translate-y-1/2' },
-  { label: 'Connect', className: 'absolute -top-5 left-2 -translate-x-1' },
-] as const;
-
 const truthInsights = [
   'Live production status',
   'Unified order data',
@@ -135,27 +128,18 @@ function FragmentedSourceCard({
 
 function SynpathHub({ hubRef }: { hubRef: React.Ref<HTMLDivElement> }) {
   return (
-    <div className="relative z-30 flex items-center justify-center px-2 py-6 lg:px-6 lg:py-8">
-      <div className="relative flex h-36 w-36 items-center justify-center sm:h-40 sm:w-40">
+    <div className="relative z-30 flex items-center justify-center px-1 py-6 lg:px-2 lg:py-8">
+      <div className="relative flex h-20 w-20 items-center justify-center sm:h-24 sm:w-24">
         <motion.div
-          className="absolute inset-3 rounded-full bg-emerald-500/20 blur-2xl"
+          className="absolute inset-0 rounded-full bg-emerald-500/20 blur-2xl"
           animate={{ opacity: [0.25, 0.5, 0.25], scale: [0.94, 1.04, 0.94] }}
           transition={{ duration: 3.5, repeat: Infinity, ease: 'easeInOut' }}
         />
         <motion.div
-          className="absolute inset-5 rounded-full border border-emerald-400/20"
+          className="absolute inset-2 rounded-full border border-emerald-400/20"
           animate={{ opacity: [0.35, 0.7, 0.35] }}
           transition={{ duration: 3.5, repeat: Infinity, ease: 'easeInOut' }}
         />
-
-        {hubLabels.map(({ label, className }) => (
-          <span
-            key={label}
-            className={`${className} z-40 whitespace-nowrap rounded-full border border-white/10 bg-black/70 px-2 py-0.5 text-[8px] font-medium uppercase tracking-[0.1em] text-white/50 sm:text-[9px]`}
-          >
-            {label}
-          </span>
-        ))}
 
         <div
           ref={hubRef}
@@ -238,7 +222,7 @@ function TruthPanel({
   return (
     <motion.div
       ref={panelRef}
-      className="relative z-20 overflow-visible rounded-2xl border border-emerald-400/25 bg-gradient-to-br from-white/[0.07] to-white/[0.02] p-3 shadow-[0_8px_40px_rgba(0,0,0,0.35)] backdrop-blur-md sm:p-3.5"
+      className="relative z-20 w-full min-w-0 overflow-visible rounded-2xl border border-emerald-400/25 bg-gradient-to-br from-white/[0.07] to-white/[0.02] p-3.5 shadow-[0_8px_40px_rgba(0,0,0,0.35)] backdrop-blur-md sm:p-4 lg:min-w-[320px] lg:max-w-[380px]"
       animate={{
         boxShadow: [
           '0 8px 40px rgba(0,0,0,0.35)',
@@ -260,9 +244,9 @@ function TruthPanel({
         />
       </motion.div>
 
-      <div className="relative mb-2.5 flex items-center justify-between gap-2 border-b border-white/10 pb-2">
-        <div>
-          <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-emerald-300/90 sm:text-[11px]">
+      <div className="relative mb-2.5 flex items-center justify-between gap-3 border-b border-white/10 pb-2.5">
+        <div className="min-w-0">
+          <p className="whitespace-nowrap text-[10px] font-semibold uppercase tracking-[0.12em] text-emerald-300/90 sm:text-[11px]">
             One Source of Truth
           </p>
           <p className="mt-0.5 text-[9px] text-white/45 sm:text-[10px]">Unified operating layer</p>
@@ -279,7 +263,7 @@ function TruthPanel({
           return (
             <motion.li
               key={item}
-              className={`flex items-center gap-2 rounded-lg border px-2.5 py-1.5 sm:px-3 sm:py-2 ${
+              className={`flex items-center gap-2.5 rounded-lg border px-3 py-2 sm:px-3.5 sm:py-2 ${
                 isActive
                   ? 'border-emerald-400/35 bg-emerald-500/[0.08]'
                   : 'border-white/[0.08] bg-black/20'
@@ -393,7 +377,7 @@ export function SourceOfTruthAnimation() {
     >
       <div
         ref={containerRef}
-        className="relative flex flex-col gap-10 lg:grid lg:grid-cols-[minmax(0,1fr)_11rem_minmax(0,1fr)] lg:items-center lg:gap-10 xl:gap-14"
+        className="relative flex flex-col gap-10 lg:grid lg:grid-cols-[minmax(0,1fr)_auto_minmax(320px,380px)] lg:items-center lg:gap-x-5 lg:gap-y-10 xl:gap-x-6"
       >
         <ConnectionLinesLayer paths={paths} />
 
@@ -448,7 +432,7 @@ export function SourceOfTruthAnimation() {
 
         <SynpathHub hubRef={hubRef} />
 
-        <div className="relative z-20">
+        <div className="relative z-20 w-full lg:w-auto lg:justify-self-start">
           <p className="mb-3 text-[9px] font-medium uppercase tracking-[0.14em] text-white/35">
             Trusted layer
           </p>

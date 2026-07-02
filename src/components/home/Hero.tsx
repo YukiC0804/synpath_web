@@ -87,17 +87,26 @@ export function Hero() {
             transition={{ duration: 0.7, ease: 'easeOut' }}
             className="mb-6 text-4xl font-semibold tracking-tighter text-white md:text-5xl lg:text-6xl xl:text-7xl"
           >
-            AI agents for modern manufacturers
+            AI Automation for Manufacturing Operation
           </motion.h1>
 
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.1, ease: 'easeOut' }}
+            className="mb-4 max-w-xl text-lg leading-relaxed text-neutral-400 md:text-xl"
+          >
+            Synpath trains custom AI agents that runs your plant with real time data. Machines,
+            software, paperwork, tribal knowledge, all connected. No rip-and-replace. No Firefighting
+          </motion.p>
+
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.15, ease: 'easeOut' }}
             className="mb-10 max-w-xl text-lg leading-relaxed text-neutral-400 md:text-xl"
           >
-            Synpath helps manufacturers automate quoting, planning, and production workflows — turning
-            messy operational data into faster decisions.
+            We&apos;ve saved our customers millions in avoided staff costs.
           </motion.p>
 
           <motion.div

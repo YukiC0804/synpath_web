@@ -1,11 +1,33 @@
-<div align="center">
+# Synpath Web
 
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
+Marketing site for [Synpath](https://www.synpath-ai.com) — AI-powered automation for manufacturers.
 
-  <h1>Built with AI Studio</h2>
+## Stack
 
-  <p>The fastest path from prompt to production with Gemini.</p>
+- React 19 + TypeScript
+- Vite 7
+- Tailwind CSS v4
+- React Router
+- Framer Motion
 
-  <a href="https://aistudio.google.com/apps">Start building</a>
+## Local development
 
-</div>
+```bash
+npm install
+npm run dev
+```
+
+Open [http://localhost:5173](http://localhost:5173).
+
+## Production build
+
+```bash
+npm run build
+npm run preview
+```
+
+## Project structure
+
+- `src/components/home/Hero.tsx` — homepage hero section
+- `src/legacy-app.jsx` — remainder of the app (routes, pages, i18n) ported from production
+- `public/hero-manufacturing.png` — hero background image

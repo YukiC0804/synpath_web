@@ -3,21 +3,29 @@ import { AnimatePresence, motion } from 'framer-motion';
 import {
   Activity,
   Bot,
+  BrainCircuit,
   CheckCircle2,
+  ClipboardList,
   Database,
   FileText,
   LayoutDashboard,
   MessageSquare,
+  Package,
+  Pencil,
   Radio,
+  ShoppingCart,
   Sparkles,
+  Truck,
 } from 'lucide-react';
 
 function AnimationShell({
   label,
   children,
+  aspectClass = 'aspect-[4/3]',
 }: {
   label: string;
   children: React.ReactNode;
+  aspectClass?: string;
 }) {
   return (
     <div
@@ -25,7 +33,9 @@ function AnimationShell({
       role="img"
       aria-label={label}
     >
-      <div className="relative aspect-[4/3] w-full overflow-hidden bg-[radial-gradient(circle_at_50%_0%,rgba(255,255,255,0.06),transparent_55%)] p-4 sm:p-5 md:p-6">
+      <div
+        className={`relative w-full overflow-hidden bg-[radial-gradient(circle_at_50%_0%,rgba(255,255,255,0.06),transparent_55%)] p-4 sm:p-5 md:p-6 ${aspectClass}`}
+      >
         <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:24px_24px] opacity-40" />
         {children}
       </div>
@@ -41,7 +51,7 @@ function PanelChrome({
   badge?: string;
 }) {
   return (
-    <div className="mb-3 flex items-center justify-between gap-2">
+    <div className="mb-2 flex items-center justify-between gap-2 sm:mb-3">
       <div className="flex items-center gap-2">
         <span className="h-2 w-2 rounded-full bg-emerald-400/80" />
         <span className="text-[11px] font-medium uppercase tracking-[0.14em] text-white/45 sm:text-xs">
@@ -57,116 +67,237 @@ function PanelChrome({
   );
 }
 
-const fadeUp = {
-  initial: { opacity: 0, y: 10 },
-  animate: { opacity: 1, y: 0 },
-};
+function ProcessCardHeader({ title }: { title: string }) {
+  return (
+    <div className="mb-2 flex items-center justify-between gap-2 border-b border-neutral-200/80 pb-2">
+      <p className="text-[10px] font-semibold text-neutral-800 sm:text-[11px]">{title}</p>
+      <Pencil className="h-3 w-3 text-neutral-400" />
+    </div>
+  );
+}
 
-export function LearnOperationsAnimation() {
-  const nodes = [
-    { id: 'orders', label: 'Order Entry', x: 14, y: 22, gap: false },
-    { id: 'plan', label: 'Planning', x: 50, y: 12, gap: true },
-    { id: 'prod', label: 'Production', x: 86, y: 24, gap: false },
-    { id: 'inv', label: 'Inventory', x: 28, y: 72, gap: true },
-    { id: 'qual', label: 'Quality', x: 72, y: 74, gap: false },
-  ] as const;
-
-  const edges = [
-    ['orders', 'plan'],
-    ['plan', 'prod'],
-    ['orders', 'inv'],
-    ['prod', 'qual'],
-    ['inv', 'qual'],
-  ] as const;
-
-  const nodeById = Object.fromEntries(nodes.map((node) => [node.id, node]));
+function AgentTag({
+  label,
+  icon: Icon,
+  tone = 'purple',
+}: {
+  label: string;
+  icon: React.ComponentType<{ className?: string }>;
+  tone?: 'purple' | 'orange';
+}) {
+  const tones = {
+    purple: 'border-violet-200 bg-violet-50 text-violet-700',
+    orange: 'border-orange-200 bg-orange-50 text-orange-700',
+  };
 
   return (
-    <AnimationShell label="Animated operations mapping and process discovery">
-      <PanelChrome title="Operations Discovery" badge="Live scan" />
+    <span
+      className={`inline-flex items-center gap-1 rounded-md border px-1.5 py-0.5 text-[8px] font-medium sm:text-[9px] ${tones[tone]}`}
+    >
+      <Icon className="h-2.5 w-2.5" />
+      {label}
+    </span>
+  );
+}
 
-      <div className="relative h-[calc(100%-2rem)] rounded-2xl border border-white/10 bg-black/40 p-3 sm:p-4">
-        <motion.p
-          className="mb-3 text-xs text-white/55 sm:text-sm"
-          animate={{ opacity: [0.45, 1, 0.45] }}
-          transition={{ duration: 2.4, repeat: Infinity, ease: 'easeInOut' }}
-        >
-          Mapping processes, data gaps, and automation opportunities...
-        </motion.p>
+export function LearnOperationsAnimation() {
+  const [phase, setPhase] = useState(0);
 
-        <div className="relative h-[78%]">
-          <svg className="absolute inset-0 h-full w-full" viewBox="0 0 100 100" preserveAspectRatio="none">
-            {edges.map(([from, to], index) => {
-              const a = nodeById[from];
-              const b = nodeById[to];
-              return (
-                <motion.line
-                  key={`${from}-${to}`}
-                  x1={a.x}
-                  y1={a.y}
-                  x2={b.x}
-                  y2={b.y}
-                  stroke="rgba(255,255,255,0.14)"
-                  strokeWidth="0.35"
-                  initial={{ pathLength: 0, opacity: 0 }}
-                  animate={{ pathLength: 1, opacity: 1 }}
-                  transition={{
-                    duration: 0.8,
-                    delay: 0.2 + index * 0.15,
-                    repeat: Infinity,
-                    repeatDelay: 4.2,
-                    repeatType: 'loop',
-                  }}
-                />
-              );
-            })}
-          </svg>
+  useEffect(() => {
+    const interval = window.setInterval(() => {
+      setPhase((current) => (current + 1) % 5);
+    }, 1400);
+    return () => window.clearInterval(interval);
+  }, []);
 
-          {nodes.map((node, index) => (
-            <motion.div
-              key={node.id}
-              className="absolute -translate-x-1/2 -translate-y-1/2"
-              style={{ left: `${node.x}%`, top: `${node.y}%` }}
-              initial={{ opacity: 0, scale: 0.85 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{
-                duration: 0.45,
-                delay: index * 0.12,
-                repeat: Infinity,
-                repeatDelay: 4.8,
-              }}
-            >
-              <div className="relative rounded-xl border border-white/15 bg-[#111] px-2.5 py-1.5 text-[10px] text-white/85 shadow-lg sm:px-3 sm:py-2 sm:text-[11px]">
-                {node.label}
-                {node.gap ? (
-                  <motion.span
-                    className="absolute -right-1 -top-1 h-2.5 w-2.5 rounded-full bg-amber-400"
-                    animate={{ scale: [1, 1.35, 1], opacity: [0.7, 1, 0.7] }}
-                    transition={{ duration: 1.6, repeat: Infinity }}
-                  />
+  const showConnection = phase >= 3;
+  const pulseTarget = phase >= 4;
+
+  const manufacturingSteps = [
+    'Frame welding',
+    'Electrical setup',
+    'Electrical testing',
+    'Case assembly',
+  ];
+
+  return (
+    <AnimationShell
+      label="Animated manufacturing and sales process mapping"
+      aspectClass="aspect-[4/3.4] sm:aspect-[4/3.2]"
+    >
+      <PanelChrome title="Operations Discovery" badge="Process map" />
+
+      <div className="relative h-[calc(100%-1.75rem)]">
+        <div className="grid h-full grid-cols-2 gap-2 sm:gap-3">
+          <motion.div
+            className="flex flex-col rounded-xl border border-neutral-200/80 bg-[#f7f7f7] p-2 shadow-sm sm:rounded-2xl sm:p-2.5"
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.45 }}
+          >
+            <ProcessCardHeader title="Manufacturing order" />
+
+            <div className="min-h-0 flex-1 space-y-1.5 overflow-hidden">
+              <motion.div
+                className="rounded-lg border border-sky-200 bg-white p-2"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: phase >= 0 ? 1 : 0 }}
+              >
+                <span className="mb-1 inline-block rounded-full bg-sky-100 px-2 py-0.5 text-[8px] font-medium text-sky-700 sm:text-[9px]">
+                  Components preparation
+                </span>
+                <p className="text-[8px] leading-snug text-neutral-600 sm:text-[9px]">
+                  Check stock and create a procurement order if needed.
+                </p>
+                <div className="mt-1.5">
+                  <AgentTag label="Procurement agent" icon={ShoppingCart} />
+                </div>
+              </motion.div>
+
+              {manufacturingSteps.map((step, index) => (
+                <motion.div
+                  key={step}
+                  className="rounded-md border border-neutral-200 bg-white px-2 py-1.5 text-[8px] text-neutral-700 sm:text-[9px]"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: phase >= 1 ? 1 : 0 }}
+                  transition={{ delay: index * 0.08 }}
+                >
+                  {step}
+                </motion.div>
+              ))}
+
+              <motion.div
+                className={`relative rounded-lg border bg-white px-2 py-1.5 text-[8px] font-medium sm:text-[9px] ${
+                  showConnection
+                    ? 'border-sky-400 text-sky-800 shadow-[0_0_0_1px_rgba(56,189,248,0.35)]'
+                    : 'border-neutral-200 text-neutral-800'
+                }`}
+                animate={showConnection ? { scale: [1, 1.02, 1] } : { scale: 1 }}
+                transition={{ duration: 1.2, repeat: showConnection ? Infinity : 0 }}
+              >
+                Add to stock
+                {showConnection ? (
+                  <span className="absolute -right-0.5 top-1/2 h-2 w-2 -translate-y-1/2 rounded-full bg-sky-500" />
                 ) : null}
-              </div>
-            </motion.div>
-          ))}
+              </motion.div>
+            </div>
+
+            <div className="mt-2 rounded-md bg-neutral-200/70 py-1 text-center text-[8px] font-medium text-neutral-500 sm:text-[9px]">
+              Done
+            </div>
+          </motion.div>
+
+          <motion.div
+            className="flex flex-col rounded-xl border border-neutral-200/80 bg-[#f7f7f7] p-2 shadow-sm sm:rounded-2xl sm:p-2.5"
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.45, delay: 0.15 }}
+          >
+            <ProcessCardHeader title="Sales order process" />
+
+            <div className="min-h-0 flex-1 space-y-1.5 overflow-hidden">
+              <motion.div
+                className="rounded-lg border border-neutral-200 bg-white p-2"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: phase >= 1 ? 1 : 0 }}
+              >
+                <div className="mb-1 flex items-center gap-1">
+                  <Truck className="h-2.5 w-2.5 text-orange-500" />
+                  <span className="rounded-full bg-orange-100 px-2 py-0.5 text-[8px] font-medium text-orange-700 sm:text-[9px]">
+                    Shipment creation
+                  </span>
+                </div>
+                <p className="text-[8px] leading-snug text-neutral-600 sm:text-[9px]">
+                  Create the shipment record based on the validated sales order.
+                </p>
+              </motion.div>
+
+              <motion.div
+                className={`relative rounded-lg border bg-white p-2 ${
+                  pulseTarget
+                    ? 'border-sky-400 shadow-[0_0_0_1px_rgba(56,189,248,0.35)]'
+                    : 'border-neutral-200'
+                }`}
+                animate={pulseTarget ? { scale: [1, 1.02, 1] } : { scale: 1 }}
+                transition={{ duration: 1.2, repeat: pulseTarget ? Infinity : 0 }}
+              >
+                {pulseTarget ? (
+                  <span className="absolute -left-0.5 top-1/2 h-2 w-2 -translate-y-1/2 rounded-full bg-sky-500" />
+                ) : null}
+                <div className="mb-1 flex items-center gap-1">
+                  <Package className="h-2.5 w-2.5 text-sky-600" />
+                  <span className="rounded-full bg-sky-100 px-2 py-0.5 text-[8px] font-medium text-sky-700 sm:text-[9px]">
+                    Batch preparation
+                  </span>
+                </div>
+                <p className="text-[8px] leading-snug text-neutral-600 sm:text-[9px]">
+                  Group, verify, and prepare items linked to outgoing orders.
+                </p>
+                <div className="mt-1.5">
+                  <motion.span
+                    className="inline-flex items-center gap-1 rounded-md border border-violet-200 bg-violet-50 px-1.5 py-0.5 text-[8px] font-medium text-violet-700 sm:text-[9px]"
+                    animate={pulseTarget ? { opacity: [0.65, 1, 0.65] } : { opacity: 1 }}
+                    transition={{ duration: 1.4, repeat: pulseTarget ? Infinity : 0 }}
+                  >
+                    <BrainCircuit className="h-2.5 w-2.5" />
+                    AI rules applied
+                  </motion.span>
+                </div>
+              </motion.div>
+
+              <motion.div
+                className="rounded-lg border border-neutral-200 bg-white p-2"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: phase >= 2 ? 1 : 0 }}
+              >
+                <div className="mb-1 flex items-center gap-1">
+                  <FileText className="h-2.5 w-2.5 text-pink-500" />
+                  <span className="rounded-full bg-pink-100 px-2 py-0.5 text-[8px] font-medium text-pink-700 sm:text-[9px]">
+                    Delivery notes
+                  </span>
+                </div>
+                <p className="text-[8px] leading-snug text-neutral-600 sm:text-[9px]">
+                  Generate delivery notes with updated batch numbers.
+                </p>
+                <div className="mt-1.5">
+                  <AgentTag label="Admin agent" icon={Bot} tone="orange" />
+                </div>
+              </motion.div>
+            </div>
+
+            <div className="mt-2 rounded-md bg-neutral-200/70 py-1 text-center text-[8px] font-medium text-neutral-500 sm:text-[9px]">
+              Done
+            </div>
+          </motion.div>
         </div>
 
-        <div className="mt-2 flex flex-wrap gap-2">
-          {['2 data gaps', '3 bottlenecks', '5 automation targets'].map((item, index) => (
-            <motion.span
-              key={item}
-              className="rounded-full border border-white/10 bg-white/[0.03] px-2 py-1 text-[10px] text-white/60 sm:text-[11px]"
-              {...fadeUp}
-              transition={{
-                duration: 0.35,
-                delay: 1.2 + index * 0.2,
-                repeat: Infinity,
-                repeatDelay: 4.5,
-              }}
-            >
-              {item}
-            </motion.span>
-          ))}
-        </div>
+        <svg
+          className="pointer-events-none absolute inset-0 h-full w-full"
+          viewBox="0 0 400 260"
+          preserveAspectRatio="none"
+          aria-hidden
+        >
+          <motion.path
+            d="M 188 198 H 228 Q 248 198 248 168 V 128"
+            fill="none"
+            stroke="#38bdf8"
+            strokeWidth="2.5"
+            strokeLinecap="round"
+            initial={{ pathLength: 0, opacity: 0 }}
+            animate={{
+              pathLength: showConnection ? 1 : 0,
+              opacity: showConnection ? 1 : 0,
+            }}
+            transition={{ duration: 0.9, ease: 'easeInOut' }}
+          />
+          <motion.polygon
+            points="248,118 248,138 258,128"
+            fill="#38bdf8"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: showConnection ? 1 : 0 }}
+            transition={{ duration: 0.3, delay: 0.75 }}
+          />
+        </svg>
       </div>
     </AnimationShell>
   );
@@ -174,110 +305,130 @@ export function LearnOperationsAnimation() {
 
 const sources = [
   { id: 'sensors', label: 'Sensors', icon: Radio },
-  { id: 'mes', label: 'Machine Data', icon: Activity },
+  { id: 'mes', label: 'MES', icon: Activity },
   { id: 'erp', label: 'ERP', icon: Database },
   { id: 'paper', label: 'Paperwork', icon: FileText },
+  { id: 'rules', label: 'Unwritten Rules', icon: Sparkles },
+  { id: 'sop', label: 'SOP', icon: ClipboardList },
+] as const;
+
+const truthRows = [
+  ['WO-1842', 'Line 3', 'In Progress'],
+  ['PO-9921', 'Raw Materials', 'Received'],
+  ['NC-044', 'Quality Hold', 'Review'],
+  ['SO-3310', 'Shipping', 'Picked'],
+  ['INV-208', 'Warehouse B', 'Available'],
+  ['MRP-118', 'Planning', 'Scheduled'],
+  ['QC-077', 'Inspection', 'Passed'],
+  ['AGT-014', 'Procurement', 'Running'],
 ] as const;
 
 export function SourceOfTruthAnimation() {
   const [rowCount, setRowCount] = useState(0);
-  const rows = [
-    ['WO-1842', 'Line 3', 'In Progress'],
-    ['PO-9921', 'Raw Materials', 'Received'],
-    ['NC-044', 'Quality Hold', 'Review'],
-  ] as const;
 
   useEffect(() => {
     let index = 0;
     const interval = window.setInterval(() => {
-      index = (index + 1) % (rows.length + 2);
+      index = (index + 1) % (truthRows.length + 2);
       setRowCount(index);
-    }, 1100);
+    }, 700);
     return () => window.clearInterval(interval);
-  }, [rows.length]);
+  }, []);
 
   return (
     <AnimationShell label="Animated unified data layer connecting operational sources">
       <PanelChrome title="Unified Operating Layer" badge="Syncing" />
 
-      <div className="grid h-[calc(100%-2rem)] grid-cols-[1fr_auto_1.2fr] items-center gap-2 sm:gap-3">
-        <div className="flex flex-col gap-2">
+      <div className="grid h-[calc(100%-1.75rem)] grid-cols-[0.95fr_auto_1.25fr] items-stretch gap-1.5 sm:gap-2">
+        <div className="grid grid-cols-2 content-start gap-1 sm:gap-1.5">
           {sources.map((source, index) => {
             const Icon = source.icon;
             return (
               <motion.div
                 key={source.id}
-                className="flex items-center gap-2 rounded-xl border border-white/10 bg-black/50 px-2 py-2 sm:px-2.5"
-                animate={{ borderColor: ['rgba(255,255,255,0.1)', 'rgba(52,211,153,0.35)', 'rgba(255,255,255,0.1)'] }}
+                className="flex items-center gap-1.5 rounded-lg border border-white/10 bg-black/50 px-1.5 py-1.5 sm:rounded-xl sm:px-2 sm:py-1.5"
+                animate={{
+                  borderColor: [
+                    'rgba(255,255,255,0.1)',
+                    'rgba(52,211,153,0.35)',
+                    'rgba(255,255,255,0.1)',
+                  ],
+                }}
                 transition={{
                   duration: 1.8,
-                  delay: index * 0.25,
+                  delay: index * 0.18,
                   repeat: Infinity,
                   ease: 'easeInOut',
                 }}
               >
-                <Icon className="h-3.5 w-3.5 text-white/55" />
-                <span className="text-[10px] text-white/75 sm:text-[11px]">{source.label}</span>
+                <Icon className="h-3 w-3 shrink-0 text-white/55" />
+                <span className="text-[9px] leading-tight text-white/75 sm:text-[10px]">{source.label}</span>
               </motion.div>
             );
           })}
         </div>
 
-        <div className="relative flex h-full flex-col items-center justify-center">
-          {[0, 1, 2, 3].map((index) => (
+        <div className="relative flex items-center justify-center px-0.5">
+          {[0, 1, 2, 3, 4, 5].map((index) => (
             <motion.span
               key={index}
               className="absolute h-1 w-1 rounded-full bg-emerald-400/80"
-              animate={{ x: [0, 18, 36], opacity: [0, 1, 0] }}
+              animate={{ x: [-4, 10, 24], opacity: [0, 1, 0] }}
               transition={{
-                duration: 1.4,
-                delay: index * 0.3,
+                duration: 1.2,
+                delay: index * 0.22,
                 repeat: Infinity,
                 ease: 'easeInOut',
               }}
             />
           ))}
           <motion.div
-            className="z-10 flex h-14 w-14 items-center justify-center rounded-2xl border border-emerald-400/30 bg-emerald-400/10 sm:h-16 sm:w-16"
-            animate={{ boxShadow: ['0 0 0 rgba(52,211,153,0)', '0 0 24px rgba(52,211,153,0.25)', '0 0 0 rgba(52,211,153,0)'] }}
+            className="z-10 flex h-11 w-11 items-center justify-center rounded-xl border border-emerald-400/30 bg-emerald-400/10 sm:h-12 sm:w-12"
+            animate={{
+              boxShadow: [
+                '0 0 0 rgba(52,211,153,0)',
+                '0 0 20px rgba(52,211,153,0.25)',
+                '0 0 0 rgba(52,211,153,0)',
+              ],
+            }}
             transition={{ duration: 2.2, repeat: Infinity }}
           >
-            <Database className="h-5 w-5 text-emerald-300" />
+            <Database className="h-4 w-4 text-emerald-300" />
           </motion.div>
         </div>
 
-        <div className="overflow-hidden rounded-2xl border border-white/10 bg-black/50">
-          <div className="border-b border-white/10 px-2 py-1.5 text-[10px] uppercase tracking-[0.12em] text-white/45 sm:text-[11px]">
+        <div className="flex min-h-0 flex-col overflow-hidden rounded-xl border border-white/10 bg-black/50 sm:rounded-2xl">
+          <div className="shrink-0 border-b border-white/10 px-2 py-1 text-[9px] uppercase tracking-[0.12em] text-white/45 sm:text-[10px]">
             Single source of truth
           </div>
-          <table className="w-full text-left text-[10px] sm:text-[11px]">
-            <thead>
-              <tr className="text-white/40">
-                <th className="px-2 py-1.5 font-medium">Record</th>
-                <th className="px-2 py-1.5 font-medium">Area</th>
-                <th className="px-2 py-1.5 font-medium">Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              {rows.map((row, index) => (
-                <AnimatePresence key={row[0]}>
-                  {index < rowCount ? (
-                    <motion.tr
-                      key={row[0]}
-                      initial={{ opacity: 0, x: 8 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      exit={{ opacity: 0 }}
-                      className="border-t border-white/5 text-white/75"
-                    >
-                      <td className="px-2 py-1.5">{row[0]}</td>
-                      <td className="px-2 py-1.5">{row[1]}</td>
-                      <td className="px-2 py-1.5 text-emerald-300/90">{row[2]}</td>
-                    </motion.tr>
-                  ) : null}
-                </AnimatePresence>
-              ))}
-            </tbody>
-          </table>
+          <div className="min-h-0 flex-1 overflow-hidden">
+            <table className="w-full text-left text-[9px] sm:text-[10px]">
+              <thead className="sticky top-0 bg-[#0a0a0a]">
+                <tr className="text-white/40">
+                  <th className="px-1.5 py-1 font-medium sm:px-2">Record</th>
+                  <th className="px-1.5 py-1 font-medium sm:px-2">Area</th>
+                  <th className="px-1.5 py-1 font-medium sm:px-2">Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                {truthRows.map((row, index) => (
+                  <AnimatePresence key={row[0]}>
+                    {index < rowCount ? (
+                      <motion.tr
+                        initial={{ opacity: 0, x: 6 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        className="border-t border-white/5 text-white/75"
+                      >
+                        <td className="px-1.5 py-1 sm:px-2">{row[0]}</td>
+                        <td className="px-1.5 py-1 sm:px-2">{row[1]}</td>
+                        <td className="px-1.5 py-1 text-emerald-300/90 sm:px-2">{row[2]}</td>
+                      </motion.tr>
+                    ) : null}
+                  </AnimatePresence>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </AnimationShell>
@@ -327,33 +478,36 @@ export function AgentsToolsAnimation() {
   ] as const;
 
   return (
-    <AnimationShell label="Animated AI agent building operational tools from natural language">
+    <AnimationShell
+      label="Animated AI agent building operational tools from natural language"
+      aspectClass="aspect-[4/3.6] sm:aspect-[4/3.3]"
+    >
       <PanelChrome title="Agent Workspace" badge="Building" />
 
-      <div className="grid h-[calc(100%-2rem)] grid-rows-[auto_1fr] gap-3">
-        <div className="rounded-2xl border border-white/10 bg-black/50 p-3">
-          <div className="mb-2 flex items-center gap-2 text-[10px] uppercase tracking-[0.12em] text-white/40 sm:text-[11px]">
-            <MessageSquare className="h-3.5 w-3.5" />
+      <div className="flex h-[calc(100%-1.75rem)] flex-col gap-2">
+        <div className="shrink-0 rounded-xl border border-white/10 bg-black/50 p-2 sm:rounded-2xl sm:p-2.5">
+          <div className="mb-1 flex items-center gap-1.5 text-[9px] uppercase tracking-[0.12em] text-white/40 sm:text-[10px]">
+            <MessageSquare className="h-3 w-3" />
             Natural language
           </div>
-          <p className="min-h-[2.5rem] text-xs leading-relaxed text-white/80 sm:text-sm">
+          <p className="min-h-[2rem] text-[11px] leading-snug text-white/80 sm:text-xs">
             {typed}
             <motion.span
-              className="ml-0.5 inline-block h-4 w-0.5 bg-white/70 align-middle"
+              className="ml-0.5 inline-block h-3.5 w-0.5 bg-white/70 align-middle"
               animate={{ opacity: [1, 0, 1] }}
               transition={{ duration: 0.8, repeat: Infinity }}
             />
           </p>
         </div>
 
-        <div className="grid grid-cols-3 gap-2">
+        <div className="grid min-h-0 flex-1 grid-cols-3 gap-1.5 sm:gap-2">
           {widgets.map((widget, index) => {
             const Icon = widget.icon;
             return (
               <motion.div
                 key={widget.id}
-                className="flex flex-col justify-between rounded-2xl border border-white/10 bg-[#101010] p-2.5 sm:p-3"
-                initial={{ opacity: 0, y: 16, scale: 0.96 }}
+                className="flex min-h-0 flex-col rounded-xl border border-white/10 bg-[#101010] p-2 sm:rounded-2xl"
+                initial={{ opacity: 0, y: 12, scale: 0.96 }}
                 animate={
                   showWidgets
                     ? { opacity: 1, y: 0, scale: 1 }
@@ -361,30 +515,26 @@ export function AgentsToolsAnimation() {
                 }
                 transition={{ duration: 0.45, delay: showWidgets ? index * 0.15 : 0 }}
               >
-                <Icon className="h-4 w-4 text-emerald-300/90" />
-                <div>
-                  <p className="text-[10px] font-medium text-white/85 sm:text-[11px]">{widget.label}</p>
-                  <motion.div
-                    className="mt-2 h-8 rounded-lg bg-white/[0.04]"
-                    animate={showWidgets ? { opacity: [0.4, 1, 0.7] } : { opacity: 0.25 }}
-                    transition={{ duration: 1.6, repeat: showWidgets ? Infinity : 0 }}
-                  >
-                    <div className="flex h-full items-end gap-1 px-1.5 pb-1">
-                      {[40, 65, 48, 80, 55].map((height, barIndex) => (
-                        <motion.span
-                          key={barIndex}
-                          className="w-1 rounded-sm bg-emerald-400/70"
-                          style={{ height: `${height}%` }}
-                          animate={showWidgets ? { opacity: [0.5, 1, 0.5] } : { opacity: 0.3 }}
-                          transition={{
-                            duration: 1.2,
-                            delay: barIndex * 0.1,
-                            repeat: showWidgets ? Infinity : 0,
-                          }}
-                        />
-                      ))}
-                    </div>
-                  </motion.div>
+                <Icon className="mb-1 h-3.5 w-3.5 shrink-0 text-emerald-300/90" />
+                <p className="shrink-0 text-[9px] font-medium leading-tight text-white/85 sm:text-[10px]">
+                  {widget.label}
+                </p>
+                <div className="mt-1.5 flex min-h-0 flex-1 items-end">
+                  <div className="flex h-6 w-full items-end gap-0.5 rounded-md bg-white/[0.04] px-1 pb-0.5 sm:h-7">
+                    {[40, 65, 48, 80, 55].map((height, barIndex) => (
+                      <motion.span
+                        key={barIndex}
+                        className="flex-1 rounded-sm bg-emerald-400/70"
+                        style={{ height: `${height}%` }}
+                        animate={showWidgets ? { opacity: [0.5, 1, 0.5] } : { opacity: 0.3 }}
+                        transition={{
+                          duration: 1.2,
+                          delay: barIndex * 0.1,
+                          repeat: showWidgets ? Infinity : 0,
+                        }}
+                      />
+                    ))}
+                  </div>
                 </div>
               </motion.div>
             );

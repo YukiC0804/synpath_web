@@ -6,7 +6,7 @@ const featureRows = [
     id: 'truth' as const,
     title: 'Build One Source of Truth',
     description:
-      'Connect sensors, machine data, software, paperwork, and tribal knowledge into one reliable operating layer.',
+      'Connect machine data, software, paperwork, and tribal knowledge into one reliable operating layer.',
   },
   {
     id: 'agents' as const,

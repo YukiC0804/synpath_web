@@ -79,12 +79,14 @@ export function HowItWorksSection() {
               key={row.id}
               className="border-b border-white/5 py-16 md:py-20 lg:py-24"
             >
-              <div className="mx-auto grid max-w-7xl grid-cols-1 items-center gap-10 px-4 sm:px-6 lg:grid-cols-2 lg:gap-16 lg:px-8 xl:gap-20">
-                <div className={reversed ? 'lg:order-2' : ''}>
-                  <FeatureCopy title={row.title} description={row.description} />
-                </div>
-                <div className={reversed ? 'lg:order-1' : ''}>
-                  <HowItWorksFeatureAnimation featureId={row.id} />
+              <div className="px-30">
+                <div className="grid grid-cols-1 items-center gap-10 lg:grid-cols-2 lg:gap-16 xl:gap-20">
+                  <div className={reversed ? 'lg:order-2' : ''}>
+                    <FeatureCopy title={row.title} description={row.description} />
+                  </div>
+                  <div className={reversed ? 'lg:order-1' : ''}>
+                    <HowItWorksFeatureAnimation featureId={row.id} />
+                  </div>
                 </div>
               </div>
             </div>
@@ -93,7 +95,7 @@ export function HowItWorksSection() {
       </div>
 
       <div className="border-t border-white/5 py-20 md:py-24 lg:py-28">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="px-30">
           <p className="mb-4 text-sm font-medium uppercase tracking-[0.18em] text-white/55">
             Our value proposition
           </p>

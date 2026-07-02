@@ -26,34 +26,60 @@ const LOOP_ITEMS = [...synpathUseCases, ...synpathUseCases, ...synpathUseCases];
 const LOOP_START = CASE_COUNT;
 const BASE_TRANSLATE_Y = VISIBLE_HEIGHT / 2 - ITEM_HEIGHT / 2;
 
-function getItemClassName(distance: number) {
-  if (distance === 0) {
-    return 'synpath-use-case-active text-[2.15rem] font-medium leading-none text-white md:text-[2.85rem] lg:text-[3.35rem]';
-  }
-  if (distance === 1) {
-    return 'text-2xl font-normal text-white/58 md:text-[1.85rem]';
-  }
-  if (distance === 2) {
-    return 'text-xl font-normal text-white/42 md:text-2xl';
-  }
-  if (distance === 3) {
-    return 'text-lg font-normal text-white/30 md:text-xl';
-  }
-  return 'text-base font-normal text-white/20';
+const FONT_SIZES_REM = [3.35, 1.85, 1.5, 1.25, 1];
+const OPACITIES = [1, 0.58, 0.42, 0.3, 0.2];
+
+function easeInOutCubic(t: number) {
+  return t < 0.5 ? 4 * t * t * t : 1 - (-2 * t + 2) ** 3 / 2;
+}
+
+function lerp(a: number, b: number, t: number) {
+  return a + (b - a) * t;
+}
+
+function sampleStops(stops: number[], distance: number) {
+  const clamped = Math.min(distance, stops.length - 1);
+  const index = Math.floor(clamped);
+  const fraction = clamped - index;
+  const next = Math.min(index + 1, stops.length - 1);
+  return lerp(stops[index], stops[next], fraction);
+}
+
+function getItemStyle(index: number, scrollOffset: number) {
+  const distance = Math.abs(index - scrollOffset);
+  const fontSizeRem = sampleStops(FONT_SIZES_REM, distance);
+  const opacity = sampleStops(OPACITIES, distance);
+  const isActive = distance < 0.35;
+
+  return {
+    height: ITEM_HEIGHT,
+    fontSize: `${fontSizeRem}rem`,
+    lineHeight: 1,
+    opacity,
+    fontFamily: isActive ? 'var(--font-serif)' : 'var(--font-sans)',
+    fontWeight: isActive ? 500 : 400,
+    letterSpacing: isActive ? '-0.02em' : 'normal',
+    color: '#fff',
+  } as const;
 }
 
 function UseCasesStepper() {
-  const [centerIndex, setCenterIndex] = useState<number>(LOOP_START);
-  const [transitionEnabled, setTransitionEnabled] = useState(true);
-  const centerIndexRef = useRef<number>(LOOP_START);
-
-  useEffect(() => {
-    centerIndexRef.current = centerIndex;
-  }, [centerIndex]);
+  const [scrollOffset, setScrollOffset] = useState<number>(LOOP_START);
+  const scrollOffsetRef = useRef<number>(LOOP_START);
+  const rafRef = useRef<number | null>(null);
+  const timeoutsRef = useRef<number[]>([]);
 
   useEffect(() => {
     let cancelled = false;
-    const timeouts: number[] = [];
+
+    const clearTimers = () => {
+      timeoutsRef.current.forEach((id) => window.clearTimeout(id));
+      timeoutsRef.current = [];
+      if (rafRef.current !== null) {
+        window.cancelAnimationFrame(rafRef.current);
+        rafRef.current = null;
+      }
+    };
 
     const schedule = (fn: () => void, delay: number) => {
       const id = window.setTimeout(() => {
@@ -61,33 +87,58 @@ function UseCasesStepper() {
           fn();
         }
       }, delay);
-      timeouts.push(id);
+      timeoutsRef.current.push(id);
+    };
+
+    const snapOffset = (value: number) => {
+      scrollOffsetRef.current = value;
+      setScrollOffset(value);
+    };
+
+    const animateTo = (target: number, onDone: () => void) => {
+      const start = scrollOffsetRef.current;
+      const startTime = performance.now();
+
+      const tick = (now: number) => {
+        if (cancelled) {
+          return;
+        }
+
+        const elapsed = now - startTime;
+        const progress = Math.min(elapsed / SLIDE_MS, 1);
+        const eased = easeInOutCubic(progress);
+        const current = start + (target - start) * eased;
+
+        scrollOffsetRef.current = current;
+        setScrollOffset(current);
+
+        if (progress < 1) {
+          rafRef.current = window.requestAnimationFrame(tick);
+          return;
+        }
+
+        rafRef.current = null;
+        onDone();
+      };
+
+      rafRef.current = window.requestAnimationFrame(tick);
     };
 
     const runCycle = () => {
       schedule(() => {
-        setTransitionEnabled(true);
-        const nextIndex = centerIndexRef.current + 1;
-        centerIndexRef.current = nextIndex;
-        setCenterIndex(nextIndex);
+        const next = scrollOffsetRef.current + 1;
 
-        schedule(() => {
-          if (nextIndex >= CASE_COUNT * 2) {
-            setTransitionEnabled(false);
-            const resetIndex = nextIndex - CASE_COUNT;
-            centerIndexRef.current = resetIndex;
-            setCenterIndex(resetIndex);
-            requestAnimationFrame(() => {
-              if (!cancelled) {
-                setTransitionEnabled(true);
-                runCycle();
-              }
-            });
+        animateTo(next, () => {
+          if (cancelled) {
             return;
           }
 
+          if (next >= CASE_COUNT * 2) {
+            snapOffset(next - CASE_COUNT);
+          }
+
           runCycle();
-        }, SLIDE_MS);
+        });
       }, PAUSE_MS);
     };
 
@@ -95,11 +146,11 @@ function UseCasesStepper() {
 
     return () => {
       cancelled = true;
-      timeouts.forEach((id) => window.clearTimeout(id));
+      clearTimers();
     };
   }, []);
 
-  const translateY = BASE_TRANSLATE_Y - centerIndex * ITEM_HEIGHT;
+  const translateY = BASE_TRANSLATE_Y - scrollOffset * ITEM_HEIGHT;
 
   return (
     <div
@@ -121,25 +172,18 @@ function UseCasesStepper() {
       />
 
       <ul
-        className={
-          transitionEnabled
-            ? 'use-cases-stepper-track use-cases-stepper-track--smooth'
-            : 'use-cases-stepper-track use-cases-stepper-track--instant'
-        }
-        style={{ transform: `translateY(${translateY}px)` }}
+        className="use-cases-stepper-track"
+        style={{ transform: `translate3d(0, ${translateY}px, 0)` }}
       >
-        {LOOP_ITEMS.map((item, index) => {
-          const distance = Math.abs(index - centerIndex);
-
-          return (
-            <li
-              key={`${item}-${index}`}
-              className={`flex h-20 w-full items-center justify-center whitespace-nowrap text-center ${getItemClassName(distance)}`}
-            >
-              {item}
-            </li>
-          );
-        })}
+        {LOOP_ITEMS.map((item, index) => (
+          <li
+            key={`${item}-${index}`}
+            className="flex w-full items-center justify-center whitespace-nowrap text-center"
+            style={getItemStyle(index, scrollOffset)}
+          >
+            {item}
+          </li>
+        ))}
       </ul>
     </div>
   );

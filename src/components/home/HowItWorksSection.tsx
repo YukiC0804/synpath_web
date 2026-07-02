@@ -1,39 +1,32 @@
 import { SynpathUseCasesIntro } from './SynpathUseCasesIntro';
+import { HowItWorksFeatureAnimation } from './HowItWorksFeatureAnimations';
 
 const featureRows = [
   {
-    id: 'learn',
+    id: 'learn' as const,
     title: 'Learn Your Operations Instantly',
     description:
       'Map your unique organization, processes, and business rules - identify data gap, bottlenecks and areas of automation',
-    image: '/build-specification.png',
-    imageAlt: 'Operational mapping and process discovery placeholder',
   },
   {
-    id: 'truth',
+    id: 'truth' as const,
     title: 'Build One Source of Truth',
     description:
       'Connect sensors, machine data, software, paperwork, and tribal knowledge into one reliable operating layer.',
-    image: '/profile-drawing.png',
-    imageAlt: 'Unified operational data layer placeholder',
   },
   {
-    id: 'agents',
+    id: 'agents' as const,
     title: 'Hire Agents. Build Tools',
     description:
       'Use natural language to create AI agents, build dashboards, and create tools that execute daunting tasks for you.',
-    image: '/hero-manufacturing.png',
-    imageAlt: 'AI agents and custom operational tools placeholder',
   },
   {
-    id: 'deploy',
+    id: 'deploy' as const,
     title: 'Go Live in 3–8 Weeks',
     description:
       'With AI data migration, fast customization, and easy user adoption, Synpath is built for rapid deployment.',
-    image: '/build-specification.png',
-    imageAlt: 'Rapid Synpath deployment workflow placeholder',
   },
-] as const;
+];
 
 const valueProps = [
   {
@@ -60,25 +53,6 @@ const valueProps = [
       'Custom dashboards and AI-powered analysis, built directly into your operational system.',
   },
 ] as const;
-
-function FeatureVisual({
-  image,
-  imageAlt,
-}: {
-  image: string;
-  imageAlt: string;
-}) {
-  return (
-    <div className="overflow-hidden rounded-[1.75rem] border border-white/10 bg-[#0d0d0d] shadow-[0_24px_80px_rgba(0,0,0,0.45)]">
-      <img
-        src={image}
-        alt={imageAlt}
-        className="aspect-[4/3] h-full w-full object-cover object-center"
-        loading="lazy"
-      />
-    </div>
-  );
-}
 
 function FeatureCopy({
   title,
@@ -124,7 +98,7 @@ export function HowItWorksSection() {
                   />
                 </div>
                 <div className={reversed ? 'lg:order-1' : ''}>
-                  <FeatureVisual image={row.image} imageAlt={row.imageAlt} />
+                  <HowItWorksFeatureAnimation featureId={row.id} />
                 </div>
               </div>
             </div>

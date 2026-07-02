@@ -59,7 +59,7 @@ export function OperationalComplexitySection() {
   return (
     <section
       aria-labelledby="operational-complexity-heading"
-      className="border-t border-white/5 bg-black py-20 md:py-24 lg:py-28"
+      className="complexity-section border-t border-white/5 bg-black py-20 md:py-24 lg:py-28"
     >
       <div className="mx-auto grid max-w-[88rem] grid-cols-1 items-start gap-12 px-4 sm:px-6 lg:grid-cols-12 lg:gap-16 lg:px-10 xl:gap-20">
         <div className="text-left lg:col-span-4">

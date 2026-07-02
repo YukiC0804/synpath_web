@@ -91,7 +91,7 @@ export function Hero() {
   return (
     <section
       aria-labelledby="hero-heading"
-      className="relative min-h-[calc(100vh-5rem)] overflow-hidden border-b border-white/5"
+      className="hero-section relative min-h-[calc(100vh-5rem)] overflow-hidden border-b border-white/5"
     >
       <img
         src="/hero-manufacturing.png"

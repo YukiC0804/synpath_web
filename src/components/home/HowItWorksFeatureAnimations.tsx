@@ -69,9 +69,9 @@ function PanelChrome({
 
 function ProcessCardHeader({ title }: { title: string }) {
   return (
-    <div className="mb-1 flex items-center justify-between gap-1 border-b border-white/10 pb-1">
-      <p className="text-[9px] font-semibold text-white sm:text-[10px]">{title}</p>
-      <Pencil className="h-2.5 w-2.5 text-white/35" />
+    <div className="mb-2 flex items-center justify-between gap-2 border-b border-white/10 pb-1.5">
+      <p className="text-[10px] font-semibold text-white sm:text-[11px]">{title}</p>
+      <Pencil className="h-3 w-3 text-white/35" />
     </div>
   );
 }
@@ -92,26 +92,21 @@ function AgentTag({
 
   return (
     <span
-      className={`inline-flex items-center gap-0.5 rounded border px-1 py-0.5 text-[7px] font-medium sm:text-[8px] ${tones[tone]}`}
+      className={`inline-flex items-center gap-1 rounded-md border px-1.5 py-0.5 text-[9px] font-medium ${tones[tone]}`}
     >
-      <Icon className="h-2 w-2" />
+      <Icon className="h-2.5 w-2.5" />
       {label}
     </span>
   );
 }
 
 export function LearnOperationsAnimation() {
-  const [phase, setPhase] = useState(0);
+  const [showConnection, setShowConnection] = useState(false);
 
   useEffect(() => {
-    const interval = window.setInterval(() => {
-      setPhase((current) => (current + 1) % 5);
-    }, 1500);
-    return () => window.clearInterval(interval);
+    const timer = window.setTimeout(() => setShowConnection(true), 600);
+    return () => window.clearTimeout(timer);
   }, []);
-
-  const showConnection = phase >= 3;
-  const pulseTarget = phase >= 4;
 
   const manufacturingSteps = [
     'Frame welding',
@@ -123,179 +118,141 @@ export function LearnOperationsAnimation() {
   return (
     <AnimationShell
       label="Animated manufacturing and sales process mapping"
-      aspectClass="aspect-[4/3.55] sm:aspect-[4/3.35]"
+      aspectClass="aspect-[5/4] sm:aspect-[4/3.2]"
     >
-      <div className="relative h-full origin-center scale-[0.92] sm:scale-[0.94]">
-        <div className="grid h-full grid-cols-2 gap-1.5 sm:gap-2">
-          <motion.div
-            className="flex min-h-0 flex-col rounded-lg border border-white/10 bg-[#101010] p-1.5 shadow-[0_8px_32px_rgba(0,0,0,0.35)] sm:rounded-xl sm:p-2"
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-          >
-            <ProcessCardHeader title="Manufacturing order" />
+      <div className="grid h-full grid-cols-[minmax(0,1fr)_18px_minmax(0,1fr)] items-stretch gap-1 sm:grid-cols-[minmax(0,1fr)_22px_minmax(0,1fr)] sm:gap-1.5">
+        <div className="flex min-h-0 flex-col rounded-xl border border-white/10 bg-[#101010] p-2 sm:p-2.5">
+          <ProcessCardHeader title="Manufacturing order" />
 
-            <div className="min-h-0 flex-1 space-y-0.5">
-              <motion.div
-                className="rounded-md border border-emerald-500/25 bg-[#0a0a0a] p-1.5"
-                initial={{ opacity: 0, y: 6 }}
-                animate={{ opacity: phase >= 0 ? 1 : 0, y: 0 }}
-              >
-                <span className="mb-0.5 inline-block rounded-full bg-emerald-500/15 px-1.5 py-0.5 text-[7px] font-medium text-emerald-300 sm:text-[8px]">
-                  Components preparation
-                </span>
-                <p className="text-[7px] leading-snug text-white/55 sm:text-[8px]">
-                  Check stock and create a procurement order if needed.
-                </p>
-                <div className="mt-1">
-                  <AgentTag label="Procurement agent" icon={ShoppingCart} />
-                </div>
-              </motion.div>
-
-              {manufacturingSteps.map((step, index) => (
-                <motion.div
-                  key={step}
-                  className="rounded border border-white/[0.06] bg-white/[0.03] px-1.5 py-0.5 text-center text-[7px] font-medium text-emerald-300/90 sm:text-[8px]"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: phase >= 1 ? 1 : 0 }}
-                  transition={{ delay: index * 0.07 }}
-                >
-                  {step}
-                </motion.div>
-              ))}
-
-              <motion.div
-                className={`relative rounded-md border px-1.5 py-1 text-center text-[7px] font-medium sm:text-[8px] ${
-                  showConnection
-                    ? 'border-emerald-400/60 bg-emerald-500/[0.08] text-emerald-200'
-                    : 'border-white/10 bg-white/[0.03] text-white/85'
-                }`}
-                animate={showConnection ? { scale: [1, 1.015, 1] } : { scale: 1 }}
-                transition={{ duration: 1.2, repeat: showConnection ? Infinity : 0 }}
-              >
-                Add to stock
-                {showConnection ? (
-                  <span className="absolute -right-0.5 top-1/2 h-1.5 w-1.5 -translate-y-1/2 rounded-full bg-emerald-400" />
-                ) : null}
-              </motion.div>
+          <div className="flex min-h-0 flex-1 flex-col gap-1">
+            <div className="rounded-lg border border-emerald-500/25 bg-[#0a0a0a] p-2">
+              <span className="mb-1 inline-block rounded-full bg-emerald-500/15 px-2 py-0.5 text-[9px] font-medium text-emerald-300">
+                Components preparation
+              </span>
+              <p className="text-[9px] leading-snug text-white/55">
+                Check stock and create a procurement order if needed.
+              </p>
+              <div className="mt-1.5">
+                <AgentTag label="Procurement agent" icon={ShoppingCart} />
+              </div>
             </div>
 
-            <div className="mt-1 rounded-md bg-white/[0.06] py-1 text-center text-[7px] font-medium text-white/40 sm:text-[8px]">
-              Done
-            </div>
-          </motion.div>
-
-          <motion.div
-            className="flex min-h-0 flex-col rounded-lg border border-white/10 bg-[#101010] p-1.5 shadow-[0_8px_32px_rgba(0,0,0,0.35)] sm:rounded-xl sm:p-2"
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.12 }}
-          >
-            <ProcessCardHeader title="Sales order process" />
-
-            <div className="min-h-0 flex-1 space-y-0.5">
-              <motion.div
-                className="rounded-md border border-white/[0.08] bg-[#0a0a0a] p-1.5"
-                initial={{ opacity: 0, y: 6 }}
-                animate={{ opacity: phase >= 1 ? 1 : 0, y: 0 }}
+            {manufacturingSteps.map((step) => (
+              <div
+                key={step}
+                className="rounded-md border border-white/[0.06] bg-white/[0.03] px-2 py-1 text-center text-[9px] font-medium text-emerald-300/90"
               >
-                <div className="mb-0.5 flex items-center gap-1">
-                  <Truck className="h-2 w-2 text-amber-400" />
-                  <span className="rounded-full bg-amber-500/15 px-1.5 py-0.5 text-[7px] font-medium text-amber-300 sm:text-[8px]">
-                    Shipment creation
-                  </span>
-                </div>
-                <p className="text-[7px] leading-snug text-white/55 sm:text-[8px]">
-                  Create the shipment record based on the validated sales order.
-                </p>
-              </motion.div>
+                {step}
+              </div>
+            ))}
 
-              <motion.div
-                className={`relative rounded-md border bg-[#0a0a0a] p-1.5 ${
-                  pulseTarget
-                    ? 'border-emerald-400/55 bg-emerald-500/[0.06]'
-                    : 'border-white/[0.08]'
-                }`}
-                animate={pulseTarget ? { scale: [1, 1.015, 1] } : { scale: 1 }}
-                transition={{ duration: 1.2, repeat: pulseTarget ? Infinity : 0 }}
-              >
-                {pulseTarget ? (
-                  <span className="absolute -left-0.5 top-1/2 h-1.5 w-1.5 -translate-y-1/2 rounded-full bg-emerald-400" />
-                ) : null}
-                <div className="mb-0.5 flex items-center gap-1">
-                  <Package className="h-2 w-2 text-emerald-300" />
-                  <span className="rounded-full bg-emerald-500/15 px-1.5 py-0.5 text-[7px] font-medium text-emerald-300 sm:text-[8px]">
-                    Batch preparation
-                  </span>
-                </div>
-                <p className="text-[7px] leading-snug text-white/55 sm:text-[8px]">
-                  Group and prepare items linked to outgoing orders.
-                </p>
-                <div className="mt-1">
-                  <motion.span
-                    className="inline-flex items-center gap-0.5 rounded border border-violet-500/30 bg-violet-500/10 px-1 py-0.5 text-[7px] font-medium text-violet-300 sm:text-[8px]"
-                    animate={pulseTarget ? { opacity: [0.55, 1, 0.55] } : { opacity: 1 }}
-                    transition={{ duration: 1.4, repeat: pulseTarget ? Infinity : 0 }}
-                  >
-                    <BrainCircuit className="h-2 w-2" />
-                    AI rules applied
-                  </motion.span>
-                </div>
-              </motion.div>
-
-              <motion.div
-                className="rounded-md border border-white/[0.08] bg-[#0a0a0a] p-1.5"
-                initial={{ opacity: 0, y: 6 }}
-                animate={{ opacity: phase >= 2 ? 1 : 0, y: 0 }}
-              >
-                <div className="mb-0.5 flex items-center gap-1">
-                  <FileText className="h-2 w-2 text-rose-400" />
-                  <span className="rounded-full bg-rose-500/15 px-1.5 py-0.5 text-[7px] font-medium text-rose-300 sm:text-[8px]">
-                    Delivery notes
-                  </span>
-                </div>
-                <p className="text-[7px] leading-snug text-white/55 sm:text-[8px]">
-                  Generate delivery notes with updated batch numbers.
-                </p>
-                <div className="mt-1">
-                  <AgentTag label="Admin agent" icon={Bot} tone="orange" />
-                </div>
-              </motion.div>
+            <div
+              className={`relative mt-auto rounded-lg border px-2 py-1.5 text-center text-[9px] font-medium ${
+                showConnection
+                  ? 'border-emerald-400/60 bg-emerald-500/[0.08] text-emerald-200'
+                  : 'border-white/10 bg-white/[0.03] text-white/85'
+              }`}
+            >
+              Add to stock
             </div>
+          </div>
 
-            <div className="mt-1 rounded-md bg-white/[0.06] py-1 text-center text-[7px] font-medium text-white/40 sm:text-[8px]">
-              Done
-            </div>
-          </motion.div>
+          <div className="mt-2 rounded-lg bg-white/[0.06] py-1.5 text-center text-[9px] font-medium text-white/40">
+            Done
+          </div>
         </div>
 
-        <svg
-          className="pointer-events-none absolute inset-0 h-full w-full"
-          viewBox="0 0 400 260"
-          preserveAspectRatio="none"
-          aria-hidden
-        >
-          <motion.path
-            d="M 188 198 H 228 Q 248 198 248 168 V 128"
-            fill="none"
-            stroke="#34d399"
-            strokeWidth="2.5"
-            strokeLinecap="round"
-            initial={{ pathLength: 0, opacity: 0 }}
-            animate={{
-              pathLength: showConnection ? 1 : 0,
-              opacity: showConnection ? 1 : 0,
-            }}
-            transition={{ duration: 0.9, ease: 'easeInOut' }}
-          />
-          <motion.polygon
-            points="248,118 248,138 258,128"
-            fill="#34d399"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: showConnection ? 1 : 0 }}
-            transition={{ duration: 0.3, delay: 0.75 }}
-          />
-        </svg>
+        <div className="relative">
+          <svg
+            className="absolute inset-0 h-full w-full overflow-visible"
+            viewBox="0 0 22 100"
+            preserveAspectRatio="none"
+            aria-hidden
+          >
+            <motion.path
+              d="M 0 86 H 9 Q 16 86 16 46 L 22 46"
+              fill="none"
+              stroke="#34d399"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              initial={{ pathLength: 0, opacity: 0 }}
+              animate={{
+                pathLength: showConnection ? 1 : 0,
+                opacity: showConnection ? 1 : 0,
+              }}
+              transition={{ duration: 0.8, ease: 'easeInOut' }}
+            />
+            <motion.polygon
+              points="22,42 22,50 18,46"
+              fill="#34d399"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: showConnection ? 1 : 0 }}
+              transition={{ duration: 0.2, delay: 0.65 }}
+            />
+          </svg>
+        </div>
+
+        <div className="flex min-h-0 flex-col rounded-xl border border-white/10 bg-[#101010] p-2 sm:p-2.5">
+          <ProcessCardHeader title="Sales order process" />
+
+          <div className="flex min-h-0 flex-1 flex-col gap-1">
+            <div className="rounded-lg border border-white/[0.08] bg-[#0a0a0a] p-2">
+              <div className="mb-1 flex items-center gap-1">
+                <Truck className="h-2.5 w-2.5 text-amber-400" />
+                <span className="rounded-full bg-amber-500/15 px-2 py-0.5 text-[9px] font-medium text-amber-300">
+                  Shipment creation
+                </span>
+              </div>
+              <p className="text-[9px] leading-snug text-white/55">
+                Create the shipment record based on the validated sales order.
+              </p>
+            </div>
+
+            <div
+              className={`rounded-lg border bg-[#0a0a0a] p-2 ${
+                showConnection
+                  ? 'border-emerald-400/55 bg-emerald-500/[0.06]'
+                  : 'border-white/[0.08]'
+              }`}
+            >
+              <div className="mb-1 flex items-center gap-1">
+                <Package className="h-2.5 w-2.5 text-emerald-300" />
+                <span className="rounded-full bg-emerald-500/15 px-2 py-0.5 text-[9px] font-medium text-emerald-300">
+                  Batch preparation
+                </span>
+              </div>
+              <p className="text-[9px] leading-snug text-white/55">
+                Group and prepare items linked to outgoing orders.
+              </p>
+              <div className="mt-1.5">
+                <span className="inline-flex items-center gap-1 rounded-md border border-violet-500/30 bg-violet-500/10 px-1.5 py-0.5 text-[9px] font-medium text-violet-300">
+                  <BrainCircuit className="h-2.5 w-2.5" />
+                  AI rules applied
+                </span>
+              </div>
+            </div>
+
+            <div className="rounded-lg border border-white/[0.08] bg-[#0a0a0a] p-2">
+              <div className="mb-1 flex items-center gap-1">
+                <FileText className="h-2.5 w-2.5 text-rose-400" />
+                <span className="rounded-full bg-rose-500/15 px-2 py-0.5 text-[9px] font-medium text-rose-300">
+                  Delivery notes
+                </span>
+              </div>
+              <p className="text-[9px] leading-snug text-white/55">
+                Generate delivery notes with updated batch numbers.
+              </p>
+              <div className="mt-1.5">
+                <AgentTag label="Admin agent" icon={Bot} tone="orange" />
+              </div>
+            </div>
+          </div>
+
+          <div className="mt-2 rounded-lg bg-white/[0.06] py-1.5 text-center text-[9px] font-medium text-white/40">
+            Done
+          </div>
+        </div>
       </div>
     </AnimationShell>
   );
@@ -324,120 +281,95 @@ const truthRows = [
 ] as const;
 
 export function SourceOfTruthAnimation() {
-  const [activeRow, setActiveRow] = useState(0);
-
-  useEffect(() => {
-    const interval = window.setInterval(() => {
-      setActiveRow((current) => (current + 1) % truthRows.length);
-    }, 900);
-    return () => window.clearInterval(interval);
-  }, []);
-
-  const sourceLineYs = [12, 26, 40, 54, 68, 82];
+  const sourceCount = sources.length;
+  const hubY = 50;
 
   return (
     <AnimationShell
       label="Animated unified data layer connecting operational sources"
-      aspectClass="aspect-[4/3.5] sm:aspect-[4/3.2]"
+      aspectClass="aspect-[5/4] sm:aspect-[4/3.2]"
     >
       <PanelChrome title="Unified Operating Layer" badge="Syncing" />
 
-      <div className="grid h-[calc(100%-1.75rem)] grid-cols-[0.82fr_auto_1.35fr] items-stretch gap-1.5 sm:gap-2">
-        <div className="relative flex flex-col gap-0.5">
-          {sources.map((source) => {
-            const Icon = source.icon;
+      <div className="relative h-[calc(100%-1.75rem)]">
+        <div className="grid h-full grid-cols-[minmax(0,0.72fr)_52px_minmax(0,1.28fr)] items-center gap-2">
+          <div className="relative z-10 flex h-full flex-col justify-center gap-1.5">
+            {sources.map((source) => {
+              const Icon = source.icon;
 
-            return (
-              <motion.div
-                key={source.id}
-                className="flex items-center gap-1.5 rounded-lg border border-emerald-400/35 bg-emerald-500/[0.08] px-1.5 py-1 sm:rounded-xl"
-                animate={{ opacity: [0.82, 1, 0.82] }}
-                transition={{ duration: 2.2, repeat: Infinity, ease: 'easeInOut' }}
-              >
-                <Icon className="h-2.5 w-2.5 shrink-0 text-emerald-300" />
-                <span className="text-[8px] leading-tight text-white/85 sm:text-[9px]">{source.label}</span>
-              </motion.div>
-            );
-          })}
-
-          <svg
-            className="pointer-events-none absolute inset-y-0 -right-3 w-8 sm:-right-4 sm:w-10"
-            viewBox="0 0 40 100"
-            preserveAspectRatio="none"
-            aria-hidden
-          >
-            {sourceLineYs.map((y, index) => (
-              <motion.line
-                key={sources[index].id}
-                x1="0"
-                y1={y}
-                x2="40"
-                y2="50"
-                stroke="rgba(52,211,153,0.55)"
-                strokeWidth="1.2"
-                strokeLinecap="round"
-                initial={{ pathLength: 0, opacity: 0 }}
-                animate={{ pathLength: 1, opacity: [0.35, 0.85, 0.35] }}
-                transition={{
-                  pathLength: { duration: 1.2, delay: index * 0.08 },
-                  opacity: { duration: 2, repeat: Infinity, delay: index * 0.12 },
-                }}
-              />
-            ))}
-          </svg>
-        </div>
-
-        <div className="relative flex items-center justify-center px-0.5">
-          <motion.div
-            className="z-10 flex h-10 w-10 items-center justify-center rounded-xl border border-emerald-400/40 bg-emerald-400/15 sm:h-11 sm:w-11"
-            animate={{
-              boxShadow: [
-                '0 0 0 rgba(52,211,153,0)',
-                '0 0 20px rgba(52,211,153,0.35)',
-                '0 0 0 rgba(52,211,153,0)',
-              ],
-              opacity: [0.9, 1, 0.9],
-            }}
-            transition={{ duration: 2.2, repeat: Infinity }}
-          >
-            <Database className="h-4 w-4 text-emerald-300" />
-          </motion.div>
-        </div>
-
-        <div className="flex min-h-0 flex-col overflow-hidden rounded-xl border border-white/10 bg-black/50 sm:rounded-2xl">
-          <div className="shrink-0 border-b border-white/10 px-2 py-1 text-[9px] uppercase tracking-[0.12em] text-white/45 sm:text-[10px]">
-            Single source of truth
+              return (
+                <div
+                  key={source.id}
+                  className="flex items-center gap-2 rounded-lg border border-emerald-400/35 bg-emerald-500/[0.08] px-2 py-1.5"
+                >
+                  <Icon className="h-3 w-3 shrink-0 text-emerald-300" />
+                  <span className="text-[9px] leading-tight text-white/85 sm:text-[10px]">{source.label}</span>
+                </div>
+              );
+            })}
           </div>
-          <div className="min-h-0 flex-1 overflow-y-auto">
-            <table className="w-full text-left text-[8px] sm:text-[9px]">
-              <thead className="sticky top-0 z-10 bg-[#0a0a0a]">
-                <tr className="text-white/40">
-                  <th className="px-1.5 py-0.5 font-medium sm:px-2 sm:py-1">Record</th>
-                  <th className="px-1.5 py-0.5 font-medium sm:px-2 sm:py-1">Area</th>
-                  <th className="px-1.5 py-0.5 font-medium sm:px-2 sm:py-1">Status</th>
-                </tr>
-              </thead>
-              <tbody>
-                {truthRows.map((row, index) => {
-                  const isActive = index === activeRow;
 
-                  return (
-                    <motion.tr
-                      key={row[0]}
-                      className={`border-t border-white/5 text-white/75 ${
-                        isActive ? 'bg-emerald-500/[0.08]' : ''
-                      }`}
-                      animate={isActive ? { opacity: [0.7, 1, 0.7] } : { opacity: 0.85 }}
-                      transition={{ duration: 0.9, repeat: isActive ? Infinity : 0 }}
-                    >
-                      <td className="px-1.5 py-0.5 sm:px-2 sm:py-1">{row[0]}</td>
-                      <td className="px-1.5 py-0.5 sm:px-2 sm:py-1">{row[1]}</td>
-                      <td className="px-1.5 py-0.5 text-emerald-300/90 sm:px-2 sm:py-1">{row[2]}</td>
-                    </motion.tr>
-                  );
-                })}
-              </tbody>
-            </table>
+          <div className="relative flex h-full items-center justify-center overflow-visible">
+            <svg
+              className="pointer-events-none absolute right-1/2 top-0 h-full w-[115%] overflow-visible"
+              viewBox="0 0 100 100"
+              preserveAspectRatio="none"
+              aria-hidden
+            >
+              {sources.map((source, index) => {
+                const sourceY = 10 + (index / (sourceCount - 1)) * 80;
+                return (
+                  <motion.path
+                    key={source.id}
+                    d={`M 0 ${sourceY} C 38 ${sourceY}, 62 ${hubY}, 100 ${hubY}`}
+                    fill="none"
+                    stroke="rgba(52,211,153,0.5)"
+                    strokeWidth="1.4"
+                    strokeLinecap="round"
+                    initial={{ pathLength: 0, opacity: 0 }}
+                    animate={{ pathLength: 1, opacity: 0.75 }}
+                    transition={{ duration: 0.7, delay: index * 0.08 }}
+                  />
+                );
+              })}
+            </svg>
+
+            <div className="relative z-10 flex h-11 w-11 items-center justify-center rounded-xl border border-emerald-400/40 bg-emerald-400/15 shadow-[0_0_18px_rgba(52,211,153,0.2)]">
+              <Database className="h-4 w-4 text-emerald-300" />
+              <motion.div
+                className="absolute left-full top-1/2 h-[1.5px] w-3 -translate-y-1/2 bg-emerald-400/70"
+                initial={{ scaleX: 0, opacity: 0 }}
+                animate={{ scaleX: 1, opacity: 0.85 }}
+                transition={{ duration: 0.45, delay: 0.6 }}
+                style={{ transformOrigin: 'left center' }}
+              />
+            </div>
+          </div>
+
+          <div className="flex min-h-0 flex-col overflow-hidden rounded-xl border border-white/10 bg-black/50">
+            <div className="shrink-0 border-b border-white/10 px-2 py-1.5 text-[9px] uppercase tracking-[0.12em] text-white/45 sm:text-[10px]">
+              Single source of truth
+            </div>
+            <div className="min-h-0 flex-1 overflow-y-auto">
+              <table className="w-full text-left text-[8px] sm:text-[9px]">
+                <thead className="sticky top-0 z-10 bg-[#0a0a0a]">
+                  <tr className="text-white/40">
+                    <th className="px-2 py-1 font-medium">Record</th>
+                    <th className="px-2 py-1 font-medium">Area</th>
+                    <th className="px-2 py-1 font-medium">Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {truthRows.map((row) => (
+                    <tr key={row[0]} className="border-t border-white/5 text-white/75">
+                      <td className="px-2 py-0.5 sm:py-1">{row[0]}</td>
+                      <td className="px-2 py-0.5 sm:py-1">{row[1]}</td>
+                      <td className="px-2 py-0.5 text-emerald-300/90 sm:py-1">{row[2]}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
       </div>

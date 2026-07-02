@@ -1,6 +1,7 @@
 import T, { useState, useEffect, useRef, useContext, useMemo, createContext, useCallback } from 'react';
 import { Link, Navigate, Outlet, useLocation, useParams, BrowserRouter, Routes, Route } from 'react-router-dom';
 import { Hero } from './components/home/Hero';
+import { OperationalComplexitySection } from './components/home/OperationalComplexitySection';
 
 const h = T;
 const $e = Link;
@@ -12653,7 +12654,7 @@ function HomePage() {
     icon: dj,
     text: n.home.featureShopFloor
   }];
-  return <div className="flex flex-col"><Hero /><section id="platform-capabilities" className="py-24 bg-neutral-950 border-t border-white/5"><div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"><div className="text-center mb-16"><h2 className="text-sm font-semibold tracking-wider text-neutral-400 uppercase mb-3">{n.home.capabilitiesEyebrow}</h2><p className="text-3xl md:text-4xl font-medium text-white">{n.home.capabilitiesTitle}</p></div><div className="space-y-14">{Hc.map(d => {
+  return <div className="flex flex-col"><Hero /><OperationalComplexitySection /><section id="platform-capabilities" className="py-24 bg-neutral-950 border-t border-white/5"><div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"><div className="text-center mb-16"><h2 className="text-sm font-semibold tracking-wider text-neutral-400 uppercase mb-3">{n.home.capabilitiesEyebrow}</h2><p className="text-3xl md:text-4xl font-medium text-white">{n.home.capabilitiesTitle}</p></div><div className="space-y-14">{Hc.map(d => {
             const f = l.filter(m => m.category === d.category);
             return <div key={d.category}><p className="text-xs font-semibold uppercase tracking-wider text-neutral-500 mb-6">{r[d.category]}</p><div className="grid grid-cols-1 md:grid-cols-2 gap-6">{f.map((m, p) => <Pe.div initial={{
                   opacity: 0,

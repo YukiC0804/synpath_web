@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 import {
   Activity,
@@ -65,17 +65,49 @@ function PanelChrome({
   );
 }
 
+function BorderlessAnimationCanvas({
+  label,
+  children,
+  className = '',
+}: {
+  label: string;
+  children: React.ReactNode;
+  className?: string;
+}) {
+  return (
+    <div
+      className={`relative w-full overflow-visible ${className}`}
+      role="img"
+      aria-label={label}
+    >
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(255,255,255,0.05),transparent_58%)]" />
+      <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.028)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.028)_1px,transparent_1px)] bg-[size:24px_24px] opacity-[0.35]" />
+      <div className="relative">{children}</div>
+    </div>
+  );
+}
+
+type FlowPaths = {
+  inbound: string[];
+  outbound: string;
+};
+
 const fragmentedSources = [
-  { id: 'mes', label: 'MES', icon: Activity, top: '4%', left: '2%', floatDelay: 0 },
-  { id: 'erp', label: 'ERP', icon: Database, top: '16%', left: '28%', floatDelay: 0.4 },
-  { id: 'machine', label: 'Machine Data', icon: Cog, top: '30%', left: '0%', floatDelay: 0.8 },
-  { id: 'paper', label: 'Paperwork', icon: FileText, top: '44%', left: '22%', floatDelay: 1.2 },
-  { id: 'tribal', label: 'Tribal Knowledge', icon: Users, top: '58%', left: '4%', floatDelay: 0.6 },
-  { id: 'excel', label: 'Excel', icon: Table2, top: '72%', left: '26%', floatDelay: 1.0 },
-  { id: 'sop', label: 'SOPs', icon: ClipboardList, top: '86%', left: '8%', floatDelay: 1.4 },
+  { id: 'mes', label: 'MES', icon: Activity, top: '5%', left: '4%', floatDelay: 0 },
+  { id: 'erp', label: 'ERP', icon: Database, top: '17%', left: '32%', floatDelay: 0.4 },
+  { id: 'machine', label: 'Machine Data', icon: Cog, top: '29%', left: '2%', floatDelay: 0.8 },
+  { id: 'paper', label: 'Paperwork', icon: FileText, top: '41%', left: '30%', floatDelay: 1.2 },
+  { id: 'tribal', label: 'Tribal Knowledge', icon: Users, top: '53%', left: '6%', floatDelay: 0.6 },
+  { id: 'excel', label: 'Excel', icon: Table2, top: '65%', left: '30%', floatDelay: 1.0 },
+  { id: 'sop', label: 'SOPs', icon: ClipboardList, top: '77%', left: '8%', floatDelay: 1.4 },
 ] as const;
 
-const hubLabels = ['Clean', 'Connect', 'Structure', 'Validate'] as const;
+const hubLabels = [
+  { label: 'Clean', className: 'absolute -top-7 left-1/2 -translate-x-1/2' },
+  { label: 'Validate', className: 'absolute -bottom-7 left-1/2 -translate-x-1/2' },
+  { label: 'Structure', className: 'absolute left-0 top-1/2 -translate-x-[calc(100%+10px)] -translate-y-1/2' },
+  { label: 'Connect', className: 'absolute -top-5 left-2 -translate-x-1' },
+] as const;
 
 const truthInsights = [
   'Live production status',
@@ -85,8 +117,6 @@ const truthInsights = [
   'Team-wide visibility',
 ] as const;
 
-const sourceLineYs = [8, 20, 34, 48, 62, 76, 90];
-
 function FragmentedSourceCard({
   label,
   icon: Icon,
@@ -94,6 +124,7 @@ function FragmentedSourceCard({
   left,
   floatDelay,
   index,
+  cardRef,
 }: {
   label: string;
   icon: React.ComponentType<{ className?: string }>;
@@ -101,12 +132,14 @@ function FragmentedSourceCard({
   left: string;
   floatDelay: number;
   index: number;
+  cardRef?: (element: HTMLDivElement | null) => void;
 }) {
   return (
     <motion.div
-      className="absolute z-10 max-w-[88%] rounded-xl border border-dashed border-white/20 bg-white/[0.04] px-2.5 py-2 shadow-[0_4px_24px_rgba(0,0,0,0.25)] backdrop-blur-sm sm:px-3 sm:py-2.5"
+      ref={cardRef}
+      className="absolute z-20 max-w-[92%] rounded-xl border border-dashed border-white/20 bg-white/[0.04] px-2.5 py-2 shadow-[0_4px_24px_rgba(0,0,0,0.25)] backdrop-blur-sm sm:px-3 sm:py-2.5"
       style={{ top, left }}
-      animate={{ y: [0, -5, 0], x: [0, index % 2 === 0 ? 2 : -2, 0] }}
+      animate={{ y: [0, -4, 0], x: [0, index % 2 === 0 ? 2 : -2, 0] }}
       transition={{
         duration: 3.6 + floatDelay,
         repeat: Infinity,
@@ -125,39 +158,34 @@ function FragmentedSourceCard({
   );
 }
 
-function SynpathHub() {
+function SynpathHub({ hubRef }: { hubRef: React.Ref<HTMLDivElement> }) {
   return (
-    <div className="relative flex flex-col items-center justify-center py-4 lg:py-0">
-      <div className="relative flex h-28 w-28 items-center justify-center sm:h-32 sm:w-32">
+    <div className="relative z-30 flex items-center justify-center px-2 py-6 lg:px-6 lg:py-8">
+      <div className="relative flex h-36 w-36 items-center justify-center sm:h-40 sm:w-40">
         <motion.div
-          className="absolute inset-0 rounded-full bg-emerald-500/20 blur-2xl"
-          animate={{ opacity: [0.25, 0.5, 0.25], scale: [0.92, 1.06, 0.92] }}
+          className="absolute inset-3 rounded-full bg-emerald-500/20 blur-2xl"
+          animate={{ opacity: [0.25, 0.5, 0.25], scale: [0.94, 1.04, 0.94] }}
           transition={{ duration: 3.5, repeat: Infinity, ease: 'easeInOut' }}
         />
         <motion.div
-          className="absolute inset-2 rounded-full border border-emerald-400/20"
+          className="absolute inset-5 rounded-full border border-emerald-400/20"
           animate={{ opacity: [0.35, 0.7, 0.35] }}
           transition={{ duration: 3.5, repeat: Infinity, ease: 'easeInOut' }}
         />
 
-        {hubLabels.map((label, index) => {
-          const angle = (index / hubLabels.length) * Math.PI * 2 - Math.PI / 2;
-          const radius = 58;
-          const x = Math.cos(angle) * radius;
-          const y = Math.sin(angle) * radius;
+        {hubLabels.map(({ label, className }) => (
+          <span
+            key={label}
+            className={`${className} z-40 whitespace-nowrap rounded-full border border-white/10 bg-black/70 px-2 py-0.5 text-[8px] font-medium uppercase tracking-[0.1em] text-white/50 sm:text-[9px]`}
+          >
+            {label}
+          </span>
+        ))}
 
-          return (
-            <span
-              key={label}
-              className="absolute rounded-full border border-white/10 bg-black/50 px-1.5 py-0.5 text-[8px] font-medium uppercase tracking-[0.1em] text-white/45 sm:text-[9px]"
-              style={{ transform: `translate(${x}px, ${y}px)` }}
-            >
-              {label}
-            </span>
-          );
-        })}
-
-        <div className="relative z-10 flex h-16 w-16 flex-col items-center justify-center rounded-full border border-emerald-400/40 bg-gradient-to-b from-emerald-500/20 to-emerald-500/5 shadow-[0_0_32px_rgba(52,211,153,0.25)] sm:h-[4.5rem] sm:w-[4.5rem]">
+        <div
+          ref={hubRef}
+          className="relative z-30 flex h-16 w-16 flex-col items-center justify-center rounded-full border border-emerald-400/40 bg-gradient-to-b from-emerald-500/20 to-emerald-500/5 shadow-[0_0_32px_rgba(52,211,153,0.25)] sm:h-[4.5rem] sm:w-[4.5rem]"
+        >
           <Sparkles className="mb-0.5 h-4 w-4 text-emerald-300" />
           <span className="text-[9px] font-semibold text-emerald-200 sm:text-[10px]">Synpath</span>
         </div>
@@ -166,154 +194,128 @@ function SynpathHub() {
   );
 }
 
-function FragmentedSourcesColumn() {
-  return (
-    <>
-      <div className="grid grid-cols-2 gap-2 lg:hidden">
-        {fragmentedSources.map((source) => {
-          const Icon = source.icon;
-          return (
-            <motion.div
-              key={source.id}
-              className="rounded-xl border border-dashed border-white/20 bg-white/[0.04] px-2.5 py-2 backdrop-blur-sm"
-              animate={{ y: [0, -4, 0] }}
-              transition={{
-                duration: 3.6 + source.floatDelay,
-                repeat: Infinity,
-                ease: 'easeInOut',
-                delay: source.floatDelay,
-              }}
-            >
-              <div className="flex items-center gap-2">
-                <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-lg border border-white/10 bg-black/30">
-                  <Icon className="h-3 w-3 text-white/55" />
-                </div>
-                <span className="text-[10px] font-medium text-white/70">{source.label}</span>
-              </div>
-              <div className="mt-1.5 h-px w-full border-t border-dotted border-white/15" />
-            </motion.div>
-          );
-        })}
-      </div>
+function ConnectionLinesLayer({ paths }: { paths: FlowPaths | null }) {
+  if (!paths) {
+    return null;
+  }
 
-      <div className="relative mt-5 hidden h-[calc(100%-1rem)] min-h-[17rem] lg:block">
-        {fragmentedSources.map((source, index) => (
-          <FragmentedSourceCard
-            key={source.id}
-            label={source.label}
-            icon={source.icon}
-            top={source.top}
-            left={source.left}
-            floatDelay={source.floatDelay}
-            index={index}
-          />
-        ))}
-      </div>
-    </>
-  );
-}
-
-function DesktopFlowOverlay() {
   return (
     <svg
-      className="pointer-events-none absolute inset-0 z-0 hidden h-full w-full overflow-visible lg:block"
-      viewBox="0 0 100 100"
-      preserveAspectRatio="none"
+      className="pointer-events-none absolute inset-0 z-10 hidden h-full w-full overflow-visible lg:block"
       aria-hidden
     >
-      {sourceLineYs.map((y, index) => (
-        <g key={y}>
+      {paths.inbound.map((path, index) =>
+        path ? (
+          <g key={fragmentedSources[index]?.id ?? index}>
           <motion.path
-            d={`M 18 ${y} C 36 ${y}, 44 50, 50 50`}
+            d={path}
             fill="none"
-            stroke="rgba(52,211,153,0.28)"
-            strokeWidth="0.7"
+            stroke="rgba(52,211,153,0.32)"
+            strokeWidth="1.2"
             strokeLinecap="round"
-            initial={{ pathLength: 0 }}
-            animate={{ pathLength: 1 }}
-            transition={{ duration: 1, delay: index * 0.1 }}
+            initial={{ pathLength: 0, opacity: 0 }}
+            animate={{ pathLength: 1, opacity: 1 }}
+            transition={{ duration: 0.9, delay: index * 0.08 }}
           />
           <motion.circle
-            r="0.9"
+            r="2.2"
             fill="#34d399"
-            animate={{ opacity: [0, 0.85, 0], offsetDistance: ['0%', '100%'] }}
+            animate={{ opacity: [0, 0.9, 0], offsetDistance: ['0%', '100%'] }}
             transition={{
-              duration: 2.4,
+              duration: 2.6,
               repeat: Infinity,
               delay: index * 0.35,
               ease: 'linear',
             }}
-            style={{ offsetPath: `path("M 18 ${y} C 36 ${y}, 44 50, 50 50")` }}
+            style={{ offsetPath: `path("${path}")` }}
           />
-        </g>
-      ))}
+          </g>
+        ) : null,
+      )}
       <motion.path
-        d="M 50 50 C 56 50, 64 50, 82 50"
+        d={paths.outbound}
         fill="none"
-        stroke="rgba(52,211,153,0.45)"
-        strokeWidth="0.8"
+        stroke="rgba(52,211,153,0.5)"
+        strokeWidth="1.4"
         strokeLinecap="round"
-        initial={{ pathLength: 0 }}
-        animate={{ pathLength: 1 }}
-        transition={{ duration: 0.8, delay: 0.5 }}
+        initial={{ pathLength: 0, opacity: 0 }}
+        animate={{ pathLength: 1, opacity: 1 }}
+        transition={{ duration: 0.8, delay: 0.45 }}
       />
       <motion.circle
-        r="1"
+        r="2.4"
         fill="#34d399"
         animate={{ opacity: [0, 1, 0], offsetDistance: ['0%', '100%'] }}
-        transition={{ duration: 2, repeat: Infinity, ease: 'linear', delay: 0.8 }}
-        style={{ offsetPath: 'path("M 50 50 C 56 50, 64 50, 82 50")' }}
+        transition={{ duration: 2.1, repeat: Infinity, ease: 'linear', delay: 0.7 }}
+        style={{ offsetPath: `path("${paths.outbound}")` }}
       />
     </svg>
   );
 }
 
-function TruthPanel({ highlightIndex }: { highlightIndex: number }) {
+function TruthPanel({
+  highlightIndex,
+  panelRef,
+}: {
+  highlightIndex: number;
+  panelRef: React.Ref<HTMLDivElement>;
+}) {
   return (
     <motion.div
-      className="relative overflow-hidden rounded-2xl border border-emerald-400/25 bg-gradient-to-br from-white/[0.07] to-white/[0.02] p-3 shadow-[0_8px_40px_rgba(0,0,0,0.35)] backdrop-blur-md sm:p-4"
-      animate={{ boxShadow: ['0 8px 40px rgba(0,0,0,0.35)', '0 8px 48px rgba(52,211,153,0.12)', '0 8px 40px rgba(0,0,0,0.35)'] }}
+      ref={panelRef}
+      className="relative z-20 overflow-visible rounded-2xl border border-emerald-400/25 bg-gradient-to-br from-white/[0.07] to-white/[0.02] p-3 shadow-[0_8px_40px_rgba(0,0,0,0.35)] backdrop-blur-md sm:p-3.5"
+      animate={{
+        boxShadow: [
+          '0 8px 40px rgba(0,0,0,0.35)',
+          '0 8px 48px rgba(52,211,153,0.12)',
+          '0 8px 40px rgba(0,0,0,0.35)',
+        ],
+      }}
       transition={{ duration: 2.5, repeat: Infinity, ease: 'easeInOut' }}
     >
       <motion.div
         key={highlightIndex}
-        className="pointer-events-none absolute inset-0 bg-gradient-to-r from-transparent via-emerald-400/10 to-transparent"
-        initial={{ x: '-100%' }}
-        animate={{ x: '100%' }}
-        transition={{ duration: 1.2, ease: 'easeInOut' }}
-      />
+        className="pointer-events-none absolute inset-0 overflow-hidden rounded-2xl"
+      >
+        <motion.div
+          className="absolute inset-y-0 w-1/2 bg-gradient-to-r from-transparent via-emerald-400/10 to-transparent"
+          initial={{ x: '-120%' }}
+          animate={{ x: '260%' }}
+          transition={{ duration: 1.2, ease: 'easeInOut' }}
+        />
+      </motion.div>
 
-      <div className="relative mb-3 flex items-center justify-between gap-2 border-b border-white/10 pb-2.5">
+      <div className="relative mb-2.5 flex items-center justify-between gap-2 border-b border-white/10 pb-2">
         <div>
           <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-emerald-300/90 sm:text-[11px]">
             One Source of Truth
           </p>
           <p className="mt-0.5 text-[9px] text-white/45 sm:text-[10px]">Unified operating layer</p>
         </div>
-        <div className="flex h-8 w-8 items-center justify-center rounded-lg border border-emerald-400/30 bg-emerald-500/10">
+        <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg border border-emerald-400/30 bg-emerald-500/10">
           <Lock className="h-3.5 w-3.5 text-emerald-300" />
         </div>
       </div>
 
-      <ul className="relative space-y-1.5 sm:space-y-2">
+      <ul className="relative space-y-1">
         {truthInsights.map((item, index) => {
           const isActive = index === highlightIndex;
 
           return (
             <motion.li
               key={item}
-              className={`flex items-center gap-2 rounded-lg border px-2.5 py-2 sm:px-3 ${
+              className={`flex items-center gap-2 rounded-lg border px-2.5 py-1.5 sm:px-3 sm:py-2 ${
                 isActive
                   ? 'border-emerald-400/35 bg-emerald-500/[0.08]'
                   : 'border-white/[0.08] bg-black/20'
               }`}
-              animate={isActive ? { opacity: [0.85, 1, 0.85] } : { opacity: 0.9 }}
+              animate={isActive ? { opacity: [0.85, 1, 0.85] } : { opacity: 0.92 }}
               transition={{ duration: 2.5, repeat: isActive ? Infinity : 0 }}
             >
               <CheckCircle2
                 className={`h-3.5 w-3.5 shrink-0 ${isActive ? 'text-emerald-300' : 'text-white/35'}`}
               />
-              <span className="text-[10px] font-medium text-white/80 sm:text-[11px]">{item}</span>
+              <span className="text-[10px] font-medium leading-snug text-white/80 sm:text-[11px]">{item}</span>
             </motion.li>
           );
         })}
@@ -322,8 +324,85 @@ function TruthPanel({ highlightIndex }: { highlightIndex: number }) {
   );
 }
 
+function useFlowPaths(
+  containerRef: React.RefObject<HTMLDivElement | null>,
+  hubRef: React.RefObject<HTMLDivElement | null>,
+  cardRefs: React.MutableRefObject<(HTMLDivElement | null)[]>,
+  panelRef: React.RefObject<HTMLDivElement | null>,
+) {
+  const [paths, setPaths] = useState<FlowPaths | null>(null);
+
+  useLayoutEffect(() => {
+    const updatePaths = () => {
+      const container = containerRef.current;
+      const hub = hubRef.current;
+      const panel = panelRef.current;
+
+      if (!container || !hub || !panel || window.innerWidth < 1024) {
+        setPaths(null);
+        return;
+      }
+
+      const containerRect = container.getBoundingClientRect();
+      const hubRect = hub.getBoundingClientRect();
+      const panelRect = panel.getBoundingClientRect();
+
+      const hubX = hubRect.left + hubRect.width / 2 - containerRect.left;
+      const hubY = hubRect.top + hubRect.height / 2 - containerRect.top;
+      const panelX = panelRect.left - containerRect.left;
+
+      const inbound = fragmentedSources.map((_, index) => {
+        const card = cardRefs.current[index];
+        if (!card) {
+          return '';
+        }
+
+        const cardRect = card.getBoundingClientRect();
+        const startX = cardRect.right - containerRect.left;
+        const startY = cardRect.top + cardRect.height / 2 - containerRect.top;
+        const controlX = startX + (hubX - startX) * 0.55;
+
+        return `M ${startX} ${startY} C ${controlX} ${startY}, ${controlX} ${hubY}, ${hubX} ${hubY}`;
+      });
+
+      const outboundStartX = hubRect.right - containerRect.left;
+      const outboundY = hubY;
+      const outboundEndX = panelX;
+      const outboundControlX = outboundStartX + (outboundEndX - outboundStartX) * 0.5;
+
+      setPaths({
+        inbound,
+        outbound: `M ${outboundStartX} ${outboundY} C ${outboundControlX} ${outboundY}, ${outboundControlX} ${outboundY}, ${outboundEndX} ${outboundY}`,
+      });
+    };
+
+    const frame = window.requestAnimationFrame(updatePaths);
+    updatePaths();
+
+    const resizeObserver = new ResizeObserver(updatePaths);
+    if (containerRef.current) {
+      resizeObserver.observe(containerRef.current);
+    }
+
+    window.addEventListener('resize', updatePaths);
+
+    return () => {
+      window.cancelAnimationFrame(frame);
+      resizeObserver.disconnect();
+      window.removeEventListener('resize', updatePaths);
+    };
+  }, [cardRefs, containerRef, hubRef, panelRef]);
+
+  return paths;
+}
+
 export function SourceOfTruthAnimation() {
   const [highlightIndex, setHighlightIndex] = useState(0);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const hubRef = useRef<HTMLDivElement>(null);
+  const panelRef = useRef<HTMLDivElement>(null);
+  const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const paths = useFlowPaths(containerRef, hubRef, cardRefs, panelRef);
 
   useEffect(() => {
     const interval = window.setInterval(() => {
@@ -333,45 +412,84 @@ export function SourceOfTruthAnimation() {
   }, []);
 
   return (
-    <AnimationShell
+    <BorderlessAnimationCanvas
       label="Connect fragmented manufacturing data into one reliable source of truth"
-      aspectClass="min-h-[32rem] lg:min-h-0 lg:aspect-[16/10]"
+      className="min-h-[34rem] py-2 lg:min-h-[26rem] lg:py-4"
     >
-      <div className="relative flex h-full flex-col gap-8 lg:grid lg:grid-cols-[minmax(0,1fr)_9rem_minmax(0,1fr)] lg:items-center lg:gap-3">
-        <DesktopFlowOverlay />
+      <div
+        ref={containerRef}
+        className="relative flex flex-col gap-10 lg:grid lg:grid-cols-[minmax(0,1fr)_11rem_minmax(0,1fr)] lg:items-center lg:gap-10 xl:gap-14"
+      >
+        <ConnectionLinesLayer paths={paths} />
 
-        <div className="relative z-10">
-          <p className="mb-2 text-[9px] font-medium uppercase tracking-[0.14em] text-white/35">
+        <div className="relative z-20">
+          <p className="mb-3 text-[9px] font-medium uppercase tracking-[0.14em] text-white/35">
             Fragmented sources
           </p>
-          <FragmentedSourcesColumn />
+
+          <div className="grid grid-cols-2 gap-2 lg:hidden">
+            {fragmentedSources.map((source) => {
+              const Icon = source.icon;
+              return (
+                <motion.div
+                  key={source.id}
+                  className="rounded-xl border border-dashed border-white/20 bg-white/[0.04] px-2.5 py-2 backdrop-blur-sm"
+                  animate={{ y: [0, -3, 0] }}
+                  transition={{
+                    duration: 3.6 + source.floatDelay,
+                    repeat: Infinity,
+                    ease: 'easeInOut',
+                    delay: source.floatDelay,
+                  }}
+                >
+                  <div className="flex items-center gap-2">
+                    <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-lg border border-white/10 bg-black/30">
+                      <Icon className="h-3 w-3 text-white/55" />
+                    </div>
+                    <span className="text-[10px] font-medium text-white/70">{source.label}</span>
+                  </div>
+                </motion.div>
+              );
+            })}
+          </div>
+
+          <div className="relative hidden min-h-[24rem] lg:block">
+            {fragmentedSources.map((source, index) => (
+              <FragmentedSourceCard
+                key={source.id}
+                label={source.label}
+                icon={source.icon}
+                top={source.top}
+                left={source.left}
+                floatDelay={source.floatDelay}
+                index={index}
+                cardRef={(element) => {
+                  cardRefs.current[index] = element;
+                }}
+              />
+            ))}
+          </div>
         </div>
 
-        <div className="relative z-10 flex flex-col items-center justify-center py-2">
-          <SynpathHub />
-          <div className="flex flex-col items-center gap-1 pt-3 lg:hidden">
+        <SynpathHub hubRef={hubRef} />
+
+        <div className="relative z-20">
+          <p className="mb-3 text-[9px] font-medium uppercase tracking-[0.14em] text-white/35">
+            Trusted layer
+          </p>
+          <TruthPanel highlightIndex={highlightIndex} panelRef={panelRef} />
+
+          <div className="mt-4 flex flex-col items-center gap-1 lg:hidden">
             <motion.div
               className="h-6 w-px bg-gradient-to-b from-emerald-400/50 to-emerald-400/10"
               animate={{ opacity: [0.4, 1, 0.4] }}
               transition={{ duration: 2, repeat: Infinity }}
             />
-            <span className="text-[8px] uppercase tracking-[0.12em] text-white/35">Orchestrating</span>
-            <motion.div
-              className="h-6 w-px bg-gradient-to-b from-emerald-400/10 to-emerald-400/50"
-              animate={{ opacity: [0.4, 1, 0.4] }}
-              transition={{ duration: 2, repeat: Infinity, delay: 0.5 }}
-            />
+            <span className="text-[8px] uppercase tracking-[0.12em] text-white/35">Unified output</span>
           </div>
         </div>
-
-        <div className="relative z-10">
-          <p className="mb-2 text-[9px] font-medium uppercase tracking-[0.14em] text-white/35">
-            Trusted layer
-          </p>
-          <TruthPanel highlightIndex={highlightIndex} />
-        </div>
       </div>
-    </AnimationShell>
+    </BorderlessAnimationCanvas>
   );
 }
 

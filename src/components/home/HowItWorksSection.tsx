@@ -119,12 +119,9 @@ export function HowItWorksSection() {
                 <h3 className="mb-4 text-xl font-medium leading-snug text-white md:text-2xl">
                   {item.title}
                 </h3>
-                <p className="flex-1 text-sm leading-relaxed text-white/65 md:text-base">
+                <p className="text-sm leading-relaxed text-white/65 md:text-base">
                   {item.description}
                 </p>
-                <span className="mt-6 inline-flex text-sm font-medium text-white/80">
-                  Read more
-                </span>
               </article>
             ))}
           </div>

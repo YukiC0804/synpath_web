@@ -102,6 +102,10 @@ h6 {
   transition: transform 700ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+.use-cases-stepper-track--smooth {
+  transition: transform 500ms cubic-bezier(0.45, 0, 0.15, 1);
+}
+
 .use-cases-stepper-track--instant {
   transition: none;
 }

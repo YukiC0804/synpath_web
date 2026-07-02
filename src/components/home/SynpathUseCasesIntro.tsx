@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { ArrowRight } from 'lucide-react';
 
 const synpathUseCases = [
@@ -18,17 +18,13 @@ const synpathUseCases = [
 ] as const;
 
 const CASE_COUNT = synpathUseCases.length;
-const STEP_MS = 2200;
-const TRANSITION_MS = 700;
+const PAUSE_MS = 1000;
+const SLIDE_MS = 500;
 const ITEM_HEIGHT = 80;
-const VISIBLE_ROWS = 7;
-const VISIBLE_HEIGHT = ITEM_HEIGHT * VISIBLE_ROWS;
-const ROW_OFFSETS = [-3, -2, -1, 0, 1, 2, 3] as const;
-const BASE_TRANSLATE_Y = VISIBLE_HEIGHT / 2 - 3 * ITEM_HEIGHT - ITEM_HEIGHT / 2;
-
-function modIndex(index: number) {
-  return ((index % CASE_COUNT) + CASE_COUNT) % CASE_COUNT;
-}
+const VISIBLE_HEIGHT = ITEM_HEIGHT * 7;
+const LOOP_ITEMS = [...synpathUseCases, ...synpathUseCases, ...synpathUseCases];
+const LOOP_START = CASE_COUNT;
+const BASE_TRANSLATE_Y = VISIBLE_HEIGHT / 2 - ITEM_HEIGHT / 2;
 
 function getItemClassName(distance: number) {
   if (distance === 0) {
@@ -47,36 +43,63 @@ function getItemClassName(distance: number) {
 }
 
 function UseCasesStepper() {
-  const [activeIndex, setActiveIndex] = useState(0);
-  const [slideOffset, setSlideOffset] = useState(0);
+  const [centerIndex, setCenterIndex] = useState<number>(LOOP_START);
   const [transitionEnabled, setTransitionEnabled] = useState(true);
+  const centerIndexRef = useRef<number>(LOOP_START);
 
   useEffect(() => {
-    const intervalId = window.setInterval(() => {
-      setSlideOffset(-ITEM_HEIGHT);
-    }, STEP_MS);
+    centerIndexRef.current = centerIndex;
+  }, [centerIndex]);
 
-    return () => window.clearInterval(intervalId);
+  useEffect(() => {
+    let cancelled = false;
+    const timeouts: number[] = [];
+
+    const schedule = (fn: () => void, delay: number) => {
+      const id = window.setTimeout(() => {
+        if (!cancelled) {
+          fn();
+        }
+      }, delay);
+      timeouts.push(id);
+    };
+
+    const runCycle = () => {
+      schedule(() => {
+        setTransitionEnabled(true);
+        const nextIndex = centerIndexRef.current + 1;
+        centerIndexRef.current = nextIndex;
+        setCenterIndex(nextIndex);
+
+        schedule(() => {
+          if (nextIndex >= CASE_COUNT * 2) {
+            setTransitionEnabled(false);
+            const resetIndex = nextIndex - CASE_COUNT;
+            centerIndexRef.current = resetIndex;
+            setCenterIndex(resetIndex);
+            requestAnimationFrame(() => {
+              if (!cancelled) {
+                setTransitionEnabled(true);
+                runCycle();
+              }
+            });
+            return;
+          }
+
+          runCycle();
+        }, SLIDE_MS);
+      }, PAUSE_MS);
+    };
+
+    runCycle();
+
+    return () => {
+      cancelled = true;
+      timeouts.forEach((id) => window.clearTimeout(id));
+    };
   }, []);
 
-  useEffect(() => {
-    if (slideOffset === 0) {
-      return;
-    }
-
-    const timeoutId = window.setTimeout(() => {
-      setTransitionEnabled(false);
-      setActiveIndex((current) => modIndex(current + 1));
-      setSlideOffset(0);
-      requestAnimationFrame(() => {
-        requestAnimationFrame(() => setTransitionEnabled(true));
-      });
-    }, TRANSITION_MS);
-
-    return () => window.clearTimeout(timeoutId);
-  }, [slideOffset]);
-
-  const translateY = BASE_TRANSLATE_Y + slideOffset;
+  const translateY = BASE_TRANSLATE_Y - centerIndex * ITEM_HEIGHT;
 
   return (
     <div
@@ -100,21 +123,20 @@ function UseCasesStepper() {
       <ul
         className={
           transitionEnabled
-            ? 'use-cases-stepper-track'
+            ? 'use-cases-stepper-track use-cases-stepper-track--smooth'
             : 'use-cases-stepper-track use-cases-stepper-track--instant'
         }
         style={{ transform: `translateY(${translateY}px)` }}
       >
-        {(slideOffset === 0 ? ROW_OFFSETS : [...ROW_OFFSETS, 4]).map((offset) => {
-          const distance = Math.abs(offset);
-          const label = synpathUseCases[modIndex(activeIndex + offset)];
+        {LOOP_ITEMS.map((item, index) => {
+          const distance = Math.abs(index - centerIndex);
 
           return (
             <li
-              key={offset}
-              className={`flex h-20 w-full items-center justify-center whitespace-nowrap text-center transition-all duration-700 ${getItemClassName(distance)}`}
+              key={`${item}-${index}`}
+              className={`flex h-20 w-full items-center justify-center whitespace-nowrap text-center ${getItemClassName(distance)}`}
             >
-              {label}
+              {item}
             </li>
           );
         })}

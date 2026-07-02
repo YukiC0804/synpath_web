@@ -75,7 +75,7 @@ export function OperationalComplexitySection() {
           >
             Built to handle
             <br />
-            operational complexity
+            complexity
           </h2>
         </div>
 

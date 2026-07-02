@@ -54,7 +54,16 @@ h6 {
   background: #0a0a0a;
 }
 
-.calendly-scroll-area::-webkit-scrollbar-thumb {
-  background: #3a3a3a;
-  border-radius: 4px;
+.hero-title-line {
+  display: block;
+  white-space: nowrap;
+  font-size: min(5.75rem, calc((100vw - 3rem) / 21));
+  line-height: 1.08;
+  letter-spacing: -0.035em;
+}
+
+@media (min-width: 1536px) {
+  .hero-title-line {
+    font-size: 5.75rem;
+  }
 }

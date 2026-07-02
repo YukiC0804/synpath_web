@@ -45,25 +45,19 @@ export function Hero() {
         aria-hidden
       />
 
-      <div className="relative z-10 mx-auto flex min-h-[calc(100vh-5rem)] max-w-5xl flex-col items-center justify-center px-4 py-16 text-center sm:px-6 lg:px-8 lg:py-24">
+      <div className="relative z-10 mx-auto flex min-h-[calc(100vh-5rem)] w-full max-w-[96rem] flex-col items-center justify-center px-4 py-16 text-center sm:px-6 lg:px-8 lg:py-24">
         <motion.h1
           id="hero-heading"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, ease: 'easeOut' }}
-          className="mb-6 max-w-4xl text-4xl font-semibold tracking-tighter text-white md:text-5xl lg:mb-8 lg:text-6xl xl:text-7xl"
+          className="mb-12 w-full font-semibold text-white lg:mb-14"
         >
-          AI that listens and executes for you.
+          <span className="hero-title-line">AI that listens and executes for you.</span>
+          <span className="hero-title-line mt-2 md:mt-3">
+            Purpose Built for Manufacturing Operations.
+          </span>
         </motion.h1>
-
-        <motion.p
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, delay: 0.1, ease: 'easeOut' }}
-          className="mb-12 max-w-3xl text-xl font-medium tracking-tight text-white md:text-2xl lg:mb-14 lg:text-3xl"
-        >
-          Purpose Built for Manufacturing Operations
-        </motion.p>
 
         <motion.div
           initial={{ opacity: 0, y: 20 }}

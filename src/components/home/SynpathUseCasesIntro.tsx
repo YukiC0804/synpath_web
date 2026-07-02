@@ -117,7 +117,7 @@ function UseCasesStepper() {
 export function SynpathUseCasesIntro() {
   return (
     <div className="border-t border-white/5 py-16 md:py-20 lg:py-24">
-      <div className="px-3 sm:px-4 md:px-5 lg:px-6 xl:px-8">
+      <div className="px-8">
         <p className="mb-10 text-sm font-medium uppercase tracking-[0.18em] text-white/55 md:mb-12">
           How It Works
         </p>

@@ -1,141 +1,179 @@
-import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Bot, Link2, Settings2, ShieldCheck } from 'lucide-react';
-
-const steps = [
+const featureRows = [
   {
-    id: 'connect',
-    label: 'Connect systems',
-    title: 'Connect your operational systems',
-    description:
-      'Plug Synpath into your ERP, shop-floor systems, spreadsheets, and tribal knowledge without ripping out what already works.',
-    icon: Link2,
+    id: 'adapt',
+    title: 'Instantly adapt to your unique organization, processes, and business rules',
+    description: 'A truly flexible platform with process builder and AI rule capture',
+    detail:
+      'Manufacturing order and sales order workflows connected in one system, with AI rules and agents handling shipment batching and delivery notes.',
+    image: '/build-specification.png',
+    imageAlt: 'Operational workflow configuration interface placeholder',
   },
   {
-    id: 'rules',
-    label: 'Define rules',
-    title: 'Define how your plant runs',
+    id: 'deploy',
+    title: 'Deploy in 3 to 10 weeks',
     description:
-      'Capture policies, workflows, and business rules in plain language so agents understand your real operating reality.',
-    icon: Settings2,
+      'With AI data migration, instantaneous customization, and easy adoption by users, Synpath is built for manufacturers that need to move fast.',
+    image: '/profile-drawing.png',
+    imageAlt: 'Deployment and onboarding workflow placeholder',
   },
   {
-    id: 'execute',
-    label: 'Agents execute',
-    title: 'Agents listen and execute',
+    id: 'automate',
+    title: 'Automate your business with a modern platform',
     description:
-      'Custom AI agents monitor live data, make decisions, and run operational work across planning, production, and support flows.',
-    icon: Bot,
+      'Factory software that listens to your instructions and executes daunting tasks on your behalf — not just cloud software, but AI-native operations.',
+    image: '/hero-manufacturing.png',
+    imageAlt: 'Shop floor automation and production workflow placeholder',
   },
   {
-    id: 'review',
-    label: 'Review & improve',
-    title: 'Review exceptions and improve',
-    description:
-      'Stay in control with supervision, exception handling, and continuous refinement as your operations evolve.',
-    icon: ShieldCheck,
+    id: 'teams',
+    title: 'Manufacturing software your teams will love',
+    description: 'An industrial platform with best-in-class UI and UX design for operators and managers.',
+    image: '/build-specification.png',
+    imageAlt: 'Operator-friendly manufacturing software interface placeholder',
   },
 ] as const;
 
-function StepDemo({ stepIndex }: { stepIndex: number }) {
-  const step = steps[stepIndex];
-  const Icon = step.icon;
+const valueProps = [
+  {
+    id: 'next-gen',
+    title: 'A next-generation platform',
+    description:
+      'Automate the most daunting tasks with AI agents, built directly into Synpath — operating under your supervision.',
+  },
+  {
+    id: 'simplify',
+    title: 'Simplify your operations',
+    description:
+      'Synpath handles order management, inventory, purchasing, planning, production, quality, logistics, and more in one connected system.',
+  },
+  {
+    id: 'control-tower',
+    title: 'Factory Control Tower',
+    description: 'Design, monitor, and supervise your AI-driven operations in real time.',
+  },
+  {
+    id: 'analyze',
+    title: 'Analyze & Decide',
+    description:
+      'Custom dashboards and AI-powered analysis, built directly into your operational system.',
+  },
+] as const;
 
+function FeatureVisual({
+  image,
+  imageAlt,
+}: {
+  image: string;
+  imageAlt: string;
+}) {
   return (
-    <div className="flex h-full min-h-[320px] flex-col justify-between p-6 md:min-h-[380px] md:p-8">
-      <div>
-        <p className="mb-3 text-xs font-medium uppercase tracking-[0.2em] text-white/55">
-          Step {stepIndex + 1}
-        </p>
-        <h3 className="mb-4 max-w-xl text-2xl font-medium tracking-tight text-white md:text-3xl">
-          {step.title}
-        </h3>
-        <p className="max-w-2xl text-sm leading-relaxed text-white/70 md:text-base">
-          {step.description}
-        </p>
-      </div>
+    <div className="overflow-hidden rounded-[1.75rem] border border-white/10 bg-[#0d0d0d] shadow-[0_24px_80px_rgba(0,0,0,0.45)]">
+      <img
+        src={image}
+        alt={imageAlt}
+        className="aspect-[4/3] h-full w-full object-cover object-center"
+        loading="lazy"
+      />
+    </div>
+  );
+}
 
-      <div className="mt-8 rounded-2xl border border-white/10 bg-white/[0.03] p-6 md:p-8">
-        <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl border border-white/10 bg-white/5">
-          <Icon className="h-6 w-6 text-white" strokeWidth={1.5} aria-hidden />
-        </div>
-        <p className="text-sm text-white/55">Demo preview placeholder</p>
-        <p className="mt-2 max-w-lg text-base text-white/80">
-          Replace this panel with screenshots, workflow UI, or product demos for this step.
-        </p>
-      </div>
+function FeatureCopy({
+  title,
+  description,
+  detail,
+}: {
+  title: string;
+  description: string;
+  detail?: string;
+}) {
+  return (
+    <div className="max-w-xl lg:max-w-lg">
+      <h3 className="mb-5 text-3xl font-medium leading-[1.12] tracking-tight text-white md:text-4xl lg:text-[2.6rem]">
+        {title}
+      </h3>
+      <p className="text-base leading-relaxed text-white/70 md:text-lg">{description}</p>
+      {detail ? (
+        <p className="mt-4 text-sm leading-relaxed text-white/55 md:text-base">{detail}</p>
+      ) : null}
     </div>
   );
 }
 
 export function HowItWorksSection() {
-  const [activeStep, setActiveStep] = useState(0);
-
   return (
-    <section
-      id="how-it-works"
-      aria-labelledby="how-it-works-heading"
-      className="border-t border-white/5 bg-neutral-950 py-20 md:py-24 lg:py-28"
-    >
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="mb-12 max-w-3xl">
-          <p className="mb-3 text-sm font-medium uppercase tracking-[0.18em] text-white/55">
+    <section id="how-it-works" aria-labelledby="how-it-works-heading" className="bg-black">
+      <div className="border-t border-white/5 py-20 md:py-24 lg:py-28">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <p className="mb-4 text-sm font-medium uppercase tracking-[0.18em] text-white/55">
             How it works
           </p>
           <h2
             id="how-it-works-heading"
-            className="text-3xl font-medium tracking-tight text-white md:text-4xl lg:text-5xl"
+            className="max-w-4xl text-4xl font-medium leading-[1.08] tracking-tight text-white md:text-5xl lg:text-6xl"
           >
-            From trigger to outcome.
+            Operations that move as fast as your ambition
           </h2>
+          <p className="mt-6 max-w-3xl text-lg leading-relaxed text-white/70 md:text-xl">
+            Manufacturing operations are more complex than ever. Synpath is built to work for that
+            reality.
+          </p>
         </div>
+      </div>
 
-        <div className="mx-auto mb-8 w-full max-w-5xl overflow-hidden rounded-2xl border border-white/10 bg-[#0b0b0b]">
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={activeStep}
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -12 }}
-              transition={{ duration: 0.3, ease: 'easeOut' }}
-            >
-              <StepDemo stepIndex={activeStep} />
-            </motion.div>
-          </AnimatePresence>
-        </div>
+      <div className="border-t border-white/5">
+        {featureRows.map((row, index) => {
+          const reversed = index % 2 === 1;
 
-        <div className="flex flex-wrap justify-center gap-3 px-2">
-          {steps.map((step, index) => (
-            <button
-              key={step.id}
-              type="button"
-              onClick={() => setActiveStep(index)}
-              className={`rounded-full border px-6 py-2.5 text-sm font-medium whitespace-nowrap transition-all duration-300 ${
-                activeStep === index
-                  ? 'border-white bg-white text-black shadow-[0_0_15px_rgba(255,255,255,0.12)]'
-                  : 'border-white/10 bg-black/40 text-white/75 hover:border-white/25 hover:bg-white/5 hover:text-white'
-              }`}
+          return (
+            <div
+              key={row.id}
+              className="border-b border-white/5 py-16 md:py-20 lg:py-24"
             >
-              {step.label}
-            </button>
-          ))}
-        </div>
+              <div className="mx-auto grid max-w-7xl grid-cols-1 items-center gap-10 px-4 sm:px-6 lg:grid-cols-2 lg:gap-16 lg:px-8 xl:gap-20">
+                <div className={reversed ? 'lg:order-2' : ''}>
+                  <FeatureCopy
+                    title={row.title}
+                    description={row.description}
+                    detail={'detail' in row ? row.detail : undefined}
+                  />
+                </div>
+                <div className={reversed ? 'lg:order-1' : ''}>
+                  <FeatureVisual image={row.image} imageAlt={row.imageAlt} />
+                </div>
+              </div>
+            </div>
+          );
+        })}
+      </div>
 
-        <div className="mt-14 grid grid-cols-1 gap-8 border-t border-white/10 pt-12 md:grid-cols-2 lg:grid-cols-4">
-          {steps.map((step, index) => (
-            <button
-              key={`${step.id}-summary`}
-              type="button"
-              onClick={() => setActiveStep(index)}
-              className="text-left transition-opacity hover:opacity-90"
-            >
-              <p className="mb-3 text-xs font-medium uppercase tracking-[0.18em] text-white/45">
-                Step {index + 1}
-              </p>
-              <h3 className="mb-3 text-lg font-medium text-white">{step.label}</h3>
-              <p className="text-sm leading-relaxed text-white/65">{step.description}</p>
-            </button>
-          ))}
+      <div className="border-t border-white/5 py-20 md:py-24 lg:py-28">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <p className="mb-4 text-sm font-medium uppercase tracking-[0.18em] text-white/55">
+            Our value proposition
+          </p>
+          <h2 className="max-w-4xl text-4xl font-medium leading-[1.08] tracking-tight text-white md:text-5xl lg:text-6xl">
+            The manufacturing platform that fits how you work, and works while you sleep
+          </h2>
+
+          <div className="mt-14 grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-4">
+            {valueProps.map((item) => (
+              <article
+                key={item.id}
+                className="flex min-h-full flex-col rounded-2xl border border-white/10 bg-[#0b0b0b] p-6 md:p-7"
+              >
+                <h3 className="mb-4 text-xl font-medium leading-snug text-white md:text-2xl">
+                  {item.title}
+                </h3>
+                <p className="flex-1 text-sm leading-relaxed text-white/65 md:text-base">
+                  {item.description}
+                </p>
+                <span className="mt-6 inline-flex text-sm font-medium text-white/80">
+                  Read more
+                </span>
+              </article>
+            ))}
+          </div>
         </div>
       </div>
     </section>

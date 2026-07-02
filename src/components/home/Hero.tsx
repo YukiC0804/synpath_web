@@ -101,13 +101,13 @@ export function Hero() {
           transition={{ duration: 0.7, ease: 'easeOut' }}
           className="mx-auto mb-12 w-fit max-w-full text-center lg:mb-14"
         >
+          <p className="mb-4 inline-flex rounded-full border border-white/20 bg-white/5 px-4 py-1.5 text-xs font-medium tracking-wide text-white/80 backdrop-blur-sm sm:mb-5 sm:px-5 sm:text-sm">
+            Hit Plan, Cut Waste and Scale
+          </p>
           <h1 id="hero-heading" className="hero-headline">
             <span className="hero-title-line">AI that listens and executes for you</span>
             <span className="hero-title-line mt-2 md:mt-3">Build for Manufacturing Operations</span>
           </h1>
-          <p className="mt-4 inline-flex rounded-full border border-white/20 bg-white/5 px-4 py-1.5 text-xs font-medium tracking-wide text-white/80 backdrop-blur-sm sm:mt-5 sm:px-5 sm:text-sm">
-            Hit plan, cut waste and scale
-          </p>
         </motion.div>
 
         <motion.div

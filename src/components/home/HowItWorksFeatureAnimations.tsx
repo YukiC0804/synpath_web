@@ -16,31 +16,6 @@ import {
   Users,
 } from 'lucide-react';
 
-function AnimationShell({
-  label,
-  children,
-  aspectClass = 'aspect-[4/3]',
-}: {
-  label: string;
-  children: React.ReactNode;
-  aspectClass?: string;
-}) {
-  return (
-    <div
-      className="overflow-hidden rounded-[1.75rem] border border-white/10 bg-[#0d0d0d] shadow-[0_24px_80px_rgba(0,0,0,0.45)]"
-      role="img"
-      aria-label={label}
-    >
-      <div
-        className={`relative w-full overflow-hidden bg-[radial-gradient(circle_at_50%_0%,rgba(255,255,255,0.06),transparent_55%)] p-4 sm:p-5 md:p-6 ${aspectClass}`}
-      >
-        <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:24px_24px] opacity-40" />
-        {children}
-      </div>
-    </div>
-  );
-}
-
 function PanelChrome({
   title,
   badge,
@@ -536,9 +511,9 @@ export function AgentsToolsAnimation() {
   ] as const;
 
   return (
-    <AnimationShell
+    <BorderlessAnimationCanvas
       label="Animated AI agent building operational tools from natural language"
-      aspectClass="aspect-[4/3.6] sm:aspect-[4/3.3]"
+      className="aspect-[4/3.6] sm:aspect-[4/3.3]"
     >
       <PanelChrome title="Agent Workspace" badge="Building" />
 
@@ -599,7 +574,7 @@ export function AgentsToolsAnimation() {
           })}
         </div>
       </div>
-    </AnimationShell>
+    </BorderlessAnimationCanvas>
   );
 }
 
@@ -625,7 +600,10 @@ export function GoLiveAnimation() {
       : deploySteps[activeStep].progress;
 
   return (
-    <AnimationShell label="Animated rapid deployment timeline from migration to go-live">
+    <BorderlessAnimationCanvas
+      label="Animated rapid deployment timeline from migration to go-live"
+      className="aspect-[4/3.2] sm:aspect-[4/3]"
+    >
       <PanelChrome title="Deployment Timeline" badge="3–8 weeks" />
 
       <div className="flex h-[calc(100%-2rem)] flex-col rounded-2xl border border-white/10 bg-black/40 p-3 sm:p-4">
@@ -701,7 +679,7 @@ export function GoLiveAnimation() {
           })}
         </div>
       </div>
-    </AnimationShell>
+    </BorderlessAnimationCanvas>
   );
 }
 

@@ -94,7 +94,7 @@ function FeatureCopy({
       >
         {title}
       </h3>
-      <p className="text-base font-normal leading-relaxed text-white/70">{description}</p>
+      <p className="text-lg font-normal leading-relaxed text-white/70 md:text-xl">{description}</p>
     </div>
   );
 }

@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
@@ -20,7 +21,47 @@ const heroStats = [
   },
 ] as const;
 
+function useIncrementingCounter(initialValue: number, intervalMs: number) {
+  const [count, setCount] = useState(initialValue);
+
+  useEffect(() => {
+    const intervalId = window.setInterval(() => {
+      setCount((current) => current + 1);
+    }, intervalMs);
+
+    return () => window.clearInterval(intervalId);
+  }, [intervalMs]);
+
+  return count;
+}
+
+function formatCount(value: number) {
+  return value.toLocaleString('en-US');
+}
+
+function StatCard({
+  label,
+  value,
+  valueClassName = 'text-emerald-400',
+}: {
+  label: string;
+  value: string;
+  valueClassName?: string;
+}) {
+  return (
+    <div className="rounded-2xl border border-white/20 bg-black/25 px-4 py-5 backdrop-blur-sm sm:px-5 sm:py-6">
+      <p className="mb-3 text-xs font-medium leading-snug text-white sm:text-sm">{label}</p>
+      <p className={`text-2xl font-semibold tracking-tight sm:text-3xl md:text-4xl ${valueClassName}`}>
+        {value}
+      </p>
+    </div>
+  );
+}
+
 export function Hero() {
+  const agentQueries = useIncrementingCounter(1032, 750);
+  const disruptionsAnticipated = useIncrementingCounter(103, 10 * 60 * 1000);
+
   return (
     <section
       aria-labelledby="hero-heading"
@@ -36,10 +77,7 @@ export function Hero() {
         loading="eager"
         fetchPriority="high"
       />
-      <div
-        className="pointer-events-none absolute inset-0 bg-black/35"
-        aria-hidden
-      />
+      <div className="pointer-events-none absolute inset-0 bg-black/35" aria-hidden />
       <div
         className="pointer-events-none absolute inset-0 bg-gradient-to-b from-black/25 via-black/30 to-black/45"
         aria-hidden
@@ -51,7 +89,7 @@ export function Hero() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, ease: 'easeOut' }}
-          className="mx-auto mb-12 w-fit max-w-full text-center font-semibold text-white lg:mb-14"
+          className="hero-headline mx-auto mb-12 w-fit max-w-full text-center lg:mb-14"
         >
           <span className="hero-title-line">AI that listens and executes for you.</span>
           <span className="hero-title-line mt-2 md:mt-3">
@@ -63,21 +101,18 @@ export function Hero() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.18, ease: 'easeOut' }}
-          className="mb-12 grid w-full max-w-3xl grid-cols-1 gap-4 sm:grid-cols-3 sm:gap-6"
+          className="mb-12 w-full max-w-6xl"
         >
-          {heroStats.map((stat) => (
-            <div
-              key={stat.id}
-              className="rounded-2xl border border-white/20 bg-black/25 px-5 py-6 backdrop-blur-sm"
-            >
-              <p className="mb-3 text-sm font-medium leading-snug text-white md:text-base">
-                {stat.label}
-              </p>
-              <p className="text-3xl font-semibold tracking-tight text-emerald-400 md:text-4xl">
-                {stat.value}
-              </p>
-            </div>
-          ))}
+          <p className="mb-4 text-left text-sm font-medium tracking-wide text-white/75">
+            For our customers:
+          </p>
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 xl:gap-5">
+            <StatCard label="Agent queries" value={formatCount(agentQueries)} />
+            <StatCard label="Disruptions Anticipated" value={formatCount(disruptionsAnticipated)} />
+            {heroStats.map((stat) => (
+              <StatCard key={stat.id} label={stat.label} value={stat.value} />
+            ))}
+          </div>
         </motion.div>
 
         <motion.div

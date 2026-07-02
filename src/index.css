@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap");
 @import "tailwindcss";
 
 @theme {
@@ -54,13 +54,21 @@ h6 {
   background: #0a0a0a;
 }
 
+.hero-headline {
+  font-family: var(--font-sans);
+  font-weight: 500;
+  color: #fff;
+}
+
 .hero-title-line {
   display: block;
   white-space: nowrap;
   text-align: center;
+  font-family: var(--font-sans);
+  font-weight: 500;
   font-size: min(3.75rem, calc((100vw - 3rem) / 28));
-  line-height: 1.12;
-  letter-spacing: -0.03em;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
 }
 
 @media (min-width: 1536px) {

@@ -47,20 +47,6 @@ function useUnevenAgentQueries(initialValue: number) {
   return count;
 }
 
-function useIncrementingCounter(initialValue: number, intervalMs: number) {
-  const [count, setCount] = useState(initialValue);
-
-  useEffect(() => {
-    const intervalId = window.setInterval(() => {
-      setCount((current) => current + 1);
-    }, intervalMs);
-
-    return () => window.clearInterval(intervalId);
-  }, [intervalMs]);
-
-  return count;
-}
-
 function formatCount(value: number) {
   return value.toLocaleString('en-US');
 }
@@ -86,7 +72,6 @@ function StatCard({
 
 export function Hero() {
   const agentQueries = useUnevenAgentQueries(1032);
-  const disruptionsAnticipated = useIncrementingCounter(103, 10 * 60 * 1000);
 
   return (
     <section
@@ -132,9 +117,8 @@ export function Hero() {
           <p className="mb-4 text-left text-sm font-medium tracking-wide text-white/75">
             For our customers:
           </p>
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 xl:gap-5">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 xl:gap-5">
             <StatCard label="Agent queries" value={formatCount(agentQueries)} />
-            <StatCard label="Disruptions Anticipated" value={formatCount(disruptionsAnticipated)} />
             {heroStats.map((stat) => (
               <StatCard key={stat.id} label={stat.label} value={stat.value} />
             ))}

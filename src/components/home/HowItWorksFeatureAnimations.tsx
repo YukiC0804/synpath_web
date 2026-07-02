@@ -57,7 +57,7 @@ function BorderlessAnimationCanvas({
     >
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(255,255,255,0.05),transparent_58%)]" />
       <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.028)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.028)_1px,transparent_1px)] bg-[size:24px_24px] opacity-[0.35]" />
-      <div className="relative">{children}</div>
+      <div className="relative h-full">{children}</div>
     </div>
   );
 }
@@ -590,30 +590,32 @@ export function AgentsToolsAnimation() {
   const showWorkflowChip = phase === 'hold';
   const isInterpreting = phase === 'interpreting';
 
+  const showInterpreting = isInterpreting || showArtifacts;
+
   return (
     <BorderlessAnimationCanvas
       label="Animated AI agent building operational tools from natural language"
-      className="py-2 lg:py-3"
+      className="h-[26rem] sm:h-[27rem]"
     >
-      <div className="mx-auto w-full max-w-[400px] lg:mx-0">
+      <div className="flex h-full w-full max-w-[540px] flex-col lg:max-w-none">
         <PanelChrome
           title="Agent Workspace"
           badge={statusReady ? 'Active' : isInterpreting ? 'Interpreting' : 'Building'}
         />
 
-        <div className="space-y-2.5 rounded-2xl border border-white/10 bg-black/45 p-2.5 shadow-[0_8px_32px_rgba(0,0,0,0.35)] sm:p-3">
+        <div className="flex min-h-0 flex-1 flex-col justify-between gap-2 rounded-2xl border border-white/10 bg-black/45 p-2.5 shadow-[0_8px_32px_rgba(0,0,0,0.35)] sm:gap-2.5 sm:p-3">
           <div
-            className={`rounded-xl border bg-black/55 p-2.5 transition-colors sm:p-3 ${
-              isInterpreting || showArtifacts
+            className={`shrink-0 rounded-xl border bg-black/55 p-2 transition-colors sm:p-2.5 ${
+              showInterpreting
                 ? 'border-emerald-400/30 shadow-[0_0_20px_rgba(52,211,153,0.08)]'
                 : 'border-white/10'
             }`}
           >
-            <div className="mb-1.5 flex items-center gap-1.5 text-[9px] uppercase tracking-[0.12em] text-white/40">
+            <div className="mb-1 flex items-center gap-1.5 text-[9px] uppercase tracking-[0.12em] text-white/40">
               <MessageSquare className="h-3 w-3 shrink-0" />
               Natural language
             </div>
-            <p className="min-h-[2.75rem] text-[10px] leading-relaxed text-white/85 sm:text-[11px]">
+            <p className="h-[2.5rem] text-[10px] leading-snug text-white/85 sm:text-[11px]">
               {typed}
               {phase === 'typing' ? (
                 <motion.span
@@ -625,33 +627,29 @@ export function AgentsToolsAnimation() {
             </p>
           </div>
 
-          {isInterpreting || showArtifacts ? (
-            <motion.div
-              className="flex items-center gap-2 rounded-lg border border-white/[0.08] bg-white/[0.03] px-2.5 py-1.5"
-              initial={{ opacity: 0, y: 4 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.35 }}
-            >
-              <div className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full border border-emerald-400/30 bg-emerald-500/10">
-                <Sparkles className="h-2.5 w-2.5 text-emerald-300" />
-              </div>
-              <p className="text-[9px] text-white/55 sm:text-[10px]">
-                {isInterpreting ? (
-                  <motion.span
-                    animate={{ opacity: [0.55, 1, 0.55] }}
-                    transition={{ duration: 1.2, repeat: Infinity }}
-                  >
-                    Synpath is interpreting your request…
-                  </motion.span>
-                ) : (
-                  'Synpath generated agents, dashboards, and workflows.'
-                )}
-              </p>
-            </motion.div>
-          ) : null}
+          <motion.div
+            className="flex h-8 shrink-0 items-center gap-2 rounded-lg border border-white/[0.08] bg-white/[0.03] px-2.5"
+            animate={{ opacity: showInterpreting ? 1 : 0 }}
+            transition={{ duration: 0.3 }}
+          >
+            <div className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full border border-emerald-400/30 bg-emerald-500/10">
+              <Sparkles className="h-2.5 w-2.5 text-emerald-300" />
+            </div>
+            <p className="truncate text-[9px] text-white/55 sm:text-[10px]">
+              {isInterpreting ? (
+                <motion.span
+                  animate={{ opacity: [0.55, 1, 0.55] }}
+                  transition={{ duration: 1.2, repeat: Infinity }}
+                >
+                  Synpath is interpreting your request…
+                </motion.span>
+              ) : (
+                'Synpath generated agents, dashboards, and workflows.'
+              )}
+            </p>
+          </motion.div>
 
-          {showArtifacts ? (
-            <div className="grid grid-cols-1 gap-1.5 sm:grid-cols-3">
+          <div className="grid shrink-0 grid-cols-3 gap-2">
             {generatedArtifacts.map((artifact, index) => {
               const Icon = artifact.icon;
 
@@ -659,13 +657,11 @@ export function AgentsToolsAnimation() {
                 <motion.div
                   key={artifact.id}
                   className="rounded-xl border border-white/10 bg-[#0d0d0d] p-2"
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={
-                    showArtifacts
-                      ? { opacity: 1, y: 0 }
-                      : { opacity: 0, y: 10 }
-                  }
-                  transition={{ duration: 0.4, delay: showArtifacts ? index * 0.12 : 0 }}
+                  animate={{
+                    opacity: showArtifacts ? 1 : 0,
+                    y: showArtifacts ? 0 : 8,
+                  }}
+                  transition={{ duration: 0.35, delay: showArtifacts ? index * 0.1 : 0 }}
                 >
                   <Icon className="mb-1 h-3.5 w-3.5 text-emerald-300/90" />
                   <p className="text-[9px] font-medium leading-snug text-white/85 sm:text-[10px]">
@@ -678,81 +674,74 @@ export function AgentsToolsAnimation() {
                     ) : (
                       <>
                         <motion.span
-                          animate={{ opacity: [0.45, 1, 0.45] }}
-                          transition={{ duration: 1, repeat: Infinity }}
+                          animate={
+                            showArtifacts
+                              ? { opacity: [0.45, 1, 0.45] }
+                              : { opacity: 0.35 }
+                          }
+                          transition={{ duration: 1, repeat: showArtifacts ? Infinity : 0 }}
                           className="text-white/55"
                         >
                           {artifact.statusFrom}
                         </motion.span>
-                        {showArtifacts ? (
-                          <span className="text-white/30"> → {artifact.statusTo}</span>
-                        ) : null}
+                        <span className="text-white/30"> → {artifact.statusTo}</span>
                       </>
                     )}
                   </p>
                 </motion.div>
               );
             })}
-            </div>
-          ) : null}
+          </div>
 
-          {showTable ? (
-            <motion.div
-              className="overflow-hidden rounded-xl border border-white/10 bg-[#0a0a0a]"
-              initial={{ opacity: 0, y: 8 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.45, ease: 'easeOut' }}
-            >
-            <div className="border-b border-white/10 px-2 py-1.5">
+          <motion.div
+            className="flex min-h-0 flex-1 flex-col overflow-hidden rounded-xl border border-white/10 bg-[#0a0a0a]"
+            animate={{ opacity: showTable ? 1 : 0 }}
+            transition={{ duration: 0.35 }}
+          >
+            <div className="shrink-0 border-b border-white/10 px-2.5 py-1.5">
               <p className="text-[9px] font-medium uppercase tracking-[0.1em] text-white/45">
                 At-Risk Orders
               </p>
             </div>
-            <div className="overflow-x-auto">
-              <table className="w-full min-w-[320px] text-left text-[8px] sm:text-[9px]">
+            <div className="min-h-0 flex-1 overflow-hidden">
+              <table className="h-full w-full table-fixed text-left text-[8px] sm:text-[9px]">
                 <thead>
                   <tr className="border-b border-white/[0.06] text-white/40">
-                    <th className="px-2 py-1.5 font-medium">Order</th>
-                    <th className="px-2 py-1.5 font-medium">Risk</th>
-                    <th className="px-2 py-1.5 font-medium">Cause</th>
-                    <th className="px-2 py-1.5 font-medium">Action</th>
+                    <th className="w-[18%] px-2 py-1 font-medium">Order</th>
+                    <th className="w-[14%] px-2 py-1 font-medium">Risk</th>
+                    <th className="w-[28%] px-2 py-1 font-medium">Cause</th>
+                    <th className="px-2 py-1 font-medium">Action</th>
                   </tr>
                 </thead>
-                <tbody>
+                <tbody className="divide-y divide-white/[0.04]">
                   {riskTableRows.map((row, index) => (
                     <motion.tr
                       key={row.order}
-                      className="border-b border-white/[0.04] last:border-0"
-                      initial={{ opacity: 0, x: -6 }}
-                      animate={showTable ? { opacity: 1, x: 0 } : { opacity: 0, x: -6 }}
-                      transition={{ duration: 0.35, delay: index * 0.1 }}
+                      animate={showTable ? { opacity: 1, x: 0 } : { opacity: 0, x: -4 }}
+                      transition={{ duration: 0.3, delay: showTable ? index * 0.08 : 0 }}
                     >
                       <td className="px-2 py-1.5 font-medium text-white/80">{row.order}</td>
                       <td className="px-2 py-1.5">
                         <RiskPill risk={row.risk} />
                       </td>
-                      <td className="px-2 py-1.5 text-white/60">{row.cause}</td>
-                      <td className="px-2 py-1.5 text-emerald-300/85">{row.action}</td>
+                      <td className="truncate px-2 py-1.5 text-white/60">{row.cause}</td>
+                      <td className="truncate px-2 py-1.5 text-emerald-300/85">{row.action}</td>
                     </motion.tr>
                   ))}
                 </tbody>
               </table>
             </div>
-            </motion.div>
-          ) : null}
+          </motion.div>
 
-          {showWorkflowChip ? (
-            <motion.div
-              className="rounded-lg border border-emerald-400/20 bg-emerald-500/[0.06] px-2.5 py-2"
-              initial={{ opacity: 0, y: 6 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4 }}
-            >
-              <p className="text-[8px] leading-relaxed text-emerald-200/80 sm:text-[9px]">
-                {workflowRuleChip}
-              </p>
-            </motion.div>
-          ) : null}
+          <motion.div
+            className="shrink-0 rounded-lg border border-emerald-400/20 bg-emerald-500/[0.06] px-2.5 py-1.5"
+            animate={{ opacity: showWorkflowChip ? 1 : 0 }}
+            transition={{ duration: 0.35 }}
+          >
+            <p className="text-[8px] leading-snug text-emerald-200/80 sm:text-[9px]">
+              {workflowRuleChip}
+            </p>
+          </motion.div>
         </div>
       </div>
     </BorderlessAnimationCanvas>

@@ -79,18 +79,19 @@ function FeatureVisual({
 }
 
 function FeatureCopy({
-  step,
   title,
   description,
+  titleClassName = '',
 }: {
-  step: number;
   title: string;
   description: string;
+  titleClassName?: string;
 }) {
   return (
     <div className="max-w-xl lg:max-w-lg">
-      <p className="mb-4 text-sm font-medium text-white/55">{step}.</p>
-      <h3 className="mb-5 text-3xl font-medium leading-[1.12] tracking-tight text-white md:text-4xl lg:text-[2.6rem]">
+      <h3
+        className={`mb-5 text-2xl font-medium leading-[1.12] tracking-tight text-white md:text-3xl lg:text-[2rem] ${titleClassName}`}
+      >
         {title}
       </h3>
       <p className="text-base leading-relaxed text-white/70 md:text-lg">{description}</p>
@@ -127,9 +128,9 @@ export function HowItWorksSection() {
               <div className="mx-auto grid max-w-7xl grid-cols-1 items-center gap-10 px-4 sm:px-6 lg:grid-cols-2 lg:gap-16 lg:px-8 xl:gap-20">
                 <div className={reversed ? 'lg:order-2' : ''}>
                   <FeatureCopy
-                    step={index + 1}
                     title={row.title}
                     description={row.description}
+                    titleClassName={row.id === 'learn' ? 'whitespace-nowrap' : ''}
                   />
                 </div>
                 <div className={reversed ? 'lg:order-1' : ''}>

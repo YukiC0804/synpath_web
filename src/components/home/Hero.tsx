@@ -2,24 +2,8 @@ import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
-
-const heroStats = [
-  {
-    id: 'otif',
-    label: 'On-Time, In-Full',
-    value: '+15%',
-  },
-  {
-    id: 'wip',
-    label: 'WIP',
-    value: '↓18%',
-  },
-  {
-    id: 'costs',
-    label: 'Avoided staff costs',
-    value: '↓$1M',
-  },
-] as const;
+import { numberFormatLocales } from '../../i18n/homepage';
+import { useHomepageCopy } from '../../i18n/useHomepageCopy';
 
 function useUnevenAgentQueries(initialValue: number) {
   const [count, setCount] = useState(initialValue);
@@ -47,10 +31,6 @@ function useUnevenAgentQueries(initialValue: number) {
   return count;
 }
 
-function formatCount(value: number) {
-  return value.toLocaleString('en-US');
-}
-
 function StatCard({
   label,
   value,
@@ -71,7 +51,14 @@ function StatCard({
 }
 
 export function Hero() {
+  const copy = useHomepageCopy();
   const agentQueries = useUnevenAgentQueries(1032);
+
+  const heroStats = [
+    { id: 'otif', label: copy.hero.statOtif, value: '+15%' },
+    { id: 'wip', label: copy.hero.statWip, value: '↓18%' },
+    { id: 'costs', label: copy.hero.statCosts, value: '↓$1M' },
+  ] as const;
 
   return (
     <section
@@ -102,11 +89,11 @@ export function Hero() {
           className="mx-auto mb-12 w-fit max-w-full text-center lg:mb-14"
         >
           <p className="mb-4 inline-flex rounded-full border border-white/20 bg-white/5 px-4 py-1.5 text-[0.9rem] font-medium tracking-wide text-white/80 backdrop-blur-sm sm:mb-5 sm:px-5 sm:text-[1.05rem]">
-            Hit Plan, Cut Waste and Scale
+            {copy.hero.tag}
           </p>
           <h1 id="hero-heading" className="hero-headline">
-            <span className="hero-title-line">AI that listens and executes for you</span>
-            <span className="hero-title-line mt-2 md:mt-3">Build for Manufacturing Operations</span>
+            <span className="hero-title-line">{copy.hero.titleLine1}</span>
+            <span className="hero-title-line mt-2 md:mt-3">{copy.hero.titleLine2}</span>
           </h1>
         </motion.div>
 
@@ -117,10 +104,13 @@ export function Hero() {
           className="mb-12 w-full max-w-6xl"
         >
           <p className="mb-4 text-left text-sm font-medium tracking-wide text-white/75">
-            For our customers:
+            {copy.hero.forCustomers}
           </p>
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 xl:gap-5">
-            <StatCard label="Agent queries" value={formatCount(agentQueries)} />
+            <StatCard
+              label={copy.hero.agentQueries}
+              value={agentQueries.toLocaleString(numberFormatLocales[copy.locale])}
+            />
             {heroStats.map((stat) => (
               <StatCard key={stat.id} label={stat.label} value={stat.value} />
             ))}
@@ -137,14 +127,14 @@ export function Hero() {
             to="/book-demo"
             className="inline-flex min-w-[200px] items-center justify-center rounded-lg bg-white px-8 py-4 font-medium text-black transition-colors hover:bg-neutral-200"
           >
-            Book a demo
+            {copy.hero.bookDemo}
             <ArrowRight className="ml-2 h-4 w-4" aria-hidden />
           </Link>
           <a
             href="#build-one-source-of-truth"
             className="inline-flex min-w-[200px] items-center justify-center rounded-lg border border-white/25 bg-white/10 px-8 py-4 font-medium text-white backdrop-blur-sm transition-colors hover:border-white/35 hover:bg-white/15"
           >
-            Explore product
+            {copy.hero.exploreProduct}
           </a>
         </motion.div>
       </div>

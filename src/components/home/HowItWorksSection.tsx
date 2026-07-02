@@ -1,58 +1,7 @@
 import type { ReactNode } from 'react';
 import { SynpathUseCasesIntro } from './SynpathUseCasesIntro';
 import { HowItWorksFeatureAnimation } from './HowItWorksFeatureAnimations';
-
-const featureRows = [
-  {
-    id: 'truth' as const,
-    title: 'Build One Source of Truth',
-    description:
-      'Connect machine data, software, paperwork, and tribal knowledge into one reliable operating layer.',
-  },
-  {
-    id: 'agents' as const,
-    title: 'Create Agents & Tools',
-    description: (
-      <>
-        Use natural language to create AI agents, dashboards,
-        <br />
-        and apps that execute daunting tasks for you.
-      </>
-    ),
-  },
-  {
-    id: 'deploy' as const,
-    title: 'Go Live in 3–8 Weeks',
-    description:
-      'With AI data migration, fast customization, and easy user adoption, Synpath is built for rapid deployment.',
-  },
-];
-
-const valueProps = [
-  {
-    id: 'next-gen',
-    title: 'A next-generation platform',
-    description:
-      'Automate the most daunting tasks with AI agents, built directly into Synpath — operating under your supervision.',
-  },
-  {
-    id: 'simplify',
-    title: 'Simplify your operations',
-    description:
-      'Synpath handles order management, inventory, purchasing, planning, production, quality, logistics, and more in one connected system.',
-  },
-  {
-    id: 'control-tower',
-    title: 'Factory Control Tower',
-    description: 'Design, monitor, and supervise your AI-driven operations in real time.',
-  },
-  {
-    id: 'analyze',
-    title: 'Analyze & Decide',
-    description:
-      'Custom dashboards and AI-powered analysis, built directly into your operational system.',
-  },
-] as const;
+import { useHomepageCopy } from '../../i18n/useHomepageCopy';
 
 function FeatureCopy({
   title,
@@ -72,6 +21,55 @@ function FeatureCopy({
 }
 
 export function HowItWorksSection() {
+  const copy = useHomepageCopy();
+
+  const featureRows = [
+    {
+      id: 'truth' as const,
+      title: copy.howItWorks.truthTitle,
+      description: copy.howItWorks.truthDesc,
+    },
+    {
+      id: 'agents' as const,
+      title: copy.howItWorks.agentsTitle,
+      description: (
+        <>
+          {copy.howItWorks.agentsDescLine1}
+          <br />
+          {copy.howItWorks.agentsDescLine2}
+        </>
+      ),
+    },
+    {
+      id: 'deploy' as const,
+      title: copy.howItWorks.deployTitle,
+      description: copy.howItWorks.deployDesc,
+    },
+  ];
+
+  const valueProps = [
+    {
+      id: 'next-gen',
+      title: copy.howItWorks.valueNextGenTitle,
+      description: copy.howItWorks.valueNextGenDesc,
+    },
+    {
+      id: 'simplify',
+      title: copy.howItWorks.valueSimplifyTitle,
+      description: copy.howItWorks.valueSimplifyDesc,
+    },
+    {
+      id: 'control-tower',
+      title: copy.howItWorks.valueControlTowerTitle,
+      description: copy.howItWorks.valueControlTowerDesc,
+    },
+    {
+      id: 'analyze',
+      title: copy.howItWorks.valueAnalyzeTitle,
+      description: copy.howItWorks.valueAnalyzeDesc,
+    },
+  ] as const;
+
   return (
     <section id="how-it-works" aria-labelledby="how-it-works-heading" className="bg-black">
       <SynpathUseCasesIntro />
@@ -104,10 +102,10 @@ export function HowItWorksSection() {
       <div className="border-t border-white/5 py-20 md:py-24 lg:py-28">
         <div className="px-30">
           <p className="mb-4 text-sm font-medium uppercase tracking-[0.18em] text-white/55">
-            Our value proposition
+            {copy.howItWorks.valueEyebrow}
           </p>
           <h2 className="max-w-4xl text-4xl font-medium leading-[1.08] tracking-tight text-white md:text-5xl lg:text-6xl">
-            The manufacturing platform that fits how you work, and works while you sleep
+            {copy.howItWorks.valueHeading}
           </h2>
 
           <div className="mt-14 grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-4">

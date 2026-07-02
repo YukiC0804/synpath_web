@@ -1,29 +1,11 @@
 import { useEffect, useRef, useState } from 'react';
 import { ArrowRight } from 'lucide-react';
+import { useHomepageCopy } from '../../i18n/useHomepageCopy';
 
-const synpathUseCases = [
-  'Production Scheduling',
-  'Demand Forecasting',
-  'Order Entry',
-  'Inventory Management',
-  'Sales and Operations Execution',
-  'Sales and Operations Planning',
-  'Procurement Automation',
-  'Order-to-Cash Automation',
-  'Client Prospecting',
-  'Data Analytics',
-  'Quoting',
-  'Estimating',
-  'AR Tracking',
-] as const;
-
-const CASE_COUNT = synpathUseCases.length;
 const PAUSE_MS = 1000;
 const SLIDE_MS = 500;
 const ITEM_HEIGHT = 80;
 const VISIBLE_HEIGHT = ITEM_HEIGHT * 7;
-const LOOP_ITEMS = [...synpathUseCases, ...synpathUseCases, ...synpathUseCases];
-const LOOP_START = CASE_COUNT;
 const BASE_TRANSLATE_Y = VISIBLE_HEIGHT / 2 - ITEM_HEIGHT / 2;
 
 const FONT_SIZES_REM = [3.35, 1.85, 1.5, 1.25, 1];
@@ -63,9 +45,13 @@ function getItemStyle(index: number, scrollOffset: number) {
   } as const;
 }
 
-function UseCasesStepper() {
-  const [scrollOffset, setScrollOffset] = useState<number>(LOOP_START);
-  const scrollOffsetRef = useRef<number>(LOOP_START);
+function UseCasesStepper({ useCases }: { useCases: string[] }) {
+  const caseCount = useCases.length;
+  const loopItems = [...useCases, ...useCases, ...useCases];
+  const loopStart = caseCount;
+
+  const [scrollOffset, setScrollOffset] = useState<number>(loopStart);
+  const scrollOffsetRef = useRef<number>(loopStart);
   const rafRef = useRef<number | null>(null);
   const timeoutsRef = useRef<number[]>([]);
 
@@ -133,8 +119,8 @@ function UseCasesStepper() {
             return;
           }
 
-          if (next >= CASE_COUNT * 2) {
-            snapOffset(next - CASE_COUNT);
+          if (next >= caseCount * 2) {
+            snapOffset(next - caseCount);
           }
 
           runCycle();
@@ -148,7 +134,7 @@ function UseCasesStepper() {
       cancelled = true;
       clearTimers();
     };
-  }, []);
+  }, [caseCount]);
 
   const translateY = BASE_TRANSLATE_Y - scrollOffset * ITEM_HEIGHT;
 
@@ -175,7 +161,7 @@ function UseCasesStepper() {
         className="use-cases-stepper-track"
         style={{ transform: `translate3d(0, ${translateY}px, 0)` }}
       >
-        {LOOP_ITEMS.map((item, index) => (
+        {loopItems.map((item, index) => (
           <li
             key={`${item}-${index}`}
             className="flex w-full items-center justify-center whitespace-nowrap text-center"
@@ -190,11 +176,13 @@ function UseCasesStepper() {
 }
 
 export function SynpathUseCasesIntro() {
+  const copy = useHomepageCopy();
+
   return (
     <div className="border-t border-white/5 py-16 md:py-20 lg:py-24">
       <div className="px-30">
         <p className="mb-10 text-sm font-medium uppercase tracking-[0.18em] text-white/55 md:mb-12">
-          How It Works
+          {copy.useCasesIntro.eyebrow}
         </p>
 
         <div className="grid grid-cols-1 items-center gap-8 lg:grid-cols-[minmax(0,0.72fr)_minmax(0,1.55fr)_auto] lg:gap-5 xl:gap-8">
@@ -202,18 +190,18 @@ export function SynpathUseCasesIntro() {
             id="how-it-works-heading"
             className="text-2xl font-normal leading-snug text-white md:text-3xl lg:text-[2rem]"
           >
-            The top manufacturers
+            {copy.useCasesIntro.headingLine1}
             <br />
-            use Synpath for
+            {copy.useCasesIntro.headingLine2}
           </h2>
 
-          <UseCasesStepper />
+          <UseCasesStepper useCases={copy.useCasesIntro.useCases} />
 
           <a
             href="#build-one-source-of-truth"
             className="inline-flex w-fit shrink-0 items-center justify-center self-center rounded-full border border-white/25 px-6 py-3 text-sm font-medium text-white transition-colors hover:border-white/40 hover:bg-white/5 md:px-7 md:py-3.5 md:text-base lg:justify-self-end lg:self-center"
           >
-            Explore Platform
+            {copy.useCasesIntro.explorePlatform}
             <ArrowRight className="ml-2 h-4 w-4" aria-hidden />
           </a>
         </div>

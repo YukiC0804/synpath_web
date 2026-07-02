@@ -15,6 +15,7 @@ import {
   Table2,
   Users,
 } from 'lucide-react';
+import { useHomepageCopy } from '../../i18n/useHomepageCopy';
 
 function PanelChrome({
   title,
@@ -67,22 +68,14 @@ type FlowPaths = {
   outbound: string;
 };
 
-const fragmentedSources = [
-  { id: 'mes', label: 'MES', icon: Activity, floatDelay: 0 },
-  { id: 'erp', label: 'ERP', icon: Database, floatDelay: 0.4 },
-  { id: 'machine', label: 'Machine Data', icon: Cog, floatDelay: 0.8 },
-  { id: 'paper', label: 'Paperwork', icon: FileText, floatDelay: 1.2 },
-  { id: 'tribal', label: 'Tribal Knowledge', icon: Users, floatDelay: 0.6 },
-  { id: 'excel', label: 'Excel', icon: Table2, floatDelay: 1.0 },
-  { id: 'sop', label: 'SOPs', icon: ClipboardList, floatDelay: 1.4 },
-] as const;
-
-const truthInsights = [
-  'Live production status',
-  'Unified order data',
-  'Accurate capacity view',
-  'Planning decisions',
-  'Team-wide visibility',
+const fragmentedSourceMeta = [
+  { id: 'mes', icon: Activity, floatDelay: 0 },
+  { id: 'erp', icon: Database, floatDelay: 0.4 },
+  { id: 'machine', icon: Cog, floatDelay: 0.8 },
+  { id: 'paper', icon: FileText, floatDelay: 1.2 },
+  { id: 'tribal', icon: Users, floatDelay: 0.6 },
+  { id: 'excel', icon: Table2, floatDelay: 1.0 },
+  { id: 'sop', icon: ClipboardList, floatDelay: 1.4 },
 ] as const;
 
 function FragmentedSourceCard({
@@ -148,7 +141,13 @@ function SynpathHub({ hubRef }: { hubRef: React.Ref<HTMLDivElement> }) {
   );
 }
 
-function ConnectionLinesLayer({ paths }: { paths: FlowPaths | null }) {
+function ConnectionLinesLayer({
+  paths,
+  sourceIds,
+}: {
+  paths: FlowPaths | null;
+  sourceIds: string[];
+}) {
   if (!paths) {
     return null;
   }
@@ -160,7 +159,7 @@ function ConnectionLinesLayer({ paths }: { paths: FlowPaths | null }) {
     >
       {paths.inbound.map((path, index) =>
         path ? (
-          <g key={fragmentedSources[index]?.id ?? index}>
+          <g key={sourceIds[index] ?? index}>
             <path
               d={path}
               fill="none"
@@ -212,9 +211,15 @@ function ConnectionLinesLayer({ paths }: { paths: FlowPaths | null }) {
 function TruthPanel({
   highlightIndex,
   panelRef,
+  insights,
+  oneSourceTitle,
+  oneSourceSubtitle,
 }: {
   highlightIndex: number;
   panelRef: React.Ref<HTMLDivElement>;
+  insights: string[];
+  oneSourceTitle: string;
+  oneSourceSubtitle: string;
 }) {
   return (
     <motion.div
@@ -244,9 +249,9 @@ function TruthPanel({
       <div className="relative mb-3 flex shrink-0 items-center justify-between gap-2 border-b border-white/10 pb-2.5">
         <div className="min-w-0">
           <p className="whitespace-nowrap text-[10px] font-semibold uppercase tracking-[0.1em] text-emerald-300/90 sm:text-[11px]">
-            One Source of Truth
+            {oneSourceTitle}
           </p>
-          <p className="mt-0.5 text-[10px] text-white/45 sm:text-[11px]">Unified operating layer</p>
+          <p className="mt-0.5 text-[10px] text-white/45 sm:text-[11px]">{oneSourceSubtitle}</p>
         </div>
         <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg border border-emerald-400/30 bg-emerald-500/10">
           <Lock className="h-3.5 w-3.5 text-emerald-300" />
@@ -254,12 +259,12 @@ function TruthPanel({
       </div>
 
       <ul className="relative flex flex-1 flex-col justify-between gap-1.5 py-0.5">
-        {truthInsights.map((item, index) => {
+        {insights.map((item, index) => {
           const isActive = index === highlightIndex;
 
           return (
             <motion.li
-              key={item}
+              key={`${item}-${index}`}
               className={`flex flex-1 items-center gap-2.5 rounded-lg border px-3 py-2 sm:px-3.5 sm:py-2.5 ${
                 isActive
                   ? 'border-emerald-400/35 bg-emerald-500/[0.08]'
@@ -285,6 +290,7 @@ function useFlowPaths(
   hubRef: React.RefObject<HTMLDivElement | null>,
   cardRefs: React.MutableRefObject<(HTMLDivElement | null)[]>,
   panelRef: React.RefObject<HTMLDivElement | null>,
+  sourceCount: number,
 ) {
   const [paths, setPaths] = useState<FlowPaths | null>(null);
 
@@ -308,7 +314,7 @@ function useFlowPaths(
       const hubCenterY = hubRect.top - containerRect.top + hubRect.height / 2;
       const panelX = panelRect.left - containerRect.left;
 
-      const inbound = fragmentedSources.map((_, index) => {
+      const inbound = Array.from({ length: sourceCount }, (_, index) => {
         const card = cardRefs.current[index];
         if (!card) {
           return '';
@@ -354,40 +360,56 @@ function useFlowPaths(
       resizeObserver.disconnect();
       window.removeEventListener('resize', updatePaths);
     };
-  }, [cardRefs, containerRef, hubRef, panelRef]);
+  }, [cardRefs, containerRef, hubRef, panelRef, sourceCount]);
 
   return paths;
 }
 
 export function SourceOfTruthAnimation() {
+  const copy = useHomepageCopy();
+  const truth = copy.animations.truth;
+  const fragmentedSources = fragmentedSourceMeta.map((source) => ({
+    ...source,
+    label: truth.sourceLabels[source.id],
+  }));
+
   const [highlightIndex, setHighlightIndex] = useState(0);
   const containerRef = useRef<HTMLDivElement>(null);
   const hubRef = useRef<HTMLDivElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
   const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
-  const paths = useFlowPaths(containerRef, hubRef, cardRefs, panelRef);
+  const paths = useFlowPaths(
+    containerRef,
+    hubRef,
+    cardRefs,
+    panelRef,
+    fragmentedSources.length,
+  );
 
   useEffect(() => {
     const interval = window.setInterval(() => {
-      setHighlightIndex((current) => (current + 1) % truthInsights.length);
+      setHighlightIndex((current) => (current + 1) % truth.insights.length);
     }, 2500);
     return () => window.clearInterval(interval);
-  }, []);
+  }, [truth.insights.length]);
 
   return (
     <BorderlessAnimationCanvas
-      label="Connect fragmented manufacturing data into one reliable source of truth"
+      label={truth.ariaLabel}
       className="min-h-[34rem] py-2 lg:min-h-[28rem] lg:py-4 xl:min-h-[30rem]"
     >
       <div
         ref={containerRef}
         className="relative flex flex-col gap-10 lg:grid lg:grid-cols-[minmax(0,26%)_minmax(5rem,16%)_minmax(0,1fr)] lg:items-stretch lg:gap-x-5 lg:gap-y-10 xl:gap-x-6"
       >
-        <ConnectionLinesLayer paths={paths} />
+        <ConnectionLinesLayer
+          paths={paths}
+          sourceIds={fragmentedSources.map((source) => source.id)}
+        />
 
         <div className="relative z-20 flex flex-col lg:h-full">
           <p className="mb-3 shrink-0 whitespace-nowrap text-[9px] font-medium uppercase tracking-[0.14em] text-white/35">
-            Fragmented sources
+            {truth.fragmentedSources}
           </p>
 
           <div className="flex flex-col gap-2 lg:hidden">
@@ -436,9 +458,15 @@ export function SourceOfTruthAnimation() {
 
         <div className="relative z-20 flex flex-col lg:h-full">
           <p className="mb-3 shrink-0 text-[9px] font-medium uppercase tracking-[0.14em] text-white/35">
-            Trusted layer
+            {truth.trustedLayer}
           </p>
-          <TruthPanel highlightIndex={highlightIndex} panelRef={panelRef} />
+          <TruthPanel
+            highlightIndex={highlightIndex}
+            panelRef={panelRef}
+            insights={truth.insights}
+            oneSourceTitle={truth.oneSourceTitle}
+            oneSourceSubtitle={truth.oneSourceSubtitle}
+          />
 
           <div className="mt-4 flex flex-col items-center gap-1 lg:hidden">
             <motion.div
@@ -446,7 +474,9 @@ export function SourceOfTruthAnimation() {
               animate={{ opacity: [0.4, 1, 0.4] }}
               transition={{ duration: 2, repeat: Infinity }}
             />
-            <span className="text-[8px] uppercase tracking-[0.12em] text-white/35">Unified output</span>
+            <span className="text-[8px] uppercase tracking-[0.12em] text-white/35">
+              {truth.unifiedOutput}
+            </span>
           </div>
         </div>
       </div>
@@ -454,76 +484,55 @@ export function SourceOfTruthAnimation() {
   );
 }
 
-const agentsPrompt =
-  'Find sales orders at risk of late delivery, identify the cause, and escalate automatically.';
-
-const generatedArtifacts = [
-  {
-    id: 'dashboard',
-    title: 'At-Risk Orders Dashboard',
-    icon: LayoutDashboard,
-    statusFrom: 'Building',
-    statusTo: 'Ready',
-  },
-  {
-    id: 'agent',
-    title: 'Late Delivery Agent',
-    icon: Bot,
-    statusFrom: 'Hiring',
-    statusTo: 'Running',
-  },
-  {
-    id: 'workflow',
-    title: 'Escalation Workflow',
-    icon: Sparkles,
-    statusFrom: 'Creating',
-    statusTo: 'Created',
-  },
-] as const;
-
-const riskTableRows = [
-  {
-    order: 'SO-1842',
-    risk: 'High',
-    cause: 'Material shortage',
-    action: 'Supplier follow-up sent',
-  },
-  {
-    order: 'SO-2041',
-    risk: 'Medium',
-    cause: 'Machine downtime',
-    action: 'Planner notified',
-  },
-  {
-    order: 'SO-2218',
-    risk: 'High',
-    cause: 'Quality hold',
-    action: 'Escalated to operations',
-  },
-] as const;
-
-const workflowRuleChip =
-  'If delivery risk is high → identify cause → notify owner → update dashboard → escalate if unresolved.';
+const riskOrders = ['SO-1842', 'SO-2041', 'SO-2218'] as const;
+const riskLevels = ['high', 'high', 'medium'] as const;
+const deployProgress = [35, 70, 100] as const;
 
 type AgentsPhase = 'typing' | 'interpreting' | 'artifacts' | 'table' | 'hold';
 
-function RiskPill({ risk }: { risk: string }) {
-  const isHigh = risk === 'High';
-
+function RiskPill({ label, isHigh }: { label: string; isHigh: boolean }) {
   return (
     <span
       className={`rounded-full px-1.5 py-0.5 text-[8px] font-medium sm:text-[9px] ${
-        isHigh
-          ? 'bg-rose-500/15 text-rose-300'
-          : 'bg-amber-500/15 text-amber-300'
+        isHigh ? 'bg-rose-500/15 text-rose-300' : 'bg-amber-500/15 text-amber-300'
       }`}
     >
-      {risk}
+      {label}
     </span>
   );
 }
 
 export function AgentsToolsAnimation() {
+  const copy = useHomepageCopy();
+  const agents = copy.animations.agents;
+  const agentsPrompt = agents.prompt;
+
+  const generatedArtifacts = [
+    {
+      id: 'dashboard',
+      ...agents.artifacts.dashboard,
+      icon: LayoutDashboard,
+    },
+    {
+      id: 'agent',
+      ...agents.artifacts.agent,
+      icon: Bot,
+    },
+    {
+      id: 'workflow',
+      ...agents.artifacts.workflow,
+      icon: Sparkles,
+    },
+  ] as const;
+
+  const riskTableRows = riskOrders.map((order, index) => ({
+    order,
+    isHigh: riskLevels[index] === 'high',
+    riskLabel: riskLevels[index] === 'high' ? agents.riskHigh : agents.riskMedium,
+    cause: agents.rows[index].cause,
+    action: agents.rows[index].action,
+  }));
+
   const [typed, setTyped] = useState('');
   const [phase, setPhase] = useState<AgentsPhase>('typing');
   const [statusReady, setStatusReady] = useState(false);
@@ -583,24 +592,26 @@ export function AgentsToolsAnimation() {
       cancelled = true;
       timers.forEach((id) => window.clearTimeout(id));
     };
-  }, []);
+  }, [agentsPrompt]);
 
   const showArtifacts = phase !== 'typing' && phase !== 'interpreting';
   const showTable = phase === 'table' || phase === 'hold';
   const showWorkflowChip = phase === 'hold';
   const isInterpreting = phase === 'interpreting';
-
   const showInterpreting = isInterpreting || showArtifacts;
 
   return (
-    <BorderlessAnimationCanvas
-      label="Animated AI agent building operational tools from natural language"
-      className="h-[26rem] sm:h-[27rem]"
-    >
+    <BorderlessAnimationCanvas label={agents.ariaLabel} className="h-[26rem] sm:h-[27rem]">
       <div className="flex h-full w-full max-w-[540px] flex-col lg:max-w-none">
         <PanelChrome
-          title="Agent Workspace"
-          badge={statusReady ? 'Active' : isInterpreting ? 'Interpreting' : 'Building'}
+          title={agents.workspace}
+          badge={
+            statusReady
+              ? agents.badgeActive
+              : isInterpreting
+                ? agents.badgeInterpreting
+                : agents.badgeBuilding
+          }
         />
 
         <div className="flex min-h-0 flex-1 flex-col justify-between gap-2 rounded-2xl border border-white/10 bg-black/45 p-2.5 shadow-[0_8px_32px_rgba(0,0,0,0.35)] sm:gap-2.5 sm:p-3">
@@ -613,7 +624,7 @@ export function AgentsToolsAnimation() {
           >
             <div className="mb-1 flex items-center gap-1.5 text-[9px] uppercase tracking-[0.12em] text-white/40">
               <MessageSquare className="h-3 w-3 shrink-0" />
-              Natural language
+              {agents.naturalLanguage}
             </div>
             <p className="h-[2.5rem] text-[10px] leading-snug text-white/85 sm:text-[11px]">
               {typed}
@@ -641,10 +652,10 @@ export function AgentsToolsAnimation() {
                   animate={{ opacity: [0.55, 1, 0.55] }}
                   transition={{ duration: 1.2, repeat: Infinity }}
                 >
-                  Synpath is interpreting your request…
+                  {agents.interpreting}
                 </motion.span>
               ) : (
-                'Synpath generated agents, dashboards, and workflows.'
+                agents.generated
               )}
             </p>
           </motion.div>
@@ -668,7 +679,7 @@ export function AgentsToolsAnimation() {
                     {artifact.title}
                   </p>
                   <p className="mt-1 text-[8px] text-white/40 sm:text-[9px]">
-                    Status:{' '}
+                    {agents.status}{' '}
                     {statusReady ? (
                       <span className="text-emerald-300">{artifact.statusTo}</span>
                     ) : (
@@ -700,17 +711,17 @@ export function AgentsToolsAnimation() {
           >
             <div className="shrink-0 border-b border-white/10 px-2.5 py-1.5">
               <p className="text-[9px] font-medium uppercase tracking-[0.1em] text-white/45">
-                At-Risk Orders
+                {agents.atRiskOrders}
               </p>
             </div>
             <div className="min-h-0 flex-1 overflow-hidden">
               <table className="h-full w-full table-fixed text-left text-[8px] sm:text-[9px]">
                 <thead>
                   <tr className="border-b border-white/[0.06] text-white/40">
-                    <th className="w-[18%] px-2 py-1 font-medium">Order</th>
-                    <th className="w-[14%] px-2 py-1 font-medium">Risk</th>
-                    <th className="w-[28%] px-2 py-1 font-medium">Cause</th>
-                    <th className="px-2 py-1 font-medium">Action</th>
+                    <th className="w-[18%] px-2 py-1 font-medium">{agents.tableOrder}</th>
+                    <th className="w-[14%] px-2 py-1 font-medium">{agents.tableRisk}</th>
+                    <th className="w-[28%] px-2 py-1 font-medium">{agents.tableCause}</th>
+                    <th className="px-2 py-1 font-medium">{agents.tableAction}</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-white/[0.04]">
@@ -722,7 +733,7 @@ export function AgentsToolsAnimation() {
                     >
                       <td className="px-2 py-1.5 font-medium text-white/80">{row.order}</td>
                       <td className="px-2 py-1.5">
-                        <RiskPill risk={row.risk} />
+                        <RiskPill label={row.riskLabel} isHigh={row.isHigh} />
                       </td>
                       <td className="truncate px-2 py-1.5 text-white/60">{row.cause}</td>
                       <td className="truncate px-2 py-1.5 text-emerald-300/85">{row.action}</td>
@@ -739,7 +750,7 @@ export function AgentsToolsAnimation() {
             transition={{ duration: 0.35 }}
           >
             <p className="text-[8px] leading-snug text-emerald-200/80 sm:text-[9px]">
-              {workflowRuleChip}
+              {agents.workflowChip}
             </p>
           </motion.div>
         </div>
@@ -748,13 +759,14 @@ export function AgentsToolsAnimation() {
   );
 }
 
-const deploySteps = [
-  { week: 'Week 1–2', label: 'AI data migration', progress: 35 },
-  { week: 'Week 3–5', label: 'Customization & agents', progress: 70 },
-  { week: 'Week 6–8', label: 'Go live & adoption', progress: 100 },
-] as const;
-
 export function GoLiveAnimation() {
+  const copy = useHomepageCopy();
+  const deploy = copy.animations.deploy;
+  const deploySteps = deploy.steps.map((step, index) => ({
+    ...step,
+    progress: deployProgress[index],
+  }));
+
   const [activeStep, setActiveStep] = useState(0);
 
   useEffect(() => {
@@ -762,24 +774,18 @@ export function GoLiveAnimation() {
       setActiveStep((current) => (current + 1) % (deploySteps.length + 1));
     }, 1800);
     return () => window.clearInterval(interval);
-  }, []);
+  }, [deploySteps.length]);
 
-  const progress =
-    activeStep >= deploySteps.length
-      ? 100
-      : deploySteps[activeStep].progress;
+  const progress = activeStep >= deploySteps.length ? 100 : deploySteps[activeStep].progress;
 
   return (
-    <BorderlessAnimationCanvas
-      label="Animated rapid deployment timeline from migration to go-live"
-      className="aspect-[4/3.2] sm:aspect-[4/3]"
-    >
-      <PanelChrome title="Deployment Timeline" badge="3–8 weeks" />
+    <BorderlessAnimationCanvas label={deploy.ariaLabel} className="aspect-[4/3.2] sm:aspect-[4/3]">
+      <PanelChrome title={deploy.title} badge={deploy.badge} />
 
       <div className="flex h-[calc(100%-2rem)] flex-col rounded-2xl border border-white/10 bg-black/40 p-3 sm:p-4">
         <div className="mb-4">
           <div className="mb-2 flex items-center justify-between text-[10px] text-white/50 sm:text-[11px]">
-            <span>Overall progress</span>
+            <span>{deploy.overallProgress}</span>
             <motion.span
               key={progress}
               initial={{ opacity: 0, y: 4 }}
@@ -805,7 +811,7 @@ export function GoLiveAnimation() {
 
             return (
               <motion.div
-                key={step.week}
+                key={`${step.week}-${index}`}
                 className={`flex items-center gap-3 rounded-xl border px-3 py-2.5 ${
                   isActive
                     ? 'border-emerald-400/35 bg-emerald-400/[0.06]'
@@ -841,7 +847,7 @@ export function GoLiveAnimation() {
                     animate={{ opacity: [0.5, 1, 0.5] }}
                     transition={{ duration: 1.2, repeat: Infinity }}
                   >
-                    In progress
+                    {deploy.inProgress}
                   </motion.span>
                 ) : null}
               </motion.div>
@@ -859,7 +865,11 @@ const animationByFeatureId = {
   deploy: GoLiveAnimation,
 } as const;
 
-export function HowItWorksFeatureAnimation({ featureId }: { featureId: keyof typeof animationByFeatureId }) {
+export function HowItWorksFeatureAnimation({
+  featureId,
+}: {
+  featureId: keyof typeof animationByFeatureId;
+}) {
   const Component = animationByFeatureId[featureId];
   return <Component />;
 }

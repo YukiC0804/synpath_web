@@ -1,27 +1,6 @@
 import type { LucideIcon } from 'lucide-react';
 import { Layers, SlidersHorizontal, Sparkles } from 'lucide-react';
-
-const features = [
-  {
-    id: 'customizable',
-    icon: SlidersHorizontal,
-    title: 'Extremely Customizable',
-    description: 'Fine-tune every nuance to match your operations reality',
-  },
-  {
-    id: 'no-silos',
-    icon: Layers,
-    title: 'No data silos',
-    description:
-      'Replace point solutions, legacy systems, and spreadsheets with one platform that scales.',
-  },
-  {
-    id: 'copilot',
-    icon: Sparkles,
-    title: 'Built-in Copilot',
-    description: 'AI helps you build any dashboards/custom agents you want',
-  },
-] as const;
+import { useHomepageCopy } from '../../i18n/useHomepageCopy';
 
 function FeatureCard({
   icon: Icon,
@@ -56,6 +35,29 @@ function FeatureCard({
 }
 
 export function OperationalComplexitySection() {
+  const copy = useHomepageCopy();
+
+  const features = [
+    {
+      id: 'customizable',
+      icon: SlidersHorizontal,
+      title: copy.complexity.customizableTitle,
+      description: copy.complexity.customizableDesc,
+    },
+    {
+      id: 'no-silos',
+      icon: Layers,
+      title: copy.complexity.noSilosTitle,
+      description: copy.complexity.noSilosDesc,
+    },
+    {
+      id: 'copilot',
+      icon: Sparkles,
+      title: copy.complexity.copilotTitle,
+      description: copy.complexity.copilotDesc,
+    },
+  ] as const;
+
   return (
     <section
       aria-labelledby="operational-complexity-heading"
@@ -63,37 +65,37 @@ export function OperationalComplexitySection() {
     >
       <div className="px-30">
         <div className="grid grid-cols-1 items-start gap-12 lg:grid-cols-12 lg:gap-10 xl:gap-14">
-        <div className="text-left lg:col-span-4">
-          <div className="mb-8 flex items-center gap-2.5">
-            <span className="h-2 w-2 shrink-0 rounded-full bg-orange-500" aria-hidden />
-            <span className="text-[11px] font-medium uppercase tracking-[0.22em] text-white">
-              Custom Agents
-            </span>
+          <div className="text-left lg:col-span-4">
+            <div className="mb-8 flex items-center gap-2.5">
+              <span className="h-2 w-2 shrink-0 rounded-full bg-orange-500" aria-hidden />
+              <span className="text-[11px] font-medium uppercase tracking-[0.22em] text-white">
+                {copy.complexity.eyebrow}
+              </span>
+            </div>
+            <h2
+              id="operational-complexity-heading"
+              className="complexity-heading max-w-sm text-[2.75rem] leading-[1.05] text-white md:text-5xl lg:text-[3.25rem]"
+            >
+              {copy.complexity.headingLine1}
+              <br />
+              {copy.complexity.headingLine2}
+            </h2>
           </div>
-          <h2
-            id="operational-complexity-heading"
-            className="complexity-heading max-w-sm text-[2.75rem] leading-[1.05] text-white md:text-5xl lg:text-[3.25rem]"
-          >
-            Built to handle
-            <br />
-            complexity
-          </h2>
-        </div>
 
-        <div className="flex justify-start lg:col-span-8 lg:justify-end">
-          <div className="grid w-full grid-cols-1 gap-2 md:grid-cols-3 md:gap-0">
-            {features.map((feature, index) => (
-              <FeatureCard
-                key={feature.id}
-                icon={feature.icon}
-                title={feature.title}
-                description={feature.description}
-                showDivider={index > 0}
-                titleClassName={feature.id === 'customizable' ? 'whitespace-nowrap' : ''}
-              />
-            ))}
+          <div className="flex justify-start lg:col-span-8 lg:justify-end">
+            <div className="grid w-full grid-cols-1 gap-2 md:grid-cols-3 md:gap-0">
+              {features.map((feature, index) => (
+                <FeatureCard
+                  key={feature.id}
+                  icon={feature.icon}
+                  title={feature.title}
+                  description={feature.description}
+                  showDivider={index > 0}
+                  titleClassName={feature.id === 'customizable' ? 'whitespace-nowrap' : ''}
+                />
+              ))}
+            </div>
           </div>
-        </div>
         </div>
       </div>
     </section>

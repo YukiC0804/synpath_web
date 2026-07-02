@@ -27,17 +27,23 @@ function FeatureCard({
   icon: Icon,
   title,
   description,
+  titleClassName = '',
 }: {
   icon: LucideIcon;
   title: string;
   description: string;
+  titleClassName?: string;
 }) {
   return (
     <div className="flex flex-col">
       <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-xl border border-white/15 bg-white/5">
         <Icon className="h-6 w-6 text-white" aria-hidden />
       </div>
-      <h3 className="mb-3 text-lg font-semibold text-white md:text-xl">{title}</h3>
+      <h3
+        className={`mb-3 text-lg font-semibold text-white md:text-xl ${titleClassName}`}
+      >
+        {title}
+      </h3>
       <p className="text-sm leading-relaxed text-white/85 md:text-base">{description}</p>
     </div>
   );
@@ -55,7 +61,9 @@ export function OperationalComplexitySection() {
             id="operational-complexity-heading"
             className="max-w-sm text-left text-3xl font-medium leading-tight tracking-tight text-white md:text-4xl lg:text-[2.5rem]"
           >
-            Built to handle operational complexity
+            Built to handle
+            <br />
+            operational complexity
           </h2>
         </div>
 
@@ -67,6 +75,7 @@ export function OperationalComplexitySection() {
                 icon={feature.icon}
                 title={feature.title}
                 description={feature.description}
+                titleClassName={feature.id === 'customizable' ? 'whitespace-nowrap' : ''}
               />
             ))}
           </div>

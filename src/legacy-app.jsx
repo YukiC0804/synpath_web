@@ -1128,6 +1128,7 @@ const N1 = {
 };
 const k1 = {
   nav: {
+    home: "Home",
     solutions: "Solutions",
     company: "Company",
     bookDemo: "Book Demo",
@@ -1263,6 +1264,7 @@ const k1 = {
 };
 const M1 = {
   nav: {
+    home: "Accueil",
     solutions: "Solutions",
     company: "Entreprise",
     bookDemo: "Réserver une démo",
@@ -1398,6 +1400,7 @@ const M1 = {
 };
 const z1 = {
   nav: {
+    home: "Startseite",
     solutions: "Lösungen",
     company: "Unternehmen",
     bookDemo: "Demo buchen",
@@ -1533,6 +1536,7 @@ const z1 = {
 };
 const D1 = {
   nav: {
+    home: "首页",
     solutions: "解决方案",
     company: "公司",
     bookDemo: "预约演示",
@@ -12605,7 +12609,7 @@ function Header() {
       r(false);
     }, 150);
   };
-  return <header className="fixed top-0 left-0 right-0 z-50 bg-black/80 backdrop-blur-md border-b border-white/10"><div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"><div className="flex items-center justify-between h-20"><$e to="/" className="flex items-center group"><Iv className="h-[70px] w-[70px] opacity-95 group-hover:opacity-80 transition-opacity" nameClassName="text-3xl tracking-wider -translate-y-0.5" gapClassName="gap-2" /></$e><nav className="hidden md:flex items-center gap-8"><div className="relative" onMouseEnter={y} onMouseLeave={v}><button className="flex items-center gap-1.5 text-base font-medium text-neutral-300 hover:text-white transition-colors h-20">{f.nav.solutions}<Yr className={`w-5 h-5 transition-transform duration-200 ${l ? "rotate-180" : ""}`} /></button><_Component4>{l && <Pe.div initial={{
+  return <header className="fixed top-0 left-0 right-0 z-50 bg-black/80 backdrop-blur-md border-b border-white/10"><div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"><div className="flex items-center justify-between h-20"><$e to="/" className="flex items-center group"><Iv className="h-[70px] w-[70px] opacity-95 group-hover:opacity-80 transition-opacity" nameClassName="text-3xl tracking-wider -translate-y-0.5" gapClassName="gap-2" /></$e><nav className="hidden md:flex items-center gap-8"><$e to="/" className="text-base font-medium text-neutral-300 hover:text-white transition-colors">{f.nav.home}</$e><div className="relative" onMouseEnter={y} onMouseLeave={v}><button className="flex items-center gap-1.5 text-base font-medium text-neutral-300 hover:text-white transition-colors h-20">{f.nav.solutions}<Yr className={`w-5 h-5 transition-transform duration-200 ${l ? "rotate-180" : ""}`} /></button><_Component4>{l && <Pe.div initial={{
                 opacity: 0,
                 y: 10
               }} animate={{
@@ -12625,7 +12629,7 @@ function Header() {
       }} exit={{
         opacity: 0,
         height: 0
-      }} className="md:hidden border-b border-neutral-800 bg-neutral-950 overflow-hidden"><div className="px-4 py-6 space-y-4"><div className="space-y-4"><div className="text-sm font-semibold text-neutral-500 uppercase tracking-wider">{f.nav.solutions}</div>{Hc.map(b => <div className="space-y-1" key={b.category}><div className="pl-2 text-xs font-semibold text-neutral-500 uppercase tracking-wider">{p[b.category]}</div>{m.filter(S => S.category === b.category).map(S => <$e to={`/solutions/${S.id}`} className="block pl-4 py-2 text-base text-neutral-300 hover:text-white" key={S.id}>{S.title}</$e>)}</div>)}</div><div className="pt-4 border-t border-neutral-800"><$e to="/company" className="block py-2 text-base text-neutral-300 hover:text-white">{f.nav.company}</$e></div><div className="pt-4"><$e to="/book-demo" className="block w-full text-center bg-white text-black px-5 py-3 rounded-md text-sm font-semibold hover:bg-neutral-200 transition-colors">{f.nav.bookDemo}</$e></div></div></Pe.div>}</_Component4></header>;
+      }} className="md:hidden border-b border-neutral-800 bg-neutral-950 overflow-hidden"><div className="px-4 py-6 space-y-4"><$e to="/" className="block py-2 text-base text-neutral-300 hover:text-white">{f.nav.home}</$e><div className="space-y-4"><div className="text-sm font-semibold text-neutral-500 uppercase tracking-wider">{f.nav.solutions}</div>{Hc.map(b => <div className="space-y-1" key={b.category}><div className="pl-2 text-xs font-semibold text-neutral-500 uppercase tracking-wider">{p[b.category]}</div>{m.filter(S => S.category === b.category).map(S => <$e to={`/solutions/${S.id}`} className="block pl-4 py-2 text-base text-neutral-300 hover:text-white" key={S.id}>{S.title}</$e>)}</div>)}</div><div className="pt-4 border-t border-neutral-800"><$e to="/company" className="block py-2 text-base text-neutral-300 hover:text-white">{f.nav.company}</$e></div><div className="pt-4"><$e to="/book-demo" className="block w-full text-center bg-white text-black px-5 py-3 rounded-md text-sm font-semibold hover:bg-neutral-200 transition-colors">{f.nav.bookDemo}</$e></div></div></Pe.div>}</_Component4></header>;
 }
 function Footer() {
   const {

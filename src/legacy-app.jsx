@@ -3,6 +3,8 @@ import { Link, Navigate, Outlet, useLocation, useParams, BrowserRouter, Routes, 
 import { Hero } from './components/home/Hero';
 import { OperationalComplexitySection } from './components/home/OperationalComplexitySection';
 import { HowItWorksSection } from './components/home/HowItWorksSection';
+import { PrivacyPolicyPage } from './pages/PrivacyPolicyPage';
+import { TermsPage } from './pages/TermsPage';
 
 const h = T;
 const $e = Link;
@@ -12630,7 +12632,7 @@ function Footer() {
     t: n,
     localizedSolutions: a
   } = useLanguage();
-  return <footer className="bg-black py-12 md:py-20 border-t border-white/10"><div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"><div className="grid grid-cols-1 md:grid-cols-4 gap-12 md:gap-8"><div className="col-span-1 md:col-span-1 border-neutral-800"><$e to="/" className="inline-flex mb-4"><Iv className="h-9 w-9" /></$e><p className="text-sm text-neutral-400">{n.footer.tagline}</p></div><div><h4 className="text-sm font-semibold text-white mb-4">{n.footer.solutions}</h4><ul className="space-y-3">{a.map(l => <li key={l.id}><$e to={`/solutions/${l.id}`} className="text-sm text-neutral-400 hover:text-white transition-colors">{l.title}</$e></li>)}</ul></div><div><h4 className="text-sm font-semibold text-white mb-4">{n.footer.company}</h4><ul className="space-y-3"><li><$e to="/company" className="text-sm text-neutral-400 hover:text-white transition-colors">{n.footer.aboutUs}</$e></li></ul></div><div><h4 className="text-sm font-semibold text-white mb-4">{n.footer.legal}</h4><ul className="space-y-3"><li><a href="#" className="text-sm text-neutral-400 hover:text-white transition-colors">{n.footer.privacy}</a></li><li><a href="#" className="text-sm text-neutral-400 hover:text-white transition-colors">{n.footer.terms}</a></li></ul></div></div><div className="mt-16 pt-8 border-t border-white/10 flex flex-col md:flex-row items-center justify-between"><p className="text-xs text-neutral-500">© {new Date().getFullYear()} {n.footer.copyright}</p></div></div></footer>;
+  return <footer className="bg-black py-12 md:py-20 border-t border-white/10"><div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"><div className="grid grid-cols-1 md:grid-cols-4 gap-12 md:gap-8"><div className="col-span-1 md:col-span-1 border-neutral-800"><$e to="/" className="inline-flex mb-4"><Iv className="h-9 w-9" /></$e><p className="text-sm text-neutral-400">{n.footer.tagline}</p></div><div><h4 className="text-sm font-semibold text-white mb-4">{n.footer.solutions}</h4><ul className="space-y-3">{a.map(l => <li key={l.id}><$e to={`/solutions/${l.id}`} className="text-sm text-neutral-400 hover:text-white transition-colors">{l.title}</$e></li>)}</ul></div><div><h4 className="text-sm font-semibold text-white mb-4">{n.footer.company}</h4><ul className="space-y-3"><li><$e to="/company" className="text-sm text-neutral-400 hover:text-white transition-colors">{n.footer.aboutUs}</$e></li></ul></div><div><h4 className="text-sm font-semibold text-white mb-4">{n.footer.legal}</h4><ul className="space-y-3"><li><$e to="/privacy" className="text-sm text-neutral-400 hover:text-white transition-colors">{n.footer.privacy}</$e></li><li><$e to="/terms" className="text-sm text-neutral-400 hover:text-white transition-colors">{n.footer.terms}</$e></li></ul></div></div><div className="mt-16 pt-8 border-t border-white/10 flex flex-col md:flex-row items-center justify-between"><p className="text-xs text-neutral-500">© {new Date().getFullYear()} {n.footer.copyright}</p></div></div></footer>;
 }
 function Layout() {
   return <div className="min-h-screen bg-black text-neutral-200 font-sans selection:bg-neutral-800 selection:text-white flex flex-col"><Header /><main className="flex-1 pt-20"><Mw /></main><Footer /></div>;
@@ -13292,6 +13294,8 @@ function App() {
             <Route index element={<HomePage />} />
             <Route path="solutions/:solutionId" element={<SolutionPage />} />
             <Route path="company" element={<CompanyPage />} />
+            <Route path="privacy" element={<PrivacyPolicyPage />} />
+            <Route path="terms" element={<TermsPage />} />
             <Route path="book-demo" element={<BookDemoPage />} />
           </Route>
         </Routes>

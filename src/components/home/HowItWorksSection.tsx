@@ -3,12 +3,6 @@ import { HowItWorksFeatureAnimation } from './HowItWorksFeatureAnimations';
 
 const featureRows = [
   {
-    id: 'learn' as const,
-    title: 'Learn Your Operations Instantly',
-    description:
-      'Map your unique organization, processes, and business rules - identify data gap, bottlenecks and areas of automation',
-  },
-  {
     id: 'truth' as const,
     title: 'Build One Source of Truth',
     description:
@@ -57,17 +51,13 @@ const valueProps = [
 function FeatureCopy({
   title,
   description,
-  titleClassName = '',
 }: {
   title: string;
   description: string;
-  titleClassName?: string;
 }) {
   return (
     <div className="max-w-xl lg:max-w-lg">
-      <h3
-        className={`mb-5 text-2xl font-medium leading-[1.12] tracking-tight text-white md:text-3xl lg:text-[2rem] ${titleClassName}`}
-      >
+      <h3 className="mb-5 text-2xl font-medium leading-[1.12] tracking-tight text-white md:text-3xl lg:text-[2rem]">
         {title}
       </h3>
       <p className="text-lg font-normal leading-relaxed text-white/70 md:text-xl">{description}</p>
@@ -91,11 +81,7 @@ export function HowItWorksSection() {
             >
               <div className="mx-auto grid max-w-7xl grid-cols-1 items-center gap-10 px-4 sm:px-6 lg:grid-cols-2 lg:gap-16 lg:px-8 xl:gap-20">
                 <div className={reversed ? 'lg:order-2' : ''}>
-                  <FeatureCopy
-                    title={row.title}
-                    description={row.description}
-                    titleClassName={row.id === 'learn' ? 'whitespace-nowrap' : ''}
-                  />
+                  <FeatureCopy title={row.title} description={row.description} />
                 </div>
                 <div className={reversed ? 'lg:order-1' : ''}>
                   <HowItWorksFeatureAnimation featureId={row.id} />

@@ -1,11 +1,8 @@
 import { useEffect, useState } from 'react';
-import { AnimatePresence, motion } from 'framer-motion';
+import { motion } from 'framer-motion';
 import {
   Activity,
-  AlertTriangle,
-  ArrowLeftRight,
   Bot,
-  BrainCircuit,
   CheckCircle2,
   ClipboardList,
   Cog,
@@ -64,187 +61,6 @@ function PanelChrome({
         </span>
       ) : null}
     </div>
-  );
-}
-
-function WorkflowPanel({
-  title,
-  steps,
-}: {
-  title: string;
-  steps: { label: string; detail?: string; accent?: boolean }[];
-}) {
-  return (
-    <div className="flex min-h-0 flex-col rounded-xl border border-white/10 bg-[#0c0c0c] p-2 sm:p-2.5">
-      <p className="mb-2 border-b border-white/10 pb-1.5 text-[10px] font-semibold text-white sm:text-[11px]">
-        {title}
-      </p>
-      <div className="flex min-h-0 flex-1 flex-col gap-1">
-        {steps.map((step) => (
-          <div
-            key={step.label}
-            className={`rounded-lg border px-2 py-1.5 ${
-              step.accent
-                ? 'border-emerald-400/35 bg-emerald-500/[0.06]'
-                : 'border-white/[0.07] bg-white/[0.02]'
-            }`}
-          >
-            <p
-              className={`text-[9px] font-medium ${
-                step.accent ? 'text-emerald-300' : 'text-white/80'
-              }`}
-            >
-              {step.label}
-            </p>
-            {step.detail ? (
-              <p className="mt-0.5 text-[8px] leading-snug text-white/45">{step.detail}</p>
-            ) : null}
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-const mappingInsights = [
-  { id: 'bottleneck', label: 'Bottleneck detected', icon: AlertTriangle },
-  { id: 'missing', label: 'Missing data', icon: Database },
-  { id: 'rule', label: 'Business rule captured', icon: BrainCircuit },
-  { id: 'automation', label: 'Automation opportunity', icon: Sparkles },
-  { id: 'handoff', label: 'Handoff risk', icon: ArrowLeftRight },
-] as const;
-
-function SynpathMappingLayer() {
-  const [insightIndex, setInsightIndex] = useState(0);
-
-  useEffect(() => {
-    const interval = window.setInterval(() => {
-      setInsightIndex((current) => (current + 1) % mappingInsights.length);
-    }, 2200);
-    return () => window.clearInterval(interval);
-  }, []);
-
-  const insight = mappingInsights[insightIndex];
-  const InsightIcon = insight.icon;
-
-  return (
-    <div className="relative flex h-full flex-col items-center justify-center px-0.5">
-      <motion.div
-        className="pointer-events-none absolute h-28 w-28 rounded-full bg-emerald-500/15 blur-2xl"
-        animate={{ opacity: [0.35, 0.65, 0.35], scale: [0.95, 1.05, 0.95] }}
-        transition={{ duration: 3.2, repeat: Infinity, ease: 'easeInOut' }}
-      />
-
-      <svg
-        className="pointer-events-none absolute inset-0 h-full w-full overflow-visible"
-        viewBox="0 0 80 100"
-        preserveAspectRatio="none"
-        aria-hidden
-      >
-        {[22, 38, 54, 70, 86].map((y, index) => (
-          <g key={y}>
-            <motion.line
-              x1="0"
-              y1={y}
-              x2="40"
-              y2="50"
-              stroke="rgba(52,211,153,0.22)"
-              strokeWidth="1"
-              strokeLinecap="round"
-              initial={{ pathLength: 0, opacity: 0 }}
-              animate={{ pathLength: 1, opacity: 0.55 }}
-              transition={{ duration: 0.8, delay: index * 0.1 }}
-            />
-            <motion.line
-              x1="80"
-              y1={y}
-              x2="40"
-              y2="50"
-              stroke="rgba(52,211,153,0.22)"
-              strokeWidth="1"
-              strokeLinecap="round"
-              initial={{ pathLength: 0, opacity: 0 }}
-              animate={{ pathLength: 1, opacity: 0.55 }}
-              transition={{ duration: 0.8, delay: 0.2 + index * 0.1 }}
-            />
-          </g>
-        ))}
-      </svg>
-
-      <div className="relative z-10 mb-2 flex flex-col items-center rounded-xl border border-emerald-400/30 bg-emerald-500/10 px-2.5 py-2 shadow-[0_0_24px_rgba(52,211,153,0.15)]">
-        <BrainCircuit className="mb-1 h-4 w-4 text-emerald-300" />
-        <span className="text-[8px] font-semibold uppercase tracking-[0.14em] text-emerald-300">
-          Synpath AI
-        </span>
-        <span className="text-[7px] text-white/45">Mapping layer</span>
-      </div>
-
-      <AnimatePresence mode="wait">
-        <motion.div
-          key={insight.id}
-          className="relative z-10 flex items-center gap-1 rounded-full border border-emerald-400/25 bg-black/60 px-2 py-1"
-          initial={{ opacity: 0, y: 6 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -6 }}
-          transition={{ duration: 0.35 }}
-        >
-          <InsightIcon className="h-2.5 w-2.5 shrink-0 text-emerald-300" />
-          <span className="whitespace-nowrap text-[7px] font-medium text-white/75 sm:text-[8px]">
-            {insight.label}
-          </span>
-        </motion.div>
-      </AnimatePresence>
-    </div>
-  );
-}
-
-export function LearnOperationsAnimation() {
-  return (
-    <AnimationShell
-      label="Synpath learns and maps manufacturing operations, processes, and business rules"
-      aspectClass="aspect-[5/4] sm:aspect-[4/3.15]"
-    >
-      <div className="grid h-full grid-cols-[minmax(0,1fr)_72px_minmax(0,1fr)] items-stretch gap-1 sm:grid-cols-[minmax(0,1fr)_84px_minmax(0,1fr)] sm:gap-1.5">
-        <WorkflowPanel
-          title="Manufacturing Order"
-          steps={[
-            {
-              label: 'Components preparation',
-              detail: 'Stock check and procurement trigger',
-            },
-            { label: 'Frame welding' },
-            { label: 'Electrical setup' },
-            { label: 'Case assembly' },
-            {
-              label: 'Add to stock',
-              detail: 'Handoff to fulfillment',
-              accent: true,
-            },
-          ]}
-        />
-
-        <SynpathMappingLayer />
-
-        <WorkflowPanel
-          title="Sales Order Process"
-          steps={[
-            {
-              label: 'Shipment creation',
-              detail: 'Validated sales order intake',
-            },
-            {
-              label: 'Batch preparation',
-              detail: 'Outgoing order grouping',
-              accent: true,
-            },
-            {
-              label: 'Delivery notes',
-              detail: 'Batch numbers and dispatch docs',
-            },
-          ]}
-        />
-      </div>
-    </AnimationShell>
   );
 }
 
@@ -591,7 +407,6 @@ export function GoLiveAnimation() {
 }
 
 const animationByFeatureId = {
-  learn: LearnOperationsAnimation,
   truth: SourceOfTruthAnimation,
   agents: AgentsToolsAnimation,
   deploy: GoLiveAnimation,

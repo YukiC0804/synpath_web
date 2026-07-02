@@ -123,23 +123,23 @@ function FragmentedSourceCard({
 
 function SynpathHub({ hubRef }: { hubRef: React.Ref<HTMLDivElement> }) {
   return (
-    <div
-      ref={hubRef}
-      className="relative z-30 flex min-h-[28rem] items-center justify-center self-stretch px-2 lg:px-3 xl:min-h-[30rem]"
-    >
-      <div className="relative flex h-full w-24 items-center justify-center sm:w-28">
+    <div className="relative z-30 flex min-h-[28rem] items-center justify-center self-stretch px-2 lg:px-3 xl:min-h-[30rem]">
+      <div className="relative flex h-24 w-24 items-center justify-center sm:h-28 sm:w-28">
         <motion.div
-          className="absolute inset-y-4 inset-x-0 rounded-full bg-emerald-500/20 blur-2xl"
+          className="absolute inset-0 rounded-full bg-emerald-500/20 blur-2xl"
           animate={{ opacity: [0.25, 0.5, 0.25], scale: [0.94, 1.04, 0.94] }}
           transition={{ duration: 3.5, repeat: Infinity, ease: 'easeInOut' }}
         />
         <motion.div
-          className="absolute inset-y-6 inset-x-2 rounded-full border border-emerald-400/20"
+          className="absolute inset-2 rounded-full border border-emerald-400/20"
           animate={{ opacity: [0.35, 0.7, 0.35] }}
           transition={{ duration: 3.5, repeat: Infinity, ease: 'easeInOut' }}
         />
 
-        <div className="relative z-30 flex h-16 w-16 flex-col items-center justify-center rounded-full border border-emerald-400/40 bg-gradient-to-b from-emerald-500/20 to-emerald-500/5 shadow-[0_0_32px_rgba(52,211,153,0.25)] sm:h-[4.5rem] sm:w-[4.5rem]">
+        <div
+          ref={hubRef}
+          className="relative z-30 flex h-16 w-16 flex-col items-center justify-center rounded-full border border-emerald-400/40 bg-gradient-to-b from-emerald-500/20 to-emerald-500/5 shadow-[0_0_32px_rgba(52,211,153,0.25)] sm:h-[4.5rem] sm:w-[4.5rem]"
+        >
           <Sparkles className="mb-0.5 h-4 w-4 text-emerald-300" />
           <span className="text-[9px] font-semibold text-emerald-200 sm:text-[10px]">Synpath</span>
         </div>
@@ -217,7 +217,7 @@ function TruthPanel({
   return (
     <motion.div
       ref={panelRef}
-      className="relative z-20 flex min-h-[28rem] w-full min-w-0 flex-col overflow-visible rounded-2xl border border-emerald-400/25 bg-gradient-to-br from-white/[0.07] to-white/[0.02] p-3.5 shadow-[0_8px_40px_rgba(0,0,0,0.35)] backdrop-blur-md sm:p-4 lg:max-w-[290px] xl:min-h-[30rem] xl:max-w-[300px]"
+      className="relative z-20 flex min-h-[28rem] w-full min-w-0 max-w-[250px] flex-col overflow-visible rounded-2xl border border-emerald-400/25 bg-gradient-to-br from-white/[0.07] to-white/[0.02] p-3.5 shadow-[0_8px_40px_rgba(0,0,0,0.35)] backdrop-blur-md sm:p-4 xl:min-h-[30rem]"
       animate={{
         boxShadow: [
           '0 8px 40px rgba(0,0,0,0.35)',
@@ -303,9 +303,7 @@ function useFlowPaths(
 
       const hubLeftX = hubRect.left - containerRect.left;
       const hubRightX = hubRect.right - containerRect.left;
-      const hubTopY = hubRect.top - containerRect.top;
-      const hubHeight = hubRect.height;
-      const hubCenterY = hubTopY + hubHeight / 2;
+      const hubCenterY = hubRect.top - containerRect.top + hubRect.height / 2;
       const panelX = panelRect.left - containerRect.left;
 
       const inbound = fragmentedSources.map((_, index) => {
@@ -317,11 +315,10 @@ function useFlowPaths(
         const cardRect = card.getBoundingClientRect();
         const startX = cardRect.right - containerRect.left;
         const startY = cardRect.top + cardRect.height / 2 - containerRect.top;
-        const targetT = (index + 1) / (fragmentedSources.length + 1);
-        const targetY = hubTopY + hubHeight * targetT;
         const targetX = hubLeftX;
+        const targetY = hubCenterY;
         const deltaX = targetX - startX;
-        const control1X = startX + deltaX * 0.4;
+        const control1X = startX + deltaX * 0.45;
         const control2X = startX + deltaX * 0.75;
 
         return `M ${startX} ${startY} C ${control1X} ${startY}, ${control2X} ${targetY}, ${targetX} ${targetY}`;

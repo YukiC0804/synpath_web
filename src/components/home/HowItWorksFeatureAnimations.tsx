@@ -1,21 +1,21 @@
 import { useEffect, useState } from 'react';
-import { motion } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 import {
   Activity,
+  AlertTriangle,
+  ArrowLeftRight,
   Bot,
   BrainCircuit,
   CheckCircle2,
   ClipboardList,
+  Cog,
   Database,
   FileText,
   LayoutDashboard,
   MessageSquare,
-  Package,
-  Pencil,
-  Radio,
-  ShoppingCart,
   Sparkles,
-  Truck,
+  Table2,
+  Users,
 } from 'lucide-react';
 
 function AnimationShell({
@@ -67,217 +67,208 @@ function PanelChrome({
   );
 }
 
-function ProcessCardHeader({ title }: { title: string }) {
+function WorkflowPanel({
+  title,
+  steps,
+}: {
+  title: string;
+  steps: { label: string; detail?: string; accent?: boolean }[];
+}) {
   return (
-    <div className="mb-2 flex items-center justify-between gap-2 border-b border-white/10 pb-1.5">
-      <p className="text-[10px] font-semibold text-white sm:text-[11px]">{title}</p>
-      <Pencil className="h-3 w-3 text-white/35" />
+    <div className="flex min-h-0 flex-col rounded-xl border border-white/10 bg-[#0c0c0c] p-2 sm:p-2.5">
+      <p className="mb-2 border-b border-white/10 pb-1.5 text-[10px] font-semibold text-white sm:text-[11px]">
+        {title}
+      </p>
+      <div className="flex min-h-0 flex-1 flex-col gap-1">
+        {steps.map((step) => (
+          <div
+            key={step.label}
+            className={`rounded-lg border px-2 py-1.5 ${
+              step.accent
+                ? 'border-emerald-400/35 bg-emerald-500/[0.06]'
+                : 'border-white/[0.07] bg-white/[0.02]'
+            }`}
+          >
+            <p
+              className={`text-[9px] font-medium ${
+                step.accent ? 'text-emerald-300' : 'text-white/80'
+              }`}
+            >
+              {step.label}
+            </p>
+            {step.detail ? (
+              <p className="mt-0.5 text-[8px] leading-snug text-white/45">{step.detail}</p>
+            ) : null}
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
 
-function AgentTag({
-  label,
-  icon: Icon,
-  tone = 'purple',
-}: {
-  label: string;
-  icon: React.ComponentType<{ className?: string }>;
-  tone?: 'purple' | 'orange';
-}) {
-  const tones = {
-    purple: 'border-violet-500/30 bg-violet-500/10 text-violet-300',
-    orange: 'border-amber-500/30 bg-amber-500/10 text-amber-300',
-  };
+const mappingInsights = [
+  { id: 'bottleneck', label: 'Bottleneck detected', icon: AlertTriangle },
+  { id: 'missing', label: 'Missing data', icon: Database },
+  { id: 'rule', label: 'Business rule captured', icon: BrainCircuit },
+  { id: 'automation', label: 'Automation opportunity', icon: Sparkles },
+  { id: 'handoff', label: 'Handoff risk', icon: ArrowLeftRight },
+] as const;
+
+function SynpathMappingLayer() {
+  const [insightIndex, setInsightIndex] = useState(0);
+
+  useEffect(() => {
+    const interval = window.setInterval(() => {
+      setInsightIndex((current) => (current + 1) % mappingInsights.length);
+    }, 2200);
+    return () => window.clearInterval(interval);
+  }, []);
+
+  const insight = mappingInsights[insightIndex];
+  const InsightIcon = insight.icon;
 
   return (
-    <span
-      className={`inline-flex items-center gap-1 rounded-md border px-1.5 py-0.5 text-[9px] font-medium ${tones[tone]}`}
-    >
-      <Icon className="h-2.5 w-2.5" />
-      {label}
-    </span>
+    <div className="relative flex h-full flex-col items-center justify-center px-0.5">
+      <motion.div
+        className="pointer-events-none absolute h-28 w-28 rounded-full bg-emerald-500/15 blur-2xl"
+        animate={{ opacity: [0.35, 0.65, 0.35], scale: [0.95, 1.05, 0.95] }}
+        transition={{ duration: 3.2, repeat: Infinity, ease: 'easeInOut' }}
+      />
+
+      <svg
+        className="pointer-events-none absolute inset-0 h-full w-full overflow-visible"
+        viewBox="0 0 80 100"
+        preserveAspectRatio="none"
+        aria-hidden
+      >
+        {[22, 38, 54, 70, 86].map((y, index) => (
+          <g key={y}>
+            <motion.line
+              x1="0"
+              y1={y}
+              x2="40"
+              y2="50"
+              stroke="rgba(52,211,153,0.22)"
+              strokeWidth="1"
+              strokeLinecap="round"
+              initial={{ pathLength: 0, opacity: 0 }}
+              animate={{ pathLength: 1, opacity: 0.55 }}
+              transition={{ duration: 0.8, delay: index * 0.1 }}
+            />
+            <motion.line
+              x1="80"
+              y1={y}
+              x2="40"
+              y2="50"
+              stroke="rgba(52,211,153,0.22)"
+              strokeWidth="1"
+              strokeLinecap="round"
+              initial={{ pathLength: 0, opacity: 0 }}
+              animate={{ pathLength: 1, opacity: 0.55 }}
+              transition={{ duration: 0.8, delay: 0.2 + index * 0.1 }}
+            />
+          </g>
+        ))}
+      </svg>
+
+      <div className="relative z-10 mb-2 flex flex-col items-center rounded-xl border border-emerald-400/30 bg-emerald-500/10 px-2.5 py-2 shadow-[0_0_24px_rgba(52,211,153,0.15)]">
+        <BrainCircuit className="mb-1 h-4 w-4 text-emerald-300" />
+        <span className="text-[8px] font-semibold uppercase tracking-[0.14em] text-emerald-300">
+          Synpath AI
+        </span>
+        <span className="text-[7px] text-white/45">Mapping layer</span>
+      </div>
+
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={insight.id}
+          className="relative z-10 flex items-center gap-1 rounded-full border border-emerald-400/25 bg-black/60 px-2 py-1"
+          initial={{ opacity: 0, y: 6 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -6 }}
+          transition={{ duration: 0.35 }}
+        >
+          <InsightIcon className="h-2.5 w-2.5 shrink-0 text-emerald-300" />
+          <span className="whitespace-nowrap text-[7px] font-medium text-white/75 sm:text-[8px]">
+            {insight.label}
+          </span>
+        </motion.div>
+      </AnimatePresence>
+    </div>
   );
 }
 
 export function LearnOperationsAnimation() {
-  const [showConnection, setShowConnection] = useState(false);
-
-  useEffect(() => {
-    const timer = window.setTimeout(() => setShowConnection(true), 600);
-    return () => window.clearTimeout(timer);
-  }, []);
-
-  const manufacturingSteps = [
-    'Frame welding',
-    'Electrical setup',
-    'Electrical testing',
-    'Case assembly',
-  ];
-
   return (
     <AnimationShell
-      label="Animated manufacturing and sales process mapping"
-      aspectClass="aspect-[5/4] sm:aspect-[4/3.2]"
+      label="Synpath learns and maps manufacturing operations, processes, and business rules"
+      aspectClass="aspect-[5/4] sm:aspect-[4/3.15]"
     >
-      <div className="grid h-full grid-cols-[minmax(0,1fr)_18px_minmax(0,1fr)] items-stretch gap-1 sm:grid-cols-[minmax(0,1fr)_22px_minmax(0,1fr)] sm:gap-1.5">
-        <div className="flex min-h-0 flex-col rounded-xl border border-white/10 bg-[#101010] p-2 sm:p-2.5">
-          <ProcessCardHeader title="Manufacturing order" />
+      <div className="grid h-full grid-cols-[minmax(0,1fr)_72px_minmax(0,1fr)] items-stretch gap-1 sm:grid-cols-[minmax(0,1fr)_84px_minmax(0,1fr)] sm:gap-1.5">
+        <WorkflowPanel
+          title="Manufacturing Order"
+          steps={[
+            {
+              label: 'Components preparation',
+              detail: 'Stock check and procurement trigger',
+            },
+            { label: 'Frame welding' },
+            { label: 'Electrical setup' },
+            { label: 'Case assembly' },
+            {
+              label: 'Add to stock',
+              detail: 'Handoff to fulfillment',
+              accent: true,
+            },
+          ]}
+        />
 
-          <div className="flex min-h-0 flex-1 flex-col gap-1">
-            <div className="rounded-lg border border-emerald-500/25 bg-[#0a0a0a] p-2">
-              <span className="mb-1 inline-block rounded-full bg-emerald-500/15 px-2 py-0.5 text-[9px] font-medium text-emerald-300">
-                Components preparation
-              </span>
-              <p className="text-[9px] leading-snug text-white/55">
-                Check stock and create a procurement order if needed.
-              </p>
-              <div className="mt-1.5">
-                <AgentTag label="Procurement agent" icon={ShoppingCart} />
-              </div>
-            </div>
+        <SynpathMappingLayer />
 
-            {manufacturingSteps.map((step) => (
-              <div
-                key={step}
-                className="rounded-md border border-white/[0.06] bg-white/[0.03] px-2 py-1 text-center text-[9px] font-medium text-emerald-300/90"
-              >
-                {step}
-              </div>
-            ))}
-
-            <div
-              className={`relative mt-auto rounded-lg border px-2 py-1.5 text-center text-[9px] font-medium ${
-                showConnection
-                  ? 'border-emerald-400/60 bg-emerald-500/[0.08] text-emerald-200'
-                  : 'border-white/10 bg-white/[0.03] text-white/85'
-              }`}
-            >
-              Add to stock
-            </div>
-          </div>
-
-          <div className="mt-2 rounded-lg bg-white/[0.06] py-1.5 text-center text-[9px] font-medium text-white/40">
-            Done
-          </div>
-        </div>
-
-        <div className="relative">
-          <svg
-            className="absolute inset-0 h-full w-full overflow-visible"
-            viewBox="0 0 22 100"
-            preserveAspectRatio="none"
-            aria-hidden
-          >
-            <motion.path
-              d="M 0 86 H 9 Q 16 86 16 46 L 22 46"
-              fill="none"
-              stroke="#34d399"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              initial={{ pathLength: 0, opacity: 0 }}
-              animate={{
-                pathLength: showConnection ? 1 : 0,
-                opacity: showConnection ? 1 : 0,
-              }}
-              transition={{ duration: 0.8, ease: 'easeInOut' }}
-            />
-            <motion.polygon
-              points="22,42 22,50 18,46"
-              fill="#34d399"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: showConnection ? 1 : 0 }}
-              transition={{ duration: 0.2, delay: 0.65 }}
-            />
-          </svg>
-        </div>
-
-        <div className="flex min-h-0 flex-col rounded-xl border border-white/10 bg-[#101010] p-2 sm:p-2.5">
-          <ProcessCardHeader title="Sales order process" />
-
-          <div className="flex min-h-0 flex-1 flex-col gap-1">
-            <div className="rounded-lg border border-white/[0.08] bg-[#0a0a0a] p-2">
-              <div className="mb-1 flex items-center gap-1">
-                <Truck className="h-2.5 w-2.5 text-amber-400" />
-                <span className="rounded-full bg-amber-500/15 px-2 py-0.5 text-[9px] font-medium text-amber-300">
-                  Shipment creation
-                </span>
-              </div>
-              <p className="text-[9px] leading-snug text-white/55">
-                Create the shipment record based on the validated sales order.
-              </p>
-            </div>
-
-            <div
-              className={`rounded-lg border bg-[#0a0a0a] p-2 ${
-                showConnection
-                  ? 'border-emerald-400/55 bg-emerald-500/[0.06]'
-                  : 'border-white/[0.08]'
-              }`}
-            >
-              <div className="mb-1 flex items-center gap-1">
-                <Package className="h-2.5 w-2.5 text-emerald-300" />
-                <span className="rounded-full bg-emerald-500/15 px-2 py-0.5 text-[9px] font-medium text-emerald-300">
-                  Batch preparation
-                </span>
-              </div>
-              <p className="text-[9px] leading-snug text-white/55">
-                Group and prepare items linked to outgoing orders.
-              </p>
-              <div className="mt-1.5">
-                <span className="inline-flex items-center gap-1 rounded-md border border-violet-500/30 bg-violet-500/10 px-1.5 py-0.5 text-[9px] font-medium text-violet-300">
-                  <BrainCircuit className="h-2.5 w-2.5" />
-                  AI rules applied
-                </span>
-              </div>
-            </div>
-
-            <div className="rounded-lg border border-white/[0.08] bg-[#0a0a0a] p-2">
-              <div className="mb-1 flex items-center gap-1">
-                <FileText className="h-2.5 w-2.5 text-rose-400" />
-                <span className="rounded-full bg-rose-500/15 px-2 py-0.5 text-[9px] font-medium text-rose-300">
-                  Delivery notes
-                </span>
-              </div>
-              <p className="text-[9px] leading-snug text-white/55">
-                Generate delivery notes with updated batch numbers.
-              </p>
-              <div className="mt-1.5">
-                <AgentTag label="Admin agent" icon={Bot} tone="orange" />
-              </div>
-            </div>
-          </div>
-
-          <div className="mt-2 rounded-lg bg-white/[0.06] py-1.5 text-center text-[9px] font-medium text-white/40">
-            Done
-          </div>
-        </div>
+        <WorkflowPanel
+          title="Sales Order Process"
+          steps={[
+            {
+              label: 'Shipment creation',
+              detail: 'Validated sales order intake',
+            },
+            {
+              label: 'Batch preparation',
+              detail: 'Outgoing order grouping',
+              accent: true,
+            },
+            {
+              label: 'Delivery notes',
+              detail: 'Batch numbers and dispatch docs',
+            },
+          ]}
+        />
       </div>
     </AnimationShell>
   );
 }
 
 const sources = [
-  { id: 'sensors', label: 'Sensors', icon: Radio },
-  { id: 'mes', label: 'MES', icon: Activity },
+  { id: 'machines', label: 'Machines', icon: Cog },
   { id: 'erp', label: 'ERP', icon: Database },
+  { id: 'mes', label: 'MES', icon: Activity },
+  { id: 'sheets', label: 'Spreadsheets', icon: Table2 },
   { id: 'paper', label: 'Paperwork', icon: FileText },
-  { id: 'rules', label: 'Unwritten Rules', icon: Sparkles },
-  { id: 'sop', label: 'SOP', icon: ClipboardList },
+  { id: 'tribal', label: 'Tribal Knowledge', icon: Users },
+  { id: 'sop', label: 'SOPs', icon: ClipboardList },
 ] as const;
 
 const truthRows = [
-  ['WO-1842', 'Line 3', 'In Progress'],
-  ['PO-9921', 'Raw Materials', 'Received'],
-  ['NC-044', 'Quality Hold', 'Review'],
-  ['SO-3310', 'Shipping', 'Picked'],
-  ['INV-208', 'Warehouse B', 'Available'],
+  ['WO-1842', 'Work Orders', 'Running'],
+  ['INV-208', 'Inventory', 'Available'],
+  ['NC-044', 'Quality', 'Review'],
+  ['PO-9921', 'Procurement', 'Running'],
   ['MRP-118', 'Planning', 'Scheduled'],
-  ['QC-077', 'Inspection', 'Passed'],
-  ['AGT-014', 'Procurement', 'Running'],
+  ['SO-3310', 'Shipping', 'Synced'],
   ['BOM-552', 'Engineering', 'Released'],
   ['LOT-903', 'Traceability', 'Synced'],
+  ['QC-077', 'Inspection', 'Review'],
+  ['AGT-014', 'Automation', 'Running'],
 ] as const;
 
 export function SourceOfTruthAnimation() {
@@ -286,24 +277,24 @@ export function SourceOfTruthAnimation() {
 
   return (
     <AnimationShell
-      label="Animated unified data layer connecting operational sources"
-      aspectClass="aspect-[5/4] sm:aspect-[4/3.2]"
+      label="Synpath unifies fragmented manufacturing data into one operating layer"
+      aspectClass="aspect-[5/4] sm:aspect-[4/3.15]"
     >
-      <PanelChrome title="Unified Operating Layer" badge="Syncing" />
+      <PanelChrome title="Synpath Data Layer" badge="Unified" />
 
       <div className="relative h-[calc(100%-1.75rem)]">
-        <div className="grid h-full grid-cols-[minmax(0,0.72fr)_52px_minmax(0,1.28fr)] items-center gap-2">
-          <div className="relative z-10 flex h-full flex-col justify-center gap-1.5">
+        <div className="grid h-full grid-cols-[minmax(0,0.68fr)_56px_minmax(0,1.32fr)] items-center gap-2">
+          <div className="relative z-10 flex h-full flex-col justify-center gap-1">
             {sources.map((source) => {
               const Icon = source.icon;
 
               return (
                 <div
                   key={source.id}
-                  className="flex items-center gap-2 rounded-lg border border-emerald-400/35 bg-emerald-500/[0.08] px-2 py-1.5"
+                  className="flex items-center gap-1.5 rounded-lg border border-emerald-400/30 bg-emerald-500/[0.07] px-1.5 py-1"
                 >
-                  <Icon className="h-3 w-3 shrink-0 text-emerald-300" />
-                  <span className="text-[9px] leading-tight text-white/85 sm:text-[10px]">{source.label}</span>
+                  <Icon className="h-2.5 w-2.5 shrink-0 text-emerald-300" />
+                  <span className="text-[8px] leading-tight text-white/85 sm:text-[9px]">{source.label}</span>
                 </div>
               );
             })}
@@ -311,51 +302,61 @@ export function SourceOfTruthAnimation() {
 
           <div className="relative flex h-full items-center justify-center overflow-visible">
             <svg
-              className="pointer-events-none absolute right-1/2 top-0 h-full w-[115%] overflow-visible"
+              className="pointer-events-none absolute right-1/2 top-0 h-full w-[120%] overflow-visible"
               viewBox="0 0 100 100"
               preserveAspectRatio="none"
               aria-hidden
             >
               {sources.map((source, index) => {
-                const sourceY = 10 + (index / (sourceCount - 1)) * 80;
+                const sourceY = 8 + (index / (sourceCount - 1)) * 84;
                 return (
                   <motion.path
                     key={source.id}
-                    d={`M 0 ${sourceY} C 38 ${sourceY}, 62 ${hubY}, 100 ${hubY}`}
+                    d={`M 0 ${sourceY} C 36 ${sourceY}, 60 ${hubY}, 100 ${hubY}`}
                     fill="none"
-                    stroke="rgba(52,211,153,0.5)"
-                    strokeWidth="1.4"
+                    stroke="rgba(52,211,153,0.45)"
+                    strokeWidth="1.2"
                     strokeLinecap="round"
                     initial={{ pathLength: 0, opacity: 0 }}
-                    animate={{ pathLength: 1, opacity: 0.75 }}
-                    transition={{ duration: 0.7, delay: index * 0.08 }}
+                    animate={{ pathLength: 1, opacity: 0.7 }}
+                    transition={{ duration: 0.65, delay: index * 0.07 }}
                   />
                 );
               })}
             </svg>
 
-            <div className="relative z-10 flex h-11 w-11 items-center justify-center rounded-xl border border-emerald-400/40 bg-emerald-400/15 shadow-[0_0_18px_rgba(52,211,153,0.2)]">
-              <Database className="h-4 w-4 text-emerald-300" />
+            <div className="relative z-10 flex flex-col items-center">
+              <motion.div
+                className="pointer-events-none absolute h-16 w-16 rounded-full bg-emerald-500/20 blur-xl"
+                animate={{ opacity: [0.3, 0.55, 0.3] }}
+                transition={{ duration: 2.8, repeat: Infinity }}
+              />
+              <div className="relative flex h-10 w-10 items-center justify-center rounded-xl border border-emerald-400/40 bg-emerald-400/15 shadow-[0_0_20px_rgba(52,211,153,0.2)] sm:h-11 sm:w-11">
+                <Database className="h-4 w-4 text-emerald-300" />
+              </div>
+              <span className="mt-1 text-[7px] font-medium uppercase tracking-[0.12em] text-emerald-300/90">
+                Synpath
+              </span>
               <motion.div
                 className="absolute left-full top-1/2 h-[1.5px] w-3 -translate-y-1/2 bg-emerald-400/70"
                 initial={{ scaleX: 0, opacity: 0 }}
                 animate={{ scaleX: 1, opacity: 0.85 }}
-                transition={{ duration: 0.45, delay: 0.6 }}
+                transition={{ duration: 0.45, delay: 0.55 }}
                 style={{ transformOrigin: 'left center' }}
               />
             </div>
           </div>
 
-          <div className="flex min-h-0 flex-col overflow-hidden rounded-xl border border-white/10 bg-black/50">
+          <div className="flex min-h-0 flex-col overflow-hidden rounded-xl border border-white/10 bg-[#0a0a0a]">
             <div className="shrink-0 border-b border-white/10 px-2 py-1.5 text-[9px] uppercase tracking-[0.12em] text-white/45 sm:text-[10px]">
-              Single source of truth
+              Single Source of Truth
             </div>
             <div className="min-h-0 flex-1 overflow-y-auto">
               <table className="w-full text-left text-[8px] sm:text-[9px]">
                 <thead className="sticky top-0 z-10 bg-[#0a0a0a]">
                   <tr className="text-white/40">
                     <th className="px-2 py-1 font-medium">Record</th>
-                    <th className="px-2 py-1 font-medium">Area</th>
+                    <th className="px-2 py-1 font-medium">Domain</th>
                     <th className="px-2 py-1 font-medium">Status</th>
                   </tr>
                 </thead>

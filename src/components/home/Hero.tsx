@@ -78,89 +78,91 @@ export function Hero() {
       />
       <div className="pointer-events-none absolute inset-0 -z-10 bg-gradient-to-b from-neutral-900/40 via-black to-black" aria-hidden />
 
-      <div className="mx-auto grid max-w-7xl items-center gap-12 px-4 sm:px-6 lg:grid-cols-2 lg:gap-16 lg:px-8">
-        <div className="text-left">
-          <motion.h1
-            id="hero-heading"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, ease: 'easeOut' }}
-            className="mb-6 text-4xl font-semibold tracking-tighter text-white md:text-5xl lg:text-6xl xl:text-7xl"
-          >
-            AI Automation for Manufacturing Operation
-          </motion.h1>
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <motion.h1
+          id="hero-heading"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, ease: 'easeOut' }}
+          className="mb-10 text-4xl font-semibold tracking-tighter text-white md:mb-12 md:text-5xl lg:text-6xl xl:text-7xl"
+        >
+          AI Automation for Manufacturing Operation
+        </motion.h1>
 
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.1, ease: 'easeOut' }}
-            className="mb-4 max-w-xl text-lg leading-relaxed text-white md:text-xl"
-          >
-            Synpath trains custom AI agents that runs your plant with real time data. Machines,
-            software, paperwork, tribal knowledge, all connected. No rip-and-replace. No Firefighting
-          </motion.p>
+        <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-16">
+          <div className="text-left">
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7, delay: 0.1, ease: 'easeOut' }}
+              className="mb-4 max-w-xl text-lg leading-relaxed text-white md:text-xl"
+            >
+              Synpath trains custom AI agents that runs your plant with real time data. Machines,
+              software, paperwork, tribal knowledge, all connected. No rip-and-replace. No Firefighting
+            </motion.p>
 
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.15, ease: 'easeOut' }}
-            className="mb-10 max-w-xl text-lg leading-relaxed text-white md:text-xl"
-          >
-            We&apos;ve saved our customers millions in avoided staff costs.
-          </motion.p>
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7, delay: 0.15, ease: 'easeOut' }}
+              className="mb-10 max-w-xl text-lg leading-relaxed text-white md:text-xl"
+            >
+              We&apos;ve saved our customers millions in avoided staff costs.
+            </motion.p>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7, delay: 0.2, ease: 'easeOut' }}
+              className="flex flex-col gap-4 sm:flex-row sm:items-center"
+            >
+              <Link
+                to="/book-demo"
+                className="inline-flex min-w-[200px] items-center justify-center rounded-lg bg-white px-8 py-4 font-medium text-black transition-colors hover:bg-neutral-200"
+              >
+                Book a demo
+                <ArrowRight className="ml-2 h-4 w-4" aria-hidden />
+              </Link>
+              <a
+                href="#platform-capabilities"
+                className="inline-flex min-w-[200px] items-center justify-center rounded-lg border border-white/15 bg-white/5 px-8 py-4 font-medium text-white transition-colors hover:border-white/25 hover:bg-white/10"
+              >
+                Explore product
+              </a>
+            </motion.div>
+          </div>
 
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.2, ease: 'easeOut' }}
-            className="flex flex-col gap-4 sm:flex-row sm:items-center"
+            initial={{ opacity: 0, x: 24 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.75, delay: 0.15, ease: 'easeOut' }}
+            className="relative mx-auto w-full max-w-xl lg:max-w-none"
           >
-            <Link
-              to="/book-demo"
-              className="inline-flex min-w-[200px] items-center justify-center rounded-lg bg-white px-8 py-4 font-medium text-black transition-colors hover:bg-neutral-200"
-            >
-              Book a demo
-              <ArrowRight className="ml-2 h-4 w-4" aria-hidden />
-            </Link>
-            <a
-              href="#platform-capabilities"
-              className="inline-flex min-w-[200px] items-center justify-center rounded-lg border border-white/15 bg-white/5 px-8 py-4 font-medium text-white transition-colors hover:border-white/25 hover:bg-white/10"
-            >
-              Explore product
-            </a>
+            <div className="relative aspect-[4/3] w-full overflow-hidden rounded-2xl border border-white/10 bg-neutral-950 shadow-[0_24px_80px_rgba(0,0,0,0.55)]">
+              <img
+                src="/hero-manufacturing.png"
+                alt="Precision CNC machining and robotic production line in a modern manufacturing facility"
+                width={1200}
+                height={900}
+                className="h-full w-full object-cover object-center"
+                loading="eager"
+                fetchPriority="high"
+              />
+              <div
+                className="pointer-events-none absolute inset-0 bg-gradient-to-tr from-black/55 via-transparent to-black/20"
+                aria-hidden
+              />
+              <div
+                className="pointer-events-none absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:28px_28px] opacity-30"
+                aria-hidden
+              />
+
+              {workflowCards.map((card) => (
+                <WorkflowCard key={card.id} {...card} />
+              ))}
+            </div>
           </motion.div>
         </div>
-
-        <motion.div
-          initial={{ opacity: 0, x: 24 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.75, delay: 0.15, ease: 'easeOut' }}
-          className="relative mx-auto w-full max-w-xl lg:max-w-none"
-        >
-          <div className="relative aspect-[4/3] w-full overflow-hidden rounded-2xl border border-white/10 bg-neutral-950 shadow-[0_24px_80px_rgba(0,0,0,0.55)]">
-            <img
-              src="/hero-manufacturing.png"
-              alt="Precision CNC machining and robotic production line in a modern manufacturing facility"
-              width={1200}
-              height={900}
-              className="h-full w-full object-cover object-center"
-              loading="eager"
-              fetchPriority="high"
-            />
-            <div
-              className="pointer-events-none absolute inset-0 bg-gradient-to-tr from-black/55 via-transparent to-black/20"
-              aria-hidden
-            />
-            <div
-              className="pointer-events-none absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:28px_28px] opacity-30"
-              aria-hidden
-            />
-
-            {workflowCards.map((card) => (
-              <WorkflowCard key={card.id} {...card} />
-            ))}
-          </div>
-        </motion.div>
       </div>
     </section>
   );

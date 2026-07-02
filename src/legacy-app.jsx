@@ -12642,20 +12642,7 @@ function Layout() {
   return <div className="min-h-screen bg-black text-neutral-200 font-sans selection:bg-neutral-800 selection:text-white flex flex-col"><Header /><main className="flex-1 pt-20"><Mw /></main><Footer /></div>;
 }
 function HomePage() {
-  const {
-    t: n
-  } = useLanguage();
-  const u = [{
-    icon: JA,
-    text: n.home.featureErp
-  }, {
-    icon: Aj,
-    text: n.home.featureInfra
-  }, {
-    icon: dj,
-    text: n.home.featureShopFloor
-  }];
-  return <div className="flex flex-col"><Hero /><OperationalComplexitySection /><HowItWorksSection /><section className="py-24 bg-black border-t border-white/5"><div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"><div className="max-w-3xl mx-auto text-center"><h2 className="text-3xl md:text-5xl font-medium tracking-tight text-white mb-6">{n.home.integrationTitle}</h2><p className="text-lg text-neutral-400 mb-10">{n.home.integrationSubtitle}</p><ul className="space-y-4 text-left max-w-md mx-auto">{u.map((d, f) => <li className="flex items-center text-neutral-300" key={f}><div className="flex items-center justify-center w-8 h-8 rounded-full bg-white/10 mr-4 shrink-0"><d.icon className="w-4 h-4 text-white" /></div>{d.text}</li>)}</ul></div></div></section></div>;
+  return <div className="flex flex-col"><Hero /><OperationalComplexitySection /><HowItWorksSection /></div>;
 }
 const zj = 6500;
 const Dj = [{

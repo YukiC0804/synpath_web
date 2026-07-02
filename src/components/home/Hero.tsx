@@ -21,6 +21,32 @@ const heroStats = [
   },
 ] as const;
 
+function useUnevenAgentQueries(initialValue: number) {
+  const [count, setCount] = useState(initialValue);
+
+  useEffect(() => {
+    let timeoutId = 0;
+
+    const scheduleNext = () => {
+      const addTwo = Math.random() < 0.45;
+      const increment = addTwo ? 2 : 1;
+      const baseDelay = addTwo ? 1750 : 750;
+      const jitter = Math.floor(Math.random() * 280) - 140;
+      const delay = Math.max(500, baseDelay + jitter);
+
+      timeoutId = window.setTimeout(() => {
+        setCount((current) => current + increment);
+        scheduleNext();
+      }, delay);
+    };
+
+    scheduleNext();
+    return () => window.clearTimeout(timeoutId);
+  }, []);
+
+  return count;
+}
+
 function useIncrementingCounter(initialValue: number, intervalMs: number) {
   const [count, setCount] = useState(initialValue);
 
@@ -59,7 +85,7 @@ function StatCard({
 }
 
 export function Hero() {
-  const agentQueries = useIncrementingCounter(1032, 750);
+  const agentQueries = useUnevenAgentQueries(1032);
   const disruptionsAnticipated = useIncrementingCounter(103, 10 * 60 * 1000);
 
   return (

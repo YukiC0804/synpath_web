@@ -1,5 +1,5 @@
 import type { LucideIcon } from 'lucide-react';
-import { Bot, Layers, SlidersHorizontal } from 'lucide-react';
+import { Layers, SlidersHorizontal, Sparkles } from 'lucide-react';
 
 const features = [
   {
@@ -17,7 +17,7 @@ const features = [
   },
   {
     id: 'copilot',
-    icon: Bot,
+    icon: Sparkles,
     title: 'Built-in Copilot',
     description: 'AI helps you build any dashboards/custom agents you want',
   },
@@ -28,23 +28,29 @@ function FeatureCard({
   title,
   description,
   titleClassName = '',
+  showDivider = false,
 }: {
   icon: LucideIcon;
   title: string;
   description: string;
   titleClassName?: string;
+  showDivider?: boolean;
 }) {
   return (
-    <div className="flex flex-col">
-      <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-xl border border-white/15 bg-white/5">
-        <Icon className="h-6 w-6 text-white" aria-hidden />
-      </div>
+    <div
+      className={`flex flex-col px-0 py-8 md:px-8 md:py-0 lg:px-10 ${
+        showDivider ? 'md:border-l md:border-white/10' : ''
+      }`}
+    >
+      <Icon className="mb-8 h-5 w-5 text-white" strokeWidth={1.5} aria-hidden />
       <h3
-        className={`mb-3 text-lg font-semibold text-white md:text-xl ${titleClassName}`}
+        className={`complexity-feature-title mb-4 text-[1.35rem] font-medium leading-snug text-white ${titleClassName}`}
       >
         {title}
       </h3>
-      <p className="text-sm leading-relaxed text-white/85 md:text-base">{description}</p>
+      <p className="complexity-feature-description max-w-[15rem] text-[0.95rem] leading-relaxed">
+        {description}
+      </p>
     </div>
   );
 }
@@ -53,13 +59,19 @@ export function OperationalComplexitySection() {
   return (
     <section
       aria-labelledby="operational-complexity-heading"
-      className="border-t border-white/5 bg-black py-16 md:py-20 lg:py-24"
+      className="border-t border-white/5 bg-black py-20 md:py-24 lg:py-28"
     >
-      <div className="mx-auto grid max-w-[88rem] grid-cols-1 items-start gap-10 px-4 sm:px-6 lg:grid-cols-12 lg:gap-12 lg:px-10">
+      <div className="mx-auto grid max-w-[88rem] grid-cols-1 items-start gap-12 px-4 sm:px-6 lg:grid-cols-12 lg:gap-16 lg:px-10 xl:gap-20">
         <div className="text-left lg:col-span-4">
+          <div className="mb-8 flex items-center gap-2.5">
+            <span className="h-2 w-2 shrink-0 rounded-full bg-orange-500" aria-hidden />
+            <span className="text-[11px] font-medium uppercase tracking-[0.22em] text-white">
+              Custom Agents
+            </span>
+          </div>
           <h2
             id="operational-complexity-heading"
-            className="max-w-sm text-left text-3xl font-medium leading-tight tracking-tight text-white md:text-4xl lg:text-[2.5rem]"
+            className="complexity-heading max-w-sm text-[2.75rem] leading-[1.05] text-white md:text-5xl lg:text-[3.25rem]"
           >
             Built to handle
             <br />
@@ -68,13 +80,14 @@ export function OperationalComplexitySection() {
         </div>
 
         <div className="flex justify-start lg:col-span-8 lg:justify-end">
-          <div className="grid w-full grid-cols-1 gap-10 md:grid-cols-3 md:gap-8 lg:w-3/4 lg:gap-10">
-            {features.map((feature) => (
+          <div className="grid w-full grid-cols-1 md:w-3/4 md:grid-cols-3">
+            {features.map((feature, index) => (
               <FeatureCard
                 key={feature.id}
                 icon={feature.icon}
                 title={feature.title}
                 description={feature.description}
+                showDivider={index > 0}
                 titleClassName={feature.id === 'customizable' ? 'whitespace-nowrap' : ''}
               />
             ))}

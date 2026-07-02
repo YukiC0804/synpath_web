@@ -454,110 +454,305 @@ export function SourceOfTruthAnimation() {
   );
 }
 
-const prompt = 'Build a WIP dashboard for Line 3 with late jobs highlighted';
+const agentsPrompt =
+  'Find sales orders at risk of late delivery, identify the cause, and escalate automatically.';
+
+const generatedArtifacts = [
+  {
+    id: 'dashboard',
+    title: 'At-Risk Orders Dashboard',
+    icon: LayoutDashboard,
+    statusFrom: 'Building',
+    statusTo: 'Ready',
+  },
+  {
+    id: 'agent',
+    title: 'Late Delivery Agent',
+    icon: Bot,
+    statusFrom: 'Hiring',
+    statusTo: 'Running',
+  },
+  {
+    id: 'workflow',
+    title: 'Escalation Workflow',
+    icon: Sparkles,
+    statusFrom: 'Creating',
+    statusTo: 'Created',
+  },
+] as const;
+
+const riskTableRows = [
+  {
+    order: 'SO-1842',
+    risk: 'High',
+    cause: 'Material shortage',
+    action: 'Supplier follow-up sent',
+  },
+  {
+    order: 'SO-2041',
+    risk: 'Medium',
+    cause: 'Machine downtime',
+    action: 'Planner notified',
+  },
+  {
+    order: 'SO-2218',
+    risk: 'High',
+    cause: 'Quality hold',
+    action: 'Escalated to operations',
+  },
+] as const;
+
+const workflowRuleChip =
+  'If delivery risk is high → identify cause → notify owner → update dashboard → escalate if unresolved.';
+
+type AgentsPhase = 'typing' | 'interpreting' | 'artifacts' | 'table' | 'hold';
+
+function RiskPill({ risk }: { risk: string }) {
+  const isHigh = risk === 'High';
+
+  return (
+    <span
+      className={`rounded-full px-1.5 py-0.5 text-[8px] font-medium sm:text-[9px] ${
+        isHigh
+          ? 'bg-rose-500/15 text-rose-300'
+          : 'bg-amber-500/15 text-amber-300'
+      }`}
+    >
+      {risk}
+    </span>
+  );
+}
 
 export function AgentsToolsAnimation() {
   const [typed, setTyped] = useState('');
-  const [showWidgets, setShowWidgets] = useState(false);
+  const [phase, setPhase] = useState<AgentsPhase>('typing');
+  const [statusReady, setStatusReady] = useState(false);
 
   useEffect(() => {
+    const timers: number[] = [];
     let index = 0;
-    let typingTimer = 0;
-    let resetTimer = 0;
+    let cancelled = false;
 
-    const typeNext = () => {
-      if (index <= prompt.length) {
-        setTyped(prompt.slice(0, index));
-        index += 1;
-        typingTimer = window.setTimeout(typeNext, 28);
-        return;
-      }
-
-      setShowWidgets(true);
-      resetTimer = window.setTimeout(() => {
-        index = 0;
-        setTyped('');
-        setShowWidgets(false);
-        typingTimer = window.setTimeout(typeNext, 400);
-      }, 2800);
+    const schedule = (fn: () => void, delay: number) => {
+      const id = window.setTimeout(() => {
+        if (!cancelled) {
+          fn();
+        }
+      }, delay);
+      timers.push(id);
     };
 
-    typingTimer = window.setTimeout(typeNext, 500);
+    const resetLoop = () => {
+      index = 0;
+      setTyped('');
+      setPhase('typing');
+      setStatusReady(false);
+      schedule(startTyping, 500);
+    };
+
+    const startTyping = () => {
+      const typeNext = () => {
+        if (cancelled) {
+          return;
+        }
+
+        if (index <= agentsPrompt.length) {
+          setTyped(agentsPrompt.slice(0, index));
+          index += 1;
+          const id = window.setTimeout(typeNext, 26);
+          timers.push(id);
+          return;
+        }
+
+        setPhase('interpreting');
+        schedule(() => {
+          setPhase('artifacts');
+          schedule(() => setStatusReady(true), 900);
+          schedule(() => setPhase('table'), 1400);
+          schedule(() => setPhase('hold'), 2200);
+          schedule(resetLoop, 5200);
+        }, 900);
+      };
+
+      typeNext();
+    };
+
+    schedule(startTyping, 500);
 
     return () => {
-      window.clearTimeout(typingTimer);
-      window.clearTimeout(resetTimer);
+      cancelled = true;
+      timers.forEach((id) => window.clearTimeout(id));
     };
   }, []);
 
-  const widgets = [
-    { id: 'dash', label: 'WIP Dashboard', icon: LayoutDashboard },
-    { id: 'agent', label: 'Late Job Agent', icon: Bot },
-    { id: 'alert', label: 'Escalation Rule', icon: Sparkles },
-  ] as const;
+  const showArtifacts = phase !== 'typing' && phase !== 'interpreting';
+  const showTable = phase === 'table' || phase === 'hold';
+  const showWorkflowChip = phase === 'hold';
+  const isInterpreting = phase === 'interpreting';
 
   return (
     <BorderlessAnimationCanvas
       label="Animated AI agent building operational tools from natural language"
-      className="aspect-[4/3.6] sm:aspect-[4/3.3]"
+      className="py-2 lg:py-3"
     >
-      <PanelChrome title="Agent Workspace" badge="Building" />
+      <div className="mx-auto w-full max-w-[400px] lg:mx-0">
+        <PanelChrome
+          title="Agent Workspace"
+          badge={statusReady ? 'Active' : isInterpreting ? 'Interpreting' : 'Building'}
+        />
 
-      <div className="flex h-[calc(100%-1.75rem)] flex-col gap-2">
-        <div className="shrink-0 rounded-xl border border-white/10 bg-black/50 p-2 sm:rounded-2xl sm:p-2.5">
-          <div className="mb-1 flex items-center gap-1.5 text-[9px] uppercase tracking-[0.12em] text-white/40 sm:text-[10px]">
-            <MessageSquare className="h-3 w-3" />
-            Natural language
+        <div className="space-y-2.5 rounded-2xl border border-white/10 bg-black/45 p-2.5 shadow-[0_8px_32px_rgba(0,0,0,0.35)] sm:p-3">
+          <div
+            className={`rounded-xl border bg-black/55 p-2.5 transition-colors sm:p-3 ${
+              isInterpreting || showArtifacts
+                ? 'border-emerald-400/30 shadow-[0_0_20px_rgba(52,211,153,0.08)]'
+                : 'border-white/10'
+            }`}
+          >
+            <div className="mb-1.5 flex items-center gap-1.5 text-[9px] uppercase tracking-[0.12em] text-white/40">
+              <MessageSquare className="h-3 w-3 shrink-0" />
+              Natural language
+            </div>
+            <p className="min-h-[2.75rem] text-[10px] leading-relaxed text-white/85 sm:text-[11px]">
+              {typed}
+              {phase === 'typing' ? (
+                <motion.span
+                  className="ml-0.5 inline-block h-3.5 w-0.5 bg-emerald-300/80 align-middle"
+                  animate={{ opacity: [1, 0, 1] }}
+                  transition={{ duration: 0.8, repeat: Infinity }}
+                />
+              ) : null}
+            </p>
           </div>
-          <p className="min-h-[2rem] text-[11px] leading-snug text-white/80 sm:text-xs">
-            {typed}
-            <motion.span
-              className="ml-0.5 inline-block h-3.5 w-0.5 bg-white/70 align-middle"
-              animate={{ opacity: [1, 0, 1] }}
-              transition={{ duration: 0.8, repeat: Infinity }}
-            />
-          </p>
-        </div>
 
-        <div className="grid min-h-0 flex-1 grid-cols-3 gap-1.5 sm:gap-2">
-          {widgets.map((widget, index) => {
-            const Icon = widget.icon;
-            return (
-              <motion.div
-                key={widget.id}
-                className="flex min-h-0 flex-col rounded-xl border border-white/10 bg-[#101010] p-2 sm:rounded-2xl"
-                initial={{ opacity: 0, y: 12, scale: 0.96 }}
-                animate={
-                  showWidgets
-                    ? { opacity: 1, y: 0, scale: 1 }
-                    : { opacity: 0.35, y: 0, scale: 1 }
-                }
-                transition={{ duration: 0.45, delay: showWidgets ? index * 0.15 : 0 }}
-              >
-                <Icon className="mb-1 h-3.5 w-3.5 shrink-0 text-emerald-300/90" />
-                <p className="shrink-0 text-[9px] font-medium leading-tight text-white/85 sm:text-[10px]">
-                  {widget.label}
-                </p>
-                <div className="mt-1.5 flex min-h-0 flex-1 items-end">
-                  <div className="flex h-6 w-full items-end gap-0.5 rounded-md bg-white/[0.04] px-1 pb-0.5 sm:h-7">
-                    {[40, 65, 48, 80, 55].map((height, barIndex) => (
-                      <motion.span
-                        key={barIndex}
-                        className="flex-1 rounded-sm bg-emerald-400/70"
-                        style={{ height: `${height}%` }}
-                        animate={showWidgets ? { opacity: [0.5, 1, 0.5] } : { opacity: 0.3 }}
-                        transition={{
-                          duration: 1.2,
-                          delay: barIndex * 0.1,
-                          repeat: showWidgets ? Infinity : 0,
-                        }}
-                      />
-                    ))}
-                  </div>
-                </div>
-              </motion.div>
-            );
-          })}
+          {isInterpreting || showArtifacts ? (
+            <motion.div
+              className="flex items-center gap-2 rounded-lg border border-white/[0.08] bg-white/[0.03] px-2.5 py-1.5"
+              initial={{ opacity: 0, y: 4 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.35 }}
+            >
+              <div className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full border border-emerald-400/30 bg-emerald-500/10">
+                <Sparkles className="h-2.5 w-2.5 text-emerald-300" />
+              </div>
+              <p className="text-[9px] text-white/55 sm:text-[10px]">
+                {isInterpreting ? (
+                  <motion.span
+                    animate={{ opacity: [0.55, 1, 0.55] }}
+                    transition={{ duration: 1.2, repeat: Infinity }}
+                  >
+                    Synpath is interpreting your request…
+                  </motion.span>
+                ) : (
+                  'Synpath generated agents, dashboards, and workflows.'
+                )}
+              </p>
+            </motion.div>
+          ) : null}
+
+          {showArtifacts ? (
+            <div className="grid grid-cols-1 gap-1.5 sm:grid-cols-3">
+            {generatedArtifacts.map((artifact, index) => {
+              const Icon = artifact.icon;
+
+              return (
+                <motion.div
+                  key={artifact.id}
+                  className="rounded-xl border border-white/10 bg-[#0d0d0d] p-2"
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={
+                    showArtifacts
+                      ? { opacity: 1, y: 0 }
+                      : { opacity: 0, y: 10 }
+                  }
+                  transition={{ duration: 0.4, delay: showArtifacts ? index * 0.12 : 0 }}
+                >
+                  <Icon className="mb-1 h-3.5 w-3.5 text-emerald-300/90" />
+                  <p className="text-[9px] font-medium leading-snug text-white/85 sm:text-[10px]">
+                    {artifact.title}
+                  </p>
+                  <p className="mt-1 text-[8px] text-white/40 sm:text-[9px]">
+                    Status:{' '}
+                    {statusReady ? (
+                      <span className="text-emerald-300">{artifact.statusTo}</span>
+                    ) : (
+                      <>
+                        <motion.span
+                          animate={{ opacity: [0.45, 1, 0.45] }}
+                          transition={{ duration: 1, repeat: Infinity }}
+                          className="text-white/55"
+                        >
+                          {artifact.statusFrom}
+                        </motion.span>
+                        {showArtifacts ? (
+                          <span className="text-white/30"> → {artifact.statusTo}</span>
+                        ) : null}
+                      </>
+                    )}
+                  </p>
+                </motion.div>
+              );
+            })}
+            </div>
+          ) : null}
+
+          {showTable ? (
+            <motion.div
+              className="overflow-hidden rounded-xl border border-white/10 bg-[#0a0a0a]"
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.45, ease: 'easeOut' }}
+            >
+            <div className="border-b border-white/10 px-2 py-1.5">
+              <p className="text-[9px] font-medium uppercase tracking-[0.1em] text-white/45">
+                At-Risk Orders
+              </p>
+            </div>
+            <div className="overflow-x-auto">
+              <table className="w-full min-w-[320px] text-left text-[8px] sm:text-[9px]">
+                <thead>
+                  <tr className="border-b border-white/[0.06] text-white/40">
+                    <th className="px-2 py-1.5 font-medium">Order</th>
+                    <th className="px-2 py-1.5 font-medium">Risk</th>
+                    <th className="px-2 py-1.5 font-medium">Cause</th>
+                    <th className="px-2 py-1.5 font-medium">Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {riskTableRows.map((row, index) => (
+                    <motion.tr
+                      key={row.order}
+                      className="border-b border-white/[0.04] last:border-0"
+                      initial={{ opacity: 0, x: -6 }}
+                      animate={showTable ? { opacity: 1, x: 0 } : { opacity: 0, x: -6 }}
+                      transition={{ duration: 0.35, delay: index * 0.1 }}
+                    >
+                      <td className="px-2 py-1.5 font-medium text-white/80">{row.order}</td>
+                      <td className="px-2 py-1.5">
+                        <RiskPill risk={row.risk} />
+                      </td>
+                      <td className="px-2 py-1.5 text-white/60">{row.cause}</td>
+                      <td className="px-2 py-1.5 text-emerald-300/85">{row.action}</td>
+                    </motion.tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            </motion.div>
+          ) : null}
+
+          {showWorkflowChip ? (
+            <motion.div
+              className="rounded-lg border border-emerald-400/20 bg-emerald-500/[0.06] px-2.5 py-2"
+              initial={{ opacity: 0, y: 6 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4 }}
+            >
+              <p className="text-[8px] leading-relaxed text-emerald-200/80 sm:text-[9px]">
+                {workflowRuleChip}
+              </p>
+            </motion.div>
+          ) : null}
         </div>
       </div>
     </BorderlessAnimationCanvas>

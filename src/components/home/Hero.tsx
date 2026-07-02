@@ -51,7 +51,7 @@ export function Hero() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, ease: 'easeOut' }}
-          className="mb-12 w-full font-semibold text-white lg:mb-14"
+          className="mx-auto mb-12 w-fit max-w-full text-center font-semibold text-white lg:mb-14"
         >
           <span className="hero-title-line">AI that listens and executes for you.</span>
           <span className="hero-title-line mt-2 md:mt-3">

@@ -51,16 +51,16 @@ function WorkflowCard({
       initial={{ opacity: 0, y: 12, scale: 0.96 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}
       transition={{ duration: 0.55, delay, ease: 'easeOut' }}
-      className={`absolute ${position} z-20 max-w-[11rem] sm:max-w-[12.5rem]`}
+      className={`absolute ${position} z-20 max-w-[12.5rem] sm:max-w-[14rem] md:max-w-[15rem]`}
     >
-      <div className="rounded-xl border border-white/15 bg-black/55 px-3 py-2.5 shadow-[0_8px_32px_rgba(0,0,0,0.45)] backdrop-blur-md">
-        <div className="mb-1.5 flex items-center gap-2">
-          <span className="flex h-6 w-6 items-center justify-center rounded-md bg-white/10">
-            <Icon className="h-3.5 w-3.5 text-emerald-400" aria-hidden />
+      <div className="rounded-xl border border-white/15 bg-black/55 px-3.5 py-3 shadow-[0_8px_32px_rgba(0,0,0,0.45)] backdrop-blur-md sm:px-4 sm:py-3.5">
+        <div className="mb-2 flex items-center gap-2">
+          <span className="flex h-7 w-7 items-center justify-center rounded-md bg-white/10">
+            <Icon className="h-4 w-4 text-emerald-400" aria-hidden />
           </span>
           <span className="h-1.5 w-1.5 rounded-full bg-emerald-400/90" aria-hidden />
         </div>
-        <p className="text-[11px] font-medium leading-snug text-white/90 sm:text-xs">{label}</p>
+        <p className="text-xs font-medium leading-snug text-white sm:text-sm">{label}</p>
       </div>
     </motion.div>
   );
@@ -70,7 +70,7 @@ export function Hero() {
   return (
     <section
       aria-labelledby="hero-heading"
-      className="relative overflow-hidden border-b border-white/5 pt-12 pb-16 md:pt-16 md:pb-24"
+      className="relative overflow-hidden border-b border-white/5 pt-14 pb-20 md:pt-20 md:pb-28"
     >
       <div
         className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_top_left,_rgba(64,80,120,0.22)_0%,_transparent_55%),radial-gradient(ellipse_at_bottom_right,_rgba(30,40,60,0.18)_0%,_transparent_50%)]"
@@ -78,37 +78,31 @@ export function Hero() {
       />
       <div className="pointer-events-none absolute inset-0 -z-10 bg-gradient-to-b from-neutral-900/40 via-black to-black" aria-hidden />
 
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-[88rem] px-4 sm:px-6 lg:px-10">
         <motion.h1
           id="hero-heading"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, ease: 'easeOut' }}
-          className="mb-10 text-4xl font-semibold tracking-tighter text-white md:mb-12 md:text-5xl lg:text-6xl xl:text-7xl"
+          className="mb-12 text-center text-4xl font-semibold tracking-tighter text-white md:mb-16 md:text-5xl lg:text-6xl xl:text-7xl"
         >
-          AI Automation for Manufacturing Operation
+          <span className="block">AI Automation</span>
+          <span className="block">for Manufacturing Operation</span>
         </motion.h1>
 
-        <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-16">
-          <div className="text-left">
-            <motion.p
+        <div className="grid items-center gap-12 lg:grid-cols-[minmax(0,0.92fr)_minmax(0,1.18fr)] lg:gap-14 xl:gap-20">
+          <div className="text-left lg:pr-4">
+            <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, delay: 0.1, ease: 'easeOut' }}
-              className="mb-4 max-w-xl text-lg leading-relaxed text-white md:text-xl"
+              className="mb-10 max-w-xl space-y-4 text-lg leading-relaxed text-white md:text-xl"
             >
-              Synpath trains custom AI agents that runs your plant with real time data. Machines,
-              software, paperwork, tribal knowledge, all connected. No rip-and-replace. No Firefighting
-            </motion.p>
-
-            <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, delay: 0.15, ease: 'easeOut' }}
-              className="mb-10 max-w-xl text-lg leading-relaxed text-white md:text-xl"
-            >
-              We&apos;ve saved our customers millions in avoided staff costs.
-            </motion.p>
+              <p>Synpath trains custom AI agents that runs your plant with real time data.</p>
+              <p>Machines, software, paperwork, tribal knowledge, all connected.</p>
+              <p>No rip-and-replace. No Firefighting</p>
+              <p>We&apos;ve saved our customers millions in avoided staff costs.</p>
+            </motion.div>
 
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -136,9 +130,9 @@ export function Hero() {
             initial={{ opacity: 0, x: 24 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.75, delay: 0.15, ease: 'easeOut' }}
-            className="relative mx-auto w-full max-w-xl lg:max-w-none"
+            className="relative w-full lg:min-h-[32rem] xl:min-h-[36rem]"
           >
-            <div className="relative aspect-[4/3] w-full overflow-hidden rounded-2xl border border-white/10 bg-neutral-950 shadow-[0_24px_80px_rgba(0,0,0,0.55)]">
+            <div className="relative aspect-[5/4] w-full min-h-[18rem] overflow-hidden rounded-2xl border border-white/10 bg-neutral-950 shadow-[0_28px_96px_rgba(0,0,0,0.6)] sm:min-h-[22rem] lg:aspect-auto lg:h-full lg:min-h-[32rem] xl:min-h-[36rem]">
               <img
                 src="/hero-manufacturing.png"
                 alt="Precision CNC machining and robotic production line in a modern manufacturing facility"

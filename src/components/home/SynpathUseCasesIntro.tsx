@@ -25,18 +25,18 @@ const VISIBLE_HEIGHT = ITEM_HEIGHT * VISIBLE_ROWS;
 
 function getItemClassName(distance: number) {
   if (distance === 0) {
-    return 'synpath-use-case-active text-[1.9rem] font-medium leading-none text-white md:text-[2.35rem] lg:text-[2.75rem]';
+    return 'synpath-use-case-active text-[2.15rem] font-medium leading-none text-white md:text-[2.85rem] lg:text-[3.35rem]';
   }
   if (distance === 1) {
-    return 'text-xl font-normal text-white/45 md:text-2xl';
+    return 'text-2xl font-normal text-white/58 md:text-[1.85rem]';
   }
   if (distance === 2) {
-    return 'text-lg font-normal text-white/30 md:text-xl';
+    return 'text-xl font-normal text-white/42 md:text-2xl';
   }
   if (distance === 3) {
-    return 'text-base font-normal text-white/18 md:text-lg';
+    return 'text-lg font-normal text-white/30 md:text-xl';
   }
-  return 'text-sm font-normal text-white/10';
+  return 'text-base font-normal text-white/20';
 }
 
 function UseCasesStepper() {

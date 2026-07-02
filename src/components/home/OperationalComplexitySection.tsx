@@ -44,11 +44,11 @@ function FeatureCard({
     >
       <Icon className="mb-8 h-5 w-5 text-white" strokeWidth={1.5} aria-hidden />
       <h3
-        className={`complexity-feature-title mb-4 text-sm font-medium leading-tight text-white sm:text-[0.95rem] md:text-base ${titleClassName}`}
+        className={`complexity-feature-title mb-4 text-base font-medium leading-tight text-white md:text-lg ${titleClassName}`}
       >
         {title}
       </h3>
-      <p className="complexity-feature-description text-[0.9rem] leading-relaxed md:text-[0.95rem]">
+      <p className="complexity-feature-description text-base leading-relaxed md:text-lg">
         {description}
       </p>
     </div>
@@ -61,7 +61,8 @@ export function OperationalComplexitySection() {
       aria-labelledby="operational-complexity-heading"
       className="complexity-section border-t border-white/5 bg-black py-20 md:py-24 lg:py-28"
     >
-      <div className="mx-auto grid max-w-[88rem] grid-cols-1 items-start gap-12 px-4 sm:px-6 lg:grid-cols-12 lg:gap-16 lg:px-10 xl:gap-20">
+      <div className="px-3 sm:px-4 md:px-5 lg:px-6 xl:px-8">
+        <div className="grid grid-cols-1 items-start gap-12 lg:grid-cols-12 lg:gap-10 xl:gap-14">
         <div className="text-left lg:col-span-4">
           <div className="mb-8 flex items-center gap-2.5">
             <span className="h-2 w-2 shrink-0 rounded-full bg-orange-500" aria-hidden />
@@ -80,7 +81,7 @@ export function OperationalComplexitySection() {
         </div>
 
         <div className="flex justify-start lg:col-span-8 lg:justify-end">
-          <div className="grid w-full grid-cols-1 gap-2 md:w-[92%] md:grid-cols-3 md:gap-0 lg:w-full">
+          <div className="grid w-full grid-cols-1 gap-2 md:grid-cols-3 md:gap-0">
             {features.map((feature, index) => (
               <FeatureCard
                 key={feature.id}
@@ -92,6 +93,7 @@ export function OperationalComplexitySection() {
               />
             ))}
           </div>
+        </div>
         </div>
       </div>
     </section>

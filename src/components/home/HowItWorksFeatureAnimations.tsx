@@ -161,28 +161,30 @@ function ConnectionLinesLayer({ paths }: { paths: FlowPaths | null }) {
       {paths.inbound.map((path, index) =>
         path ? (
           <g key={fragmentedSources[index]?.id ?? index}>
-          <motion.path
-            d={path}
-            fill="none"
-            stroke="rgba(52,211,153,0.32)"
-            strokeWidth="1.2"
-            strokeLinecap="round"
-            initial={{ pathLength: 0, opacity: 0 }}
-            animate={{ pathLength: 1, opacity: 1 }}
-            transition={{ duration: 0.9, delay: index * 0.08 }}
-          />
-          <motion.circle
-            r="2.2"
-            fill="#34d399"
-            animate={{ opacity: [0, 0.9, 0], offsetDistance: ['0%', '100%'] }}
-            transition={{
-              duration: 2.6,
-              repeat: Infinity,
-              delay: index * 0.35,
-              ease: 'linear',
-            }}
-            style={{ offsetPath: `path("${path}")` }}
-          />
+            <path
+              d={path}
+              fill="none"
+              stroke="rgba(52,211,153,0.22)"
+              strokeWidth="1.2"
+              strokeLinecap="round"
+            />
+            <motion.path
+              d={path}
+              fill="none"
+              stroke="#6ee7b7"
+              strokeWidth="1.6"
+              strokeLinecap="round"
+              pathLength={1}
+              strokeDasharray="0.14 0.86"
+              initial={{ strokeDashoffset: 1 }}
+              animate={{ strokeDashoffset: [1, 0] }}
+              transition={{
+                duration: 2.2,
+                repeat: Infinity,
+                ease: 'linear',
+                delay: index * 0.22,
+              }}
+            />
           </g>
         ) : null,
       )}
@@ -384,11 +386,11 @@ export function SourceOfTruthAnimation() {
         <ConnectionLinesLayer paths={paths} />
 
         <div className="relative z-20 flex flex-col lg:h-full">
-          <p className="mb-3 shrink-0 text-[9px] font-medium uppercase tracking-[0.14em] text-white/35">
+          <p className="mb-3 shrink-0 whitespace-nowrap text-[9px] font-medium uppercase tracking-[0.14em] text-white/35">
             Fragmented sources
           </p>
 
-          <div className="grid grid-cols-2 gap-2 lg:hidden">
+          <div className="flex flex-col gap-2 lg:hidden">
             {fragmentedSources.map((source) => {
               const Icon = source.icon;
               return (

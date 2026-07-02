@@ -19,20 +19,24 @@ const synpathUseCases = [
 
 const STEP_MS = 2200;
 const TRANSITION_MS = 700;
-const ITEM_HEIGHT = 88;
-const VISIBLE_HEIGHT = 440;
+const ITEM_HEIGHT = 80;
+const VISIBLE_ROWS = 7;
+const VISIBLE_HEIGHT = ITEM_HEIGHT * VISIBLE_ROWS;
 
 function getItemClassName(distance: number) {
   if (distance === 0) {
-    return 'synpath-use-case-active text-[2.35rem] font-medium leading-none text-white md:text-[2.85rem] lg:text-[3.35rem]';
+    return 'synpath-use-case-active text-[1.9rem] font-medium leading-none text-white md:text-[2.35rem] lg:text-[2.75rem]';
   }
   if (distance === 1) {
-    return 'text-2xl font-normal text-white/40 md:text-[1.75rem]';
+    return 'text-xl font-normal text-white/45 md:text-2xl';
   }
   if (distance === 2) {
-    return 'text-xl font-normal text-white/20 md:text-2xl';
+    return 'text-lg font-normal text-white/30 md:text-xl';
   }
-  return 'text-lg font-normal text-white/10';
+  if (distance === 3) {
+    return 'text-base font-normal text-white/18 md:text-lg';
+  }
+  return 'text-sm font-normal text-white/10';
 }
 
 function UseCasesStepper() {
@@ -68,25 +72,29 @@ function UseCasesStepper() {
 
   return (
     <div
-      className="relative mx-auto h-[27.5rem] w-full max-w-xl overflow-hidden"
+      className="relative h-[35rem] w-full min-w-0 overflow-hidden"
       aria-live="polite"
       aria-atomic="true"
     >
       <div
-        className="pointer-events-none absolute inset-x-0 top-0 z-10 h-24 bg-gradient-to-b from-black via-black/90 to-transparent"
+        className="pointer-events-none absolute inset-x-0 top-0 z-10 h-14 bg-gradient-to-b from-black via-black/85 to-transparent"
         aria-hidden
       />
       <div
-        className="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-24 bg-gradient-to-t from-black via-black/90 to-transparent"
+        className="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-14 bg-gradient-to-t from-black via-black/85 to-transparent"
         aria-hidden
       />
       <div
-        className="pointer-events-none absolute inset-x-0 top-1/2 z-0 h-[88px] -translate-y-1/2 border-y border-white/10"
+        className="pointer-events-none absolute inset-x-0 top-1/2 z-0 h-20 -translate-y-1/2 border-y border-white/10"
         aria-hidden
       />
 
       <ul
-        className={transitionEnabled ? 'use-cases-stepper-track' : 'use-cases-stepper-track use-cases-stepper-track--instant'}
+        className={
+          transitionEnabled
+            ? 'use-cases-stepper-track'
+            : 'use-cases-stepper-track use-cases-stepper-track--instant'
+        }
         style={{ transform: `translateY(${translateY}px)` }}
       >
         {displayItems.map((item, index) => {
@@ -95,7 +103,7 @@ function UseCasesStepper() {
           return (
             <li
               key={`${item}-${index}`}
-              className={`flex h-[88px] items-center whitespace-nowrap transition-all duration-700 ${getItemClassName(distance)}`}
+              className={`flex h-20 items-center whitespace-nowrap transition-all duration-700 ${getItemClassName(distance)}`}
             >
               {item}
             </li>
@@ -109,24 +117,26 @@ function UseCasesStepper() {
 export function SynpathUseCasesIntro() {
   return (
     <div className="border-t border-white/5 py-16 md:py-20 lg:py-24">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div className="px-3 sm:px-4 md:px-5 lg:px-6 xl:px-8">
         <p className="mb-10 text-sm font-medium uppercase tracking-[0.18em] text-white/55 md:mb-12">
           How It Works
         </p>
 
-        <div className="grid grid-cols-1 items-center gap-10 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.2fr)_auto] lg:gap-12 xl:gap-16">
+        <div className="grid grid-cols-1 items-center gap-8 lg:grid-cols-[minmax(0,0.72fr)_minmax(0,1.55fr)_auto] lg:gap-5 xl:gap-8">
           <h2
             id="how-it-works-heading"
-            className="max-w-sm text-2xl font-normal leading-snug text-white md:text-3xl lg:text-[2rem]"
+            className="text-2xl font-normal leading-snug text-white md:text-3xl lg:text-[2rem]"
           >
-            The top manufacturing teams use Synpath for
+            The top manufacturers
+            <br />
+            use Synpath for
           </h2>
 
           <UseCasesStepper />
 
           <a
             href="#platform-capabilities"
-            className="inline-flex w-fit items-center justify-center rounded-full border border-white/25 px-6 py-3 text-sm font-medium text-white transition-colors hover:border-white/40 hover:bg-white/5 md:px-7 md:py-3.5 md:text-base lg:justify-self-end"
+            className="inline-flex w-fit shrink-0 items-center justify-center self-center rounded-full border border-white/25 px-6 py-3 text-sm font-medium text-white transition-colors hover:border-white/40 hover:bg-white/5 md:px-7 md:py-3.5 md:text-base lg:justify-self-end lg:self-center"
           >
             Explore Platform
             <ArrowRight className="ml-2 h-4 w-4" aria-hidden />

@@ -38,17 +38,17 @@ function FeatureCard({
 }) {
   return (
     <div
-      className={`flex flex-col px-0 py-8 md:px-8 md:py-0 lg:px-10 ${
+      className={`flex min-w-0 flex-col px-0 py-8 md:min-w-[11.5rem] md:px-6 md:py-0 lg:min-w-[13rem] lg:px-8 xl:min-w-[14.5rem] xl:px-10 ${
         showDivider ? 'md:border-l md:border-white/10' : ''
       }`}
     >
       <Icon className="mb-8 h-5 w-5 text-white" strokeWidth={1.5} aria-hidden />
       <h3
-        className={`complexity-feature-title mb-4 text-[1.35rem] font-medium leading-snug text-white ${titleClassName}`}
+        className={`complexity-feature-title mb-4 text-sm font-medium leading-tight text-white sm:text-[0.95rem] md:text-base ${titleClassName}`}
       >
         {title}
       </h3>
-      <p className="complexity-feature-description max-w-[15rem] text-[0.95rem] leading-relaxed">
+      <p className="complexity-feature-description text-[0.9rem] leading-relaxed md:text-[0.95rem]">
         {description}
       </p>
     </div>
@@ -80,7 +80,7 @@ export function OperationalComplexitySection() {
         </div>
 
         <div className="flex justify-start lg:col-span-8 lg:justify-end">
-          <div className="grid w-full grid-cols-1 md:w-3/4 md:grid-cols-3">
+          <div className="grid w-full grid-cols-1 gap-2 md:w-[92%] md:grid-cols-3 md:gap-0 lg:w-full">
             {features.map((feature, index) => (
               <FeatureCard
                 key={feature.id}

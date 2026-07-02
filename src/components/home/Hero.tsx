@@ -102,10 +102,8 @@ export function Hero() {
           transition={{ duration: 0.7, ease: 'easeOut' }}
           className="hero-headline mx-auto mb-12 w-fit max-w-full text-center lg:mb-14"
         >
-          <span className="hero-title-line">AI that listens and executes for you.</span>
-          <span className="hero-title-line mt-2 md:mt-3">
-            Purpose Built for Manufacturing Operations.
-          </span>
+          <span className="hero-title-line">AI that listens and executes for you</span>
+          <span className="hero-title-line mt-2 md:mt-3">Build for Manufacturing Operations</span>
         </motion.h1>
 
         <motion.div

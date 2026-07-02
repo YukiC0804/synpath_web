@@ -101,7 +101,7 @@ export function Hero() {
           transition={{ duration: 0.7, ease: 'easeOut' }}
           className="mx-auto mb-12 w-fit max-w-full text-center lg:mb-14"
         >
-          <p className="mb-4 inline-flex rounded-full border border-white/20 bg-white/5 px-4 py-1.5 text-xs font-medium tracking-wide text-white/80 backdrop-blur-sm sm:mb-5 sm:px-5 sm:text-sm">
+          <p className="mb-4 inline-flex rounded-full border border-white/20 bg-white/5 px-4 py-1.5 text-[0.9rem] font-medium tracking-wide text-white/80 backdrop-blur-sm sm:mb-5 sm:px-5 sm:text-[1.05rem]">
             Hit Plan, Cut Waste and Scale
           </p>
           <h1 id="hero-heading" className="hero-headline">

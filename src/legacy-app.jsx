@@ -12637,14 +12637,8 @@ function Layout() {
 }
 function HomePage() {
   const {
-    t: n,
-    locale: a,
-    localizedSolutions: l
+    t: n
   } = useLanguage();
-  const r = {
-    sales: n.nav.sales,
-    operations: n.nav.operations
-  };
   const u = [{
     icon: JA,
     text: n.home.featureErp
@@ -12655,21 +12649,7 @@ function HomePage() {
     icon: dj,
     text: n.home.featureShopFloor
   }];
-  return <div className="flex flex-col"><Hero /><OperationalComplexitySection /><HowItWorksSection /><section id="platform-capabilities" className="py-24 bg-neutral-950 border-t border-white/5"><div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"><div className="text-center mb-16"><h2 className="text-sm font-semibold tracking-wider text-neutral-400 uppercase mb-3">{n.home.capabilitiesEyebrow}</h2><p className="text-3xl md:text-4xl font-medium text-white">{n.home.capabilitiesTitle}</p></div><div className="space-y-14">{Hc.map(d => {
-            const f = l.filter(m => m.category === d.category);
-            return <div key={d.category}><p className="text-xs font-semibold uppercase tracking-wider text-neutral-500 mb-6">{r[d.category]}</p><div className="grid grid-cols-1 md:grid-cols-2 gap-6">{f.map((m, p) => <Pe.div initial={{
-                  opacity: 0,
-                  y: 20
-                }} whileInView={{
-                  opacity: 1,
-                  y: 0
-                }} viewport={{
-                  once: true
-                }} transition={{
-                  duration: 0.5,
-                  delay: p * 0.1
-                }} className="group relative bg-[#111] border border-white/10 rounded-2xl p-8 hover:border-white/20 transition-colors" key={m.id}><div className="flex flex-col h-full"><h3 className="text-xl font-semibold text-white mb-3">{m.title}</h3><p className="text-neutral-400 mb-8 flex-1">{m.description}</p><$e to={`/solutions/${m.id}`} className="inline-flex items-center text-sm font-medium text-white/70 group-hover:text-white transition-colors">{n.home.learnMore} <_Component6 className="ml-1 w-4 h-4 group-hover:translate-x-1 transition-transform" /></$e></div></Pe.div>)}</div></div>;
-          })}</div></div></section><section className="py-24 bg-black border-t border-white/5"><div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"><div className="max-w-3xl mx-auto text-center"><h2 className="text-3xl md:text-5xl font-medium tracking-tight text-white mb-6">{n.home.integrationTitle}</h2><p className="text-lg text-neutral-400 mb-10">{n.home.integrationSubtitle}</p><ul className="space-y-4 text-left max-w-md mx-auto">{u.map((d, f) => <li className="flex items-center text-neutral-300" key={f}><div className="flex items-center justify-center w-8 h-8 rounded-full bg-white/10 mr-4 shrink-0"><d.icon className="w-4 h-4 text-white" /></div>{d.text}</li>)}</ul></div></div></section></div>;
+  return <div className="flex flex-col"><Hero /><OperationalComplexitySection /><HowItWorksSection /><section className="py-24 bg-black border-t border-white/5"><div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"><div className="max-w-3xl mx-auto text-center"><h2 className="text-3xl md:text-5xl font-medium tracking-tight text-white mb-6">{n.home.integrationTitle}</h2><p className="text-lg text-neutral-400 mb-10">{n.home.integrationSubtitle}</p><ul className="space-y-4 text-left max-w-md mx-auto">{u.map((d, f) => <li className="flex items-center text-neutral-300" key={f}><div className="flex items-center justify-center w-8 h-8 rounded-full bg-white/10 mr-4 shrink-0"><d.icon className="w-4 h-4 text-white" /></div>{d.text}</li>)}</ul></div></div></section></div>;
 }
 const zj = 6500;
 const Dj = [{

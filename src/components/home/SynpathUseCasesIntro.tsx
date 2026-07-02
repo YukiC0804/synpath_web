@@ -210,7 +210,7 @@ export function SynpathUseCasesIntro() {
           <UseCasesStepper />
 
           <a
-            href="#platform-capabilities"
+            href="#how-it-works"
             className="inline-flex w-fit shrink-0 items-center justify-center self-center rounded-full border border-white/25 px-6 py-3 text-sm font-medium text-white transition-colors hover:border-white/40 hover:bg-white/5 md:px-7 md:py-3.5 md:text-base lg:justify-self-end lg:self-center"
           >
             Explore Platform

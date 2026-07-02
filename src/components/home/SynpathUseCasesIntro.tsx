@@ -17,11 +17,18 @@ const synpathUseCases = [
   'AR Tracking',
 ] as const;
 
+const CASE_COUNT = synpathUseCases.length;
 const STEP_MS = 2200;
 const TRANSITION_MS = 700;
 const ITEM_HEIGHT = 80;
 const VISIBLE_ROWS = 7;
 const VISIBLE_HEIGHT = ITEM_HEIGHT * VISIBLE_ROWS;
+const ROW_OFFSETS = [-3, -2, -1, 0, 1, 2, 3] as const;
+const BASE_TRANSLATE_Y = VISIBLE_HEIGHT / 2 - 3 * ITEM_HEIGHT - ITEM_HEIGHT / 2;
+
+function modIndex(index: number) {
+  return ((index % CASE_COUNT) + CASE_COUNT) % CASE_COUNT;
+}
 
 function getItemClassName(distance: number) {
   if (distance === 0) {
@@ -41,38 +48,39 @@ function getItemClassName(distance: number) {
 
 function UseCasesStepper() {
   const [activeIndex, setActiveIndex] = useState(0);
+  const [slideOffset, setSlideOffset] = useState(0);
   const [transitionEnabled, setTransitionEnabled] = useState(true);
-  const displayItems = [...synpathUseCases, synpathUseCases[0]];
 
   useEffect(() => {
     const intervalId = window.setInterval(() => {
-      setActiveIndex((current) => current + 1);
+      setSlideOffset(-ITEM_HEIGHT);
     }, STEP_MS);
 
     return () => window.clearInterval(intervalId);
   }, []);
 
   useEffect(() => {
-    if (activeIndex !== synpathUseCases.length) {
+    if (slideOffset === 0) {
       return;
     }
 
     const timeoutId = window.setTimeout(() => {
       setTransitionEnabled(false);
-      setActiveIndex(0);
+      setActiveIndex((current) => modIndex(current + 1));
+      setSlideOffset(0);
       requestAnimationFrame(() => {
         requestAnimationFrame(() => setTransitionEnabled(true));
       });
     }, TRANSITION_MS);
 
     return () => window.clearTimeout(timeoutId);
-  }, [activeIndex]);
+  }, [slideOffset]);
 
-  const translateY = VISIBLE_HEIGHT / 2 - activeIndex * ITEM_HEIGHT - ITEM_HEIGHT / 2;
+  const translateY = BASE_TRANSLATE_Y + slideOffset;
 
   return (
     <div
-      className="relative h-[35rem] w-full min-w-0 overflow-hidden"
+      className="relative mx-auto h-[35rem] w-full max-w-4xl min-w-0 overflow-hidden"
       aria-live="polite"
       aria-atomic="true"
     >
@@ -97,15 +105,16 @@ function UseCasesStepper() {
         }
         style={{ transform: `translateY(${translateY}px)` }}
       >
-        {displayItems.map((item, index) => {
-          const distance = Math.abs(index - activeIndex);
+        {(slideOffset === 0 ? ROW_OFFSETS : [...ROW_OFFSETS, 4]).map((offset) => {
+          const distance = Math.abs(offset);
+          const label = synpathUseCases[modIndex(activeIndex + offset)];
 
           return (
             <li
-              key={`${item}-${index}`}
-              className={`flex h-20 items-center whitespace-nowrap transition-all duration-700 ${getItemClassName(distance)}`}
+              key={offset}
+              className={`flex h-20 w-full items-center justify-center whitespace-nowrap text-center transition-all duration-700 ${getItemClassName(distance)}`}
             >
-              {item}
+              {label}
             </li>
           );
         })}

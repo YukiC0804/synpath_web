@@ -1,35 +1,35 @@
 const featureRows = [
   {
-    id: 'adapt',
-    title: 'Instantly adapt to your unique organization, processes, and business rules',
-    description: 'A truly flexible platform with process builder and AI rule capture',
-    detail:
-      'Manufacturing order and sales order workflows connected in one system, with AI rules and agents handling shipment batching and delivery notes.',
+    id: 'learn',
+    title: 'Learn Your Operations Instantly',
+    description:
+      'Map your unique organization, processes, and business rules - identify data gap, bottlenecks and areas of automation',
     image: '/build-specification.png',
-    imageAlt: 'Operational workflow configuration interface placeholder',
+    imageAlt: 'Operational mapping and process discovery placeholder',
+  },
+  {
+    id: 'truth',
+    title: 'Build One Source of Truth',
+    description:
+      'Connect sensors, machine data, software, paperwork, and tribal knowledge into one reliable operating layer.',
+    image: '/profile-drawing.png',
+    imageAlt: 'Unified operational data layer placeholder',
+  },
+  {
+    id: 'agents',
+    title: 'Hire Agents. Build Tools',
+    description:
+      'Use natural language to create AI agents, build dashboards, and create tools that execute daunting tasks for you.',
+    image: '/hero-manufacturing.png',
+    imageAlt: 'AI agents and custom operational tools placeholder',
   },
   {
     id: 'deploy',
-    title: 'Deploy in 3 to 10 weeks',
+    title: 'Go Live in 3–8 Weeks',
     description:
-      'With AI data migration, instantaneous customization, and easy adoption by users, Synpath is built for manufacturers that need to move fast.',
-    image: '/profile-drawing.png',
-    imageAlt: 'Deployment and onboarding workflow placeholder',
-  },
-  {
-    id: 'automate',
-    title: 'Automate your business with a modern platform',
-    description:
-      'Factory software that listens to your instructions and executes daunting tasks on your behalf — not just cloud software, but AI-native operations.',
-    image: '/hero-manufacturing.png',
-    imageAlt: 'Shop floor automation and production workflow placeholder',
-  },
-  {
-    id: 'teams',
-    title: 'Manufacturing software your teams will love',
-    description: 'An industrial platform with best-in-class UI and UX design for operators and managers.',
+      'With AI data migration, fast customization, and easy user adoption, Synpath is built for rapid deployment.',
     image: '/build-specification.png',
-    imageAlt: 'Operator-friendly manufacturing software interface placeholder',
+    imageAlt: 'Rapid Synpath deployment workflow placeholder',
   },
 ] as const;
 
@@ -79,23 +79,21 @@ function FeatureVisual({
 }
 
 function FeatureCopy({
+  step,
   title,
   description,
-  detail,
 }: {
+  step: number;
   title: string;
   description: string;
-  detail?: string;
 }) {
   return (
     <div className="max-w-xl lg:max-w-lg">
+      <p className="mb-4 text-sm font-medium text-white/55">{step}.</p>
       <h3 className="mb-5 text-3xl font-medium leading-[1.12] tracking-tight text-white md:text-4xl lg:text-[2.6rem]">
         {title}
       </h3>
       <p className="text-base leading-relaxed text-white/70 md:text-lg">{description}</p>
-      {detail ? (
-        <p className="mt-4 text-sm leading-relaxed text-white/55 md:text-base">{detail}</p>
-      ) : null}
     </div>
   );
 }
@@ -106,18 +104,14 @@ export function HowItWorksSection() {
       <div className="border-t border-white/5 py-20 md:py-24 lg:py-28">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <p className="mb-4 text-sm font-medium uppercase tracking-[0.18em] text-white/55">
-            How it works
+            How It Works
           </p>
           <h2
             id="how-it-works-heading"
             className="max-w-4xl text-4xl font-medium leading-[1.08] tracking-tight text-white md:text-5xl lg:text-6xl"
           >
-            Operations that move as fast as your ambition
+            A single operational truth to close the execution gap
           </h2>
-          <p className="mt-6 max-w-3xl text-lg leading-relaxed text-white/70 md:text-xl">
-            Manufacturing operations are more complex than ever. Synpath is built to work for that
-            reality.
-          </p>
         </div>
       </div>
 
@@ -133,9 +127,9 @@ export function HowItWorksSection() {
               <div className="mx-auto grid max-w-7xl grid-cols-1 items-center gap-10 px-4 sm:px-6 lg:grid-cols-2 lg:gap-16 lg:px-8 xl:gap-20">
                 <div className={reversed ? 'lg:order-2' : ''}>
                   <FeatureCopy
+                    step={index + 1}
                     title={row.title}
                     description={row.description}
-                    detail={'detail' in row ? row.detail : undefined}
                   />
                 </div>
                 <div className={reversed ? 'lg:order-1' : ''}>

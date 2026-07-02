@@ -82,8 +82,9 @@ export function HowItWorksSection() {
 
           return (
             <div
+              id={row.id === 'truth' ? 'build-one-source-of-truth' : undefined}
               key={row.id}
-              className="border-b border-white/5 py-16 md:py-20 lg:py-24"
+              className={`border-b border-white/5 py-16 md:py-20 lg:py-24${row.id === 'truth' ? ' scroll-mt-24' : ''}`}
             >
               <div className="px-30">
                 <div className="grid grid-cols-1 items-center gap-10 lg:grid-cols-2 lg:gap-16 xl:gap-20">

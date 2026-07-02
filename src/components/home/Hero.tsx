@@ -139,7 +139,7 @@ export function Hero() {
             <ArrowRight className="ml-2 h-4 w-4" aria-hidden />
           </Link>
           <a
-            href="#how-it-works"
+            href="#build-one-source-of-truth"
             className="inline-flex min-w-[200px] items-center justify-center rounded-lg border border-white/25 bg-white/10 px-8 py-4 font-medium text-white backdrop-blur-sm transition-colors hover:border-white/35 hover:bg-white/15"
           >
             Explore product

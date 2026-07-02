@@ -56,9 +56,9 @@ function getItemStyle(index: number, scrollOffset: number) {
     fontSize: `${fontSizeRem}rem`,
     lineHeight: 1,
     opacity,
-    fontFamily: isActive ? 'var(--font-serif)' : 'var(--font-sans)',
+    fontFamily: 'var(--font-serif)',
     fontWeight: isActive ? 500 : 400,
-    letterSpacing: isActive ? '-0.02em' : 'normal',
+    letterSpacing: '-0.02em',
     color: '#fff',
   } as const;
 }
